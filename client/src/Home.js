@@ -14,7 +14,7 @@ const Home = (props) => {
   };
   useEffect(() => {
     getUser();
-  }, []);
+  }, []); 
 
   const logout = () => {
     localStorage.removeItem("token");
