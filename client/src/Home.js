@@ -18,12 +18,12 @@ const Home = (props) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    props.history.push("/login");
+    props.history.push("/about");
   };
 
   // If no token, go to login page
   if (!localStorage.getItem("token")) {
-    props.history.push("/login");
+    props.history.push("/about");
   }
   return (
     <div className="m-5">
