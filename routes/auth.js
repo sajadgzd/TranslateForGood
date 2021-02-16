@@ -6,7 +6,7 @@ const { requireLogin } = require("../middleware/auth");
 
 // Register user
 router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, languageFrom, languageTo, timezone } = req.body;
   try {
     let user = await User.findOne({ email });
     if (user) {
@@ -17,6 +17,9 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password: hashed_password,
+      languageFrom,
+      languageTo,
+      timezone,
     });
     await user.save();
     return res.status(201).json({ message: "User created successfully!" });

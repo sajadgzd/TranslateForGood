@@ -18,6 +18,18 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    languageFrom:{
+      type: String,
+      requred: true,
+    },
+    languageTo:{
+      type: String,
+      requred: true,
+    },
+    timezone:{
+      type: String,
+      requred: true,
+    }
   },
   { timestamps: true }
 );
