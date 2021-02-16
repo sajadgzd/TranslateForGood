@@ -7,10 +7,13 @@ const Register = (props) => {
     name: "",
     email: "",
     password: "",
+    languageFrom: "",
+    languageTo: "",
+    timezone: "",
     error: null,
   });
 
-  const { name, email, password, error } = data;
+  const { name, email, password, languageFrom, languageTo, timezone, error } = data;
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -22,7 +25,7 @@ const Register = (props) => {
       setData({ ...data, error: null });
       await axios.post(
         "/api/auth/register",
-        { name, email, password },
+        { name, email, password, languageFrom, languageTo, timezone },
         {
           headers: {
             "Content-Type": "application/json",
@@ -73,6 +76,96 @@ const Register = (props) => {
                 value={password}
                 onChange={handleChange}
               />
+            </div>
+            <div className="form-group">
+              <label htmlFor="languageFrom">
+                Language you can translate from: </label>
+                <div className="ui-select">
+                <select name="languageFrom" className="form-control" value={languageFrom} onChange={handleChange}>
+                  <option value="English">English</option>
+                  <option value="Arabic">Arabic</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Burmese">Burmese</option>
+                  <option value="French">French</option>
+                  <option value="German">German</option>
+                  <option value="Gujarati">Gujarati</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Italian">Italian</option>
+                  <option value="Japanese">Japanese</option>
+                  <option value="Javanese">Javanese</option>
+                  <option value="Kannada">Kannada</option>
+                  <option value="Korean">Korean</option>
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="Mandarin Chinese">Mandarin Chinese</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Oriya">Oriya</option>
+                  <option value="Panjabi">Panjabi</option>
+                  <option value="Persian">Persian</option>
+                  <option value="Polish">Polish</option>
+                  <option value="Portuguese">Portuguese</option>
+                  <option value="Russian">Russian</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Thai">Thai</option>
+                  <option value="Turkish">Turkish</option>
+                  <option value="Ukrainian">Ukrainian</option>
+                  <option value="Urdu">Urdu</option>
+                  <option value="Vietnamese">Vietnamese</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="languageTo">
+                Language you can translate to: </label>
+                <div className="ui-select">
+                <select name="languageTo" className="form-control" value={languageTo} onChange={handleChange}>
+                  <option value="English">English</option>
+                  <option value="Arabic">Arabic</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Burmese">Burmese</option>
+                  <option value="French">French</option>
+                  <option value="German">German</option>
+                  <option value="Gujarati">Gujarati</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Italian">Italian</option>
+                  <option value="Japanese">Japanese</option>
+                  <option value="Javanese">Javanese</option>
+                  <option value="Kannada">Kannada</option>
+                  <option value="Korean">Korean</option>
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="Mandarin Chinese">Mandarin Chinese</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Oriya">Oriya</option>
+                  <option value="Panjabi">Panjabi</option>
+                  <option value="Persian">Persian</option>
+                  <option value="Polish">Polish</option>
+                  <option value="Portuguese">Portuguese</option>
+                  <option value="Russian">Russian</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Thai">Thai</option>
+                  <option value="Turkish">Turkish</option>
+                  <option value="Ukrainian">Ukrainian</option>
+                  <option value="Urdu">Urdu</option>
+                  <option value="Vietnamese">Vietnamese</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="timezone">
+                Time zone: </label>
+                <div className="ui-select">
+                <select name="timezone" className="form-control" value={timezone} onChange={handleChange}>
+                  <option value="Eastern"  >(GMT-05:00) Eastern Time</option>
+                  <option value="Hawaii"  >(GMT-10:00) Hawaii Time</option>
+                  <option value="Alaska"  >(GMT-09:00) Alaska Time</option>
+                  <option value="Pacific"  >(GMT-08:00) Pacific Time</option>
+                  <option value="Mountain"  >(GMT-07:00) Mountain Time</option>
+                  <option value="Central"  >(GMT-06:00) Central Time</option>
+                </select>
+              </div>
             </div>
             {error ? <p className="text-danger">{error}</p> : null}
             <div className="text-center">
