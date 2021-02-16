@@ -30,7 +30,8 @@ const Login = (props) => {
       );
       localStorage.setItem("token", res.data.token);
       // when successful, redirect to home page
-      props.history.push("/");
+      // props.history.push("/about");
+      window.location.href="/about"; //refresh page so 'login' and 'logout' btn change correctly
     } catch (err) {
       setData({ ...data, error: err.response.data.error });
     }

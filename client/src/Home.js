@@ -18,6 +18,7 @@ const Home = (props) => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    console.log(props.history);
     props.history.push("/about");
   };
 
@@ -25,6 +26,7 @@ const Home = (props) => {
   if (!localStorage.getItem("token")) {
     props.history.push("/about");
   }
+
   return (
     <div className="m-5">
       <div className="jumbotron">
