@@ -3,6 +3,7 @@ import axios from "axios";
 import './Profile.css'
 
 const Profile = () => {
+
   const [user, setUser] = useState(null);
 
   const getUser = async () => {
@@ -33,10 +34,13 @@ const Profile = () => {
               Email: {user && user.email}
             </div>
             <div className='user-info'>
-              Languages: Polish, English, Russian
+              Language I can translate from: {user && user.languageFrom}
             </div>
             <div className='user-info'>
-              Translator for: Polish
+              Language I can translate to: {user && user.languageTo}
+            </div>
+            <div className='user-info'>
+              Time zone: {user && user.timezone}
             </div>
             <div>
               <button className='user-info'>Update Profile</button>
@@ -46,6 +50,5 @@ const Profile = () => {
       </div>
     )
 }
-
 
 export default Profile
