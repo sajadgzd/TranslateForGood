@@ -83,7 +83,7 @@ const Register = (props) => {
             <div className="form-check">
               <input id="copy" type="checkbox" class="form-check-input" onClick={onClick}/>
               <label htmlFor="form-check-translator">I want to register as a translator!</label>
-              { showTranslator ?   
+              { showTranslator ?
             <div id="translator">
             <div className="form-group">
               <label htmlFor="languageFrom">

@@ -1,0 +1,18 @@
+.profile {
+  display: flex;
+  justify-content: center;
+  margin: 50px;
+}
+
+.user-info {
+  margin: 30px;
+  font-size: 20px;
+  font-family: 'Trebuchet MS';
+  font-weight: bolder;
+}
+
+.user-photo {
+  width:400px;
+  height:400px;
+  border-radius: 200px;
+}
