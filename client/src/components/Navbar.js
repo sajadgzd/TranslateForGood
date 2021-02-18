@@ -1,12 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import { Button } from './Button';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-function Navbar() {
+
+
+function Navbar(props) {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
+  
+  let logBtnText = localStorage.getItem("token") ? "Logout" : "Login";
 
+  // Remove token if logging out.
+  // Update btn text to "logout" if already logged in, and vice versa. 
+  function logBtnTextUpdate() {
+    let isLoggedIn = localStorage.getItem("token");
+    if (isLoggedIn){
+      
+      localStorage.removeItem("token");
+      window.location.href="/about";
+    }
+    logBtnText = isLoggedIn ? "Logout" : "Login";
+  }
+  
+ 
   const handleClick = () => setClick(!click); // used for menu icon (reverse style)
   const closeMobileMenu = () => setClick(false);
 
@@ -19,11 +37,12 @@ function Navbar() {
   };
 
   // solves problem of signin bttn to show in MobileMenu on refresh
-  useEffect(() => {
+  useEffect(() => { 
     showButton();
   }, []);
 
   window.addEventListener('resize', showButton);
+
 
   return (
     <>
@@ -55,16 +74,29 @@ function Navbar() {
             </li>
 
             <li>
-              <Link
-                to='/Login'
-                className='nav-links-mobile'
-                onClick={closeMobileMenu}
-              >
-                Login
-              </Link>
+              {
+                localStorage.getItem("token") ? 
+                <Link
+                  to='/about'
+                  className='nav-links-mobile'
+                  onClick={() => {closeMobileMenu(); logBtnTextUpdate();} }
+                >
+                  Logout
+                </Link>
+                :
+                <Link
+                  to='/login'
+                  className='nav-links-mobile'
+                  onClick={closeMobileMenu}
+                >
+                  Login
+                </Link>
+              }
+              
             </li>
           </ul>
-          {button && <Button buttonStyle='btn--outline'>Login</Button>}
+          
+          {button && <Button buttonStyle='btn--outline' onClick={logBtnTextUpdate}>{logBtnText}</Button>}
         </div>
       </nav>
     </>

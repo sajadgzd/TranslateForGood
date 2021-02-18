@@ -25,6 +25,7 @@ const Home = (props) => {
   if (!localStorage.getItem("token")) {
     props.history.push("/about");
   }
+
   return (
     <div className="m-5">
       <div className="jumbotron">
