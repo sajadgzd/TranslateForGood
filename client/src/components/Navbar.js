@@ -61,9 +61,15 @@ function Navbar(props) {
           </div>
             {/* Hide the menu if something was selected on it*/}
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            <li className='nav-item'> 
-              <Link to='/about' className='nav-links' onClick={closeMobileMenu}> 
+            <li className='nav-item'>
+              <Link to='/about' className='nav-links' onClick={closeMobileMenu}>
                 About
+              </Link>
+            </li>
+
+            <li className='nav-item'>
+              <Link to='/profile' className='nav-links' onClick={closeMobileMenu}>
+                Profile
               </Link>
             </li>
 

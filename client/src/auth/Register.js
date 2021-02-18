@@ -13,6 +13,9 @@ const Register = (props) => {
     error: null,
   });
 
+  const [showTranslator, setShowTranslator] = React.useState(false)
+  const onClick = () => setShowTranslator(!showTranslator)
+
   const { name, email, password, languageFrom, languageTo, timezone, error } = data;
 
   const handleChange = (e) => {
@@ -77,15 +80,21 @@ const Register = (props) => {
                 onChange={handleChange}
               />
             </div>
+            <div className="form-check">
+              <input id="copy" type="checkbox" class="form-check-input" onClick={onClick}/>
+              <label htmlFor="form-check-translator">I want to register as a translator!</label>
+              { showTranslator ?
+            <div id="translator">
             <div className="form-group">
               <label htmlFor="languageFrom">
                 Language you can translate from: </label>
                 <div className="ui-select">
                 <select name="languageFrom" className="form-control" value={languageFrom} onChange={handleChange}>
-                  <option value="English">English</option>
+                  <option>Select language from list ... </option>
                   <option value="Arabic">Arabic</option>
                   <option value="Bengali">Bengali</option>
                   <option value="Burmese">Burmese</option>
+                  <option value="English">English</option>
                   <option value="French">French</option>
                   <option value="German">German</option>
                   <option value="Gujarati">Gujarati</option>
@@ -120,10 +129,11 @@ const Register = (props) => {
                 Language you can translate to: </label>
                 <div className="ui-select">
                 <select name="languageTo" className="form-control" value={languageTo} onChange={handleChange}>
-                  <option value="English">English</option>
+                  <option>Select language from list ... </option>
                   <option value="Arabic">Arabic</option>
                   <option value="Bengali">Bengali</option>
                   <option value="Burmese">Burmese</option>
+                  <option value="English">English</option>
                   <option value="French">French</option>
                   <option value="German">German</option>
                   <option value="Gujarati">Gujarati</option>
@@ -153,6 +163,9 @@ const Register = (props) => {
                 </select>
               </div>
             </div>
+          </div>
+          : null }
+          </div>
             <div className="form-group">
               <label htmlFor="timezone">
                 Time zone: </label>
@@ -186,5 +199,6 @@ const Register = (props) => {
     </div>
   );
 };
+
 
 export default Register;
