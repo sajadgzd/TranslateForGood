@@ -6,9 +6,11 @@ import Register from "./auth/Register";
 import Login from "./auth/Login";
 import Home from "./Home";
 import About from "./components/pages/About";
+import Profile from "./components/pages/Profile";
 import Navbar from './components/Navbar';
 
 function App() {
+
     return (
       <BrowserRouter>
         <Navbar />
@@ -16,6 +18,7 @@ function App() {
           <Route exact path='/about' component={About} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
+          <Route exact path='/profile' component={Profile} />
           <Route exact path="/" component={Home} />
         </Switch>
       </BrowserRouter>
