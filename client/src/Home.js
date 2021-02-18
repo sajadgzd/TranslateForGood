@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Button from '@material-ui/core/Button';
 
 const Home = (props) => {
   const [user, setUser] = useState(null);
@@ -33,6 +34,9 @@ const Home = (props) => {
         <button className="btn btn-danger" onClick={logout}>
           Logout
         </button>
+        <Button variant="contained" color="primary">
+          Hello World
+        </Button>
       </div>
     </div>
   );
