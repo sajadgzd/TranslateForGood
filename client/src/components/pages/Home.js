@@ -17,11 +17,6 @@ const Home = (props) => {
     getUser();
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    props.history.push("/about");
-  };
-
   // If no token, go to login page
   if (!localStorage.getItem("token")) {
     props.history.push("/about");
@@ -31,9 +26,6 @@ const Home = (props) => {
     <div className="m-5">
       <div className="jumbotron">
         <p className="lead">Welcome {user && user.name}</p>
-        <button className="btn btn-danger" onClick={logout}>
-          Logout
-        </button>
         <Button variant="contained" color="primary">
           Hello World
         </Button>
