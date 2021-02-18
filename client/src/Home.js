@@ -18,7 +18,6 @@ const Home = (props) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    console.log(props.history);
     props.history.push("/about");
   };
 
