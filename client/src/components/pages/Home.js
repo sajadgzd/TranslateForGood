@@ -140,7 +140,7 @@ const handleSubmitPreviousTranslator = async (e) => {
     if (data.previousTranslatorInfo === "") {
       console.log("previousTranslatorInfo radio IS EMPTY")
       // return;
-      
+
       return;
     }
     // await axios.post(
@@ -257,7 +257,7 @@ const handleSubmitPreviousTranslator = async (e) => {
       <Grid item xs={12} sm={6}>
         <Paper className={classes.paper}>
           <ThemeProvider theme={theme}>
-              <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} >Select a Previous Translator</Typography>
+              <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} > Or Select a Previous Translator</Typography>
           </ThemeProvider>
           <FormControl component="fieldset">
             <FormLabel component="legend">Select your translator</FormLabel>
@@ -278,6 +278,7 @@ const handleSubmitPreviousTranslator = async (e) => {
               className={classes.button}
               endIcon={<Icon>send</Icon>}
               onClick={handleSubmitPreviousTranslator}
+              style={{marginTop: 15}}
             >
               Submit
             </Button>
