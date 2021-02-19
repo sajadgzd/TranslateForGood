@@ -4,7 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import Register from "./auth/Register";
 import Login from "./auth/Login";
-import Home from "./Home";
+import Home from "./components/pages/Home";
 import About from "./components/pages/About";
 import Profile from "./components/pages/Profile";
 import Navbar from './components/Navbar';
