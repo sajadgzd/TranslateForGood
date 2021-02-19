@@ -60,7 +60,9 @@ const Home = (props) => {
     femaleTranslatorBool: false,
     UrgentTranslatorBool: false,
     DocumentProofReadingBool: false,
-    previousTranslatorInfo: ""
+    previousTranslatorInfo: "",
+    materialFromInputError: false,
+    materialToInputError: false
   });
 
   const getUser = async () => {
@@ -77,7 +79,11 @@ const Home = (props) => {
   }, []);
 
   const handleChangeSelect = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+    if (e.target.value.length > 1) {
+      setData({ ...data, materialFromInputError: false, materialToInputError:false, [e.target.name]: e.target.value });
+    } else {
+      this.setData({materialFromInputError: true });
+    }
   };
 
   const handleChangeCheckBox = (event) => {
@@ -88,28 +94,42 @@ const Home = (props) => {
     setData({ ...data, [event.target.name]: event.target.value });
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, UrgentTranslatorBool, DocumentProofReadingBool, previousTranslatorInfo } = data;
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, UrgentTranslatorBool, DocumentProofReadingBool, previousTranslatorInfo, materialFromInputError, materialToInputError } = data;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
       setData({ ...data, error: null });
-      // await axios.post(
-      //   "/api/auth/register",
-      //   { user, languageFrom, languageTo, error},
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-      // when successful, refresh page to home page
-      props.history.push("/home");
-      console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
-    } catch (err) {
-      setData({ ...data, error: err.response.data.error });
-    }
+      if (data.languageFrom === "") {
+        console.log("FROM language Field IS EMPTY")
+        // return;
+        setData({ ...data, materialFromInputError: true});
+        return;
+      } else if (data.languageTo === ""){
+        console.log("TO language Field IS EMPTY")
+        // return;
+        setData({ ...data, materialToInputError: true});
+        return;
+      }
+        // await axios.post(
+        //   "/api/auth/register",
+        //   { user, languageFrom, languageTo, error},
+        //   {
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
+        //   }
+        // );
+        // when successful, refresh page to home page
+        props.history.push("/home");
+        console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
+      } catch (err) {
+        setData({ ...data, error: err.response.data.error });
+      
+      }
+      
+
   };
 
 const handleSubmitPreviousTranslator = async (e) => {
@@ -117,6 +137,12 @@ const handleSubmitPreviousTranslator = async (e) => {
 
   try {
     setData({ ...data, error: null });
+    if (data.previousTranslatorInfo === "") {
+      console.log("previousTranslatorInfo radio IS EMPTY")
+      // return;
+      
+      return;
+    }
     // await axios.post(
     //   "/api/auth/register",
     //   { user, languageFrom, languageTo, error},
@@ -164,6 +190,7 @@ const handleSubmitPreviousTranslator = async (e) => {
                 select
                 label="From"
                 name="languageFrom"
+                error={data.materialFromInputError}
                 value={languageFrom}
                 onChange={handleChangeSelect}
                 helperText="Please select your language"
@@ -179,6 +206,7 @@ const handleSubmitPreviousTranslator = async (e) => {
                 select
                 label="To"
                 name="languageTo"
+                error={data.materialToInputError}
                 value={languageTo}
                 onChange={handleChangeSelect}
                 helperText="Please select the target language"
@@ -211,8 +239,10 @@ const handleSubmitPreviousTranslator = async (e) => {
             </div>
             <div>
             <Button
+              id="requestTranslatorFormBtn"
               variant="contained"
               color="primary"
+              type="submit"
               className={classes.button}
               endIcon={<Icon>send</Icon>}
               onClick={handleSubmit}
@@ -231,8 +261,8 @@ const handleSubmitPreviousTranslator = async (e) => {
           </ThemeProvider>
           <FormControl component="fieldset">
             <FormLabel component="legend">Select your translator</FormLabel>
-              <RadioGroup aria-label="previousTranslatorInfo" name="previousTranslatorInfo" value={previousTranslatorInfo} onChange={handleChangeRadioButton}>
-                <FormControlLabel value="SajadGmail" control={<Radio />} label="Sajad G. English to Farsi" />
+              <RadioGroup aria-label="previousTranslatorInfo" name="previousTranslatorInfo" value={previousTranslatorInfo} defaultValue="SajadGmail" onChange={handleChangeRadioButton}>
+                <FormControlLabel value="SajadGmail" control={<Radio defaultValue/>} label="Sajad G. English to Farsi" />
                 <FormControlLabel value="EkaterinaGmail" control={<Radio />} label="Ekaterina A. English to Russian" />
                 <FormControlLabel value="NataliaGmail" control={<Radio />} label="Natalia H. English to Polish" />
                 {/* {Languages.map((option) => (
@@ -244,6 +274,7 @@ const handleSubmitPreviousTranslator = async (e) => {
             <Button
               variant="contained"
               color="primary"
+              type="submit"
               className={classes.button}
               endIcon={<Icon>send</Icon>}
               onClick={handleSubmitPreviousTranslator}
