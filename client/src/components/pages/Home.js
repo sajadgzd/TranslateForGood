@@ -12,8 +12,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -49,36 +50,14 @@ const useStyles = makeStyles((theme) => ({
 // Home component func definition
 const Home = (props) => {
 
-
-  //start
-  // const [user, setUser] = useState(null);
-
-  // const getUser = async () => {
-  //   const res = await axios.get("/api/auth", {
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //     },
-  //   });
-  //   setUser(res.data);
-  // };
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
-  //////
-  // const [language, setlanguage] = useState(null);
-
-  // const handleChangeSelect= (event) => {
-  //   setlanguage(event.target.value);
-  // };
-
   const [data, setData] = useState({
     user: "",
     languageFrom: "",
     languageTo: "",
     error: null,
-    gilad: false,
-    jason: false,
-    antoine: false,
+    femaleTranslatorBool: false,
+    UrgentTranslatorBool: false,
+    DocumentProofReadingBool: false,
   });
 
   const getUser = async () => {
@@ -89,45 +68,41 @@ const Home = (props) => {
     });
     setData({ ...data, user: res.data});
   };
+  
   useEffect(() => {
     getUser();
   }, []);
-
-  ////
-  // const { user, languageFrom, languageTo, error} = data;
 
   const handleChangeSelect = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  ////////
   const handleChangeCheckBox = (event) => {
     setData({ ...data, [event.target.name]: event.target.checked });
   };
 
-  const { user, languageFrom, languageTo, error, gilad, jason, antoine } = data;
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, UrgentTranslatorBool, DocumentProofReadingBool } = data;
 
-  /////////
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     setData({ ...data, error: null });
-  //     await axios.post(
-  //       "/api/auth/register",
-  //       { user, languageFrom, languageTo, error},
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     // when successful, refresh page to home page
-  //     props.history.push("/home");
-  //   } catch (err) {
-  //     setData({ ...data, error: err.response.data.error });
-  //   }
-  // };
-  //////////
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setData({ ...data, error: null });
+      // await axios.post(
+      //   "/api/auth/register",
+      //   { user, languageFrom, languageTo, error},
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+      // when successful, refresh page to home page
+      props.history.push("/home");
+      console.log("HERE IS THE DATA POSTED for SUBMIT button:\t",data)
+    } catch (err) {
+      setData({ ...data, error: err.response.data.error });
+    }
+  };
 
   // If no token, go to login page
   if (!localStorage.getItem("token")) {
@@ -151,7 +126,7 @@ const Home = (props) => {
       <Grid item xs={12} sm={6}>
         <Paper className={classes.paper}>
           <ThemeProvider theme={theme}>
-            <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} >Request a Translator!</Typography>
+            <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} >Request a Translator</Typography>
           </ThemeProvider>
           
           <form className={classes.root} noValidate autoComplete="off">
@@ -187,24 +162,36 @@ const Home = (props) => {
                 ))}
               </TextField>
             </div>
+            <div>
             <FormControl component="fieldset" className={classes.formControl}>
               <FormLabel component="legend">Options</FormLabel>
               <FormGroup>
                 <FormControlLabel
-                  control={<Checkbox checked={gilad} onChange={handleChangeCheckBox} name="gilad" />}
+                  control={<Checkbox checked={femaleTranslatorBool} onChange={handleChangeCheckBox} name="femaleTranslatorBool" />}
                   label="Female Translator"
                 />
                 <FormControlLabel
-                  control={<Checkbox checked={jason} onChange={handleChangeCheckBox} name="jason" />}
+                  control={<Checkbox checked={UrgentTranslatorBool} onChange={handleChangeCheckBox} name="UrgentTranslatorBool" />}
                   label="Urgent Translation"
                 />
                 <FormControlLabel
-                  control={<Checkbox checked={antoine} onChange={handleChangeCheckBox} name="antoine" />}
+                  control={<Checkbox checked={DocumentProofReadingBool} onChange={handleChangeCheckBox} name="DocumentProofReadingBool" />}
                   label="Document Proofreading"
                 />
               </FormGroup>
             </FormControl>
-
+            </div>
+            <div>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              endIcon={<Icon>send</Icon>}
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+            </div>
           </form>
         
         </Paper>
