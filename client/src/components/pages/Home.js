@@ -92,6 +92,7 @@ const Home = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
       setData({ ...data, error: null });
       // await axios.post(
@@ -113,6 +114,7 @@ const Home = (props) => {
 
 const handleSubmitPreviousTranslator = async (e) => {
   e.preventDefault();
+
   try {
     setData({ ...data, error: null });
     // await axios.post(
@@ -126,7 +128,7 @@ const handleSubmitPreviousTranslator = async (e) => {
     // );
     // when successful, refresh page to home page
     props.history.push("/home");
-    console.log("HERE IS THE DATA POSTED for SUBMIT PREVIOUS TRANSLATOR button:\t",data)
+    console.log("HERE IS THE DATA POSTED for SUBMIT PREVIOUS TRANSLATOR button:\t", data.previousTranslatorInfo)
   } catch (err) {
     setData({ ...data, error: err.response.data.error });
   }
@@ -139,8 +141,6 @@ const handleSubmitPreviousTranslator = async (e) => {
 
   // use defined styles above
   const classes = useStyles();
-
-
   return (
 
     <div className={classes.root} style={{ marginTop: 40 }}>
@@ -159,7 +159,7 @@ const handleSubmitPreviousTranslator = async (e) => {
           
           <form className={classes.root} noValidate autoComplete="off">
             <div>
-              <TextField
+              <TextField required={true}
                 id="standard-select-language-from"
                 select
                 label="From"
@@ -174,7 +174,7 @@ const handleSubmitPreviousTranslator = async (e) => {
                   </MenuItem>
                 ))}
               </TextField>
-              <TextField
+              <TextField required={true}
                 id="standard-select-language-to"
                 select
                 label="To"
