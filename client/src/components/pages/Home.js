@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { AddToPhotos } from "@material-ui/icons";
 import Typography from '@material-ui/core/Typography';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import Languages from '../../util/languages'
+import Languages from '../../util/languages';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Checkbox from '@material-ui/core/Checkbox';
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -36,13 +39,47 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     color: "#1a237e",
     fontSize: '1.2rem',
+  },
+  formControl: {
+    margin: theme.spacing(3),
   }
 }));
 
 
 // Home component func definition
 const Home = (props) => {
-  const [user, setUser] = useState(null);
+
+
+  //start
+  // const [user, setUser] = useState(null);
+
+  // const getUser = async () => {
+  //   const res = await axios.get("/api/auth", {
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //     },
+  //   });
+  //   setUser(res.data);
+  // };
+  // useEffect(() => {
+  //   getUser();
+  // }, []);
+  //////
+  // const [language, setlanguage] = useState(null);
+
+  // const handleChangeSelect= (event) => {
+  //   setlanguage(event.target.value);
+  // };
+
+  const [data, setData] = useState({
+    user: "",
+    languageFrom: "",
+    languageTo: "",
+    error: null,
+    gilad: false,
+    jason: false,
+    antoine: false,
+  });
 
   const getUser = async () => {
     const res = await axios.get("/api/auth", {
@@ -50,11 +87,47 @@ const Home = (props) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    setUser(res.data);
+    setData({ ...data, user: res.data});
   };
   useEffect(() => {
     getUser();
   }, []);
+
+  ////
+  // const { user, languageFrom, languageTo, error} = data;
+
+  const handleChangeSelect = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  ////////
+  const handleChangeCheckBox = (event) => {
+    setData({ ...data, [event.target.name]: event.target.checked });
+  };
+
+  const { user, languageFrom, languageTo, error, gilad, jason, antoine } = data;
+
+  /////////
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     setData({ ...data, error: null });
+  //     await axios.post(
+  //       "/api/auth/register",
+  //       { user, languageFrom, languageTo, error},
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     // when successful, refresh page to home page
+  //     props.history.push("/home");
+  //   } catch (err) {
+  //     setData({ ...data, error: err.response.data.error });
+  //   }
+  // };
+  //////////
 
   // If no token, go to login page
   if (!localStorage.getItem("token")) {
@@ -64,15 +137,6 @@ const Home = (props) => {
   // use defined styles above
   const classes = useStyles();
 
-  const [language, setlanguageFrom, setlanguageTo] = React.useState('English');
-
-  const handleChangeSelectFrom = (event) => {
-    setlanguageFrom(event.target.value);
-  };
-
-  const handleChangeSelectTo = (event) => {
-    setlanguageTo(event.target.value);
-  };
 
   return (
 
@@ -87,7 +151,7 @@ const Home = (props) => {
       <Grid item xs={12} sm={6}>
         <Paper className={classes.paper}>
           <ThemeProvider theme={theme}>
-            <Typography variant="h6">Request a Translator!</Typography>
+            <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} >Request a Translator!</Typography>
           </ThemeProvider>
           
           <form className={classes.root} noValidate autoComplete="off">
@@ -96,8 +160,9 @@ const Home = (props) => {
                 id="standard-select-language-from"
                 select
                 label="From"
-                value={language}
-                onChange={handleChangeSelectFrom}
+                name="languageFrom"
+                value={languageFrom}
+                onChange={handleChangeSelect}
                 helperText="Please select your language"
               >
                 {Languages.map((option) => (
@@ -110,8 +175,9 @@ const Home = (props) => {
                 id="standard-select-language-to"
                 select
                 label="To"
-                value={language}
-                onChange={handleChangeSelectTo}
+                name="languageTo"
+                value={languageTo}
+                onChange={handleChangeSelect}
                 helperText="Please select the target language"
               >
                 {Languages.map((option) => (
@@ -121,6 +187,24 @@ const Home = (props) => {
                 ))}
               </TextField>
             </div>
+            <FormControl component="fieldset" className={classes.formControl}>
+              <FormLabel component="legend">Options</FormLabel>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox checked={gilad} onChange={handleChangeCheckBox} name="gilad" />}
+                  label="Female Translator"
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={jason} onChange={handleChangeCheckBox} name="jason" />}
+                  label="Urgent Translation"
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={antoine} onChange={handleChangeCheckBox} name="antoine" />}
+                  label="Document Proofreading"
+                />
+              </FormGroup>
+            </FormControl>
+
           </form>
         
         </Paper>
