@@ -15,6 +15,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -58,6 +60,7 @@ const Home = (props) => {
     femaleTranslatorBool: false,
     UrgentTranslatorBool: false,
     DocumentProofReadingBool: false,
+    previousTranslatorInfo: ""
   });
 
   const getUser = async () => {
@@ -81,7 +84,11 @@ const Home = (props) => {
     setData({ ...data, [event.target.name]: event.target.checked });
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, UrgentTranslatorBool, DocumentProofReadingBool } = data;
+  const handleChangeRadioButton = (event) => {
+    setData({ ...data, [event.target.name]: event.target.value });
+  };
+
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, UrgentTranslatorBool, DocumentProofReadingBool, previousTranslatorInfo } = data;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,11 +105,32 @@ const Home = (props) => {
       // );
       // when successful, refresh page to home page
       props.history.push("/home");
-      console.log("HERE IS THE DATA POSTED for SUBMIT button:\t",data)
+      console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
     } catch (err) {
       setData({ ...data, error: err.response.data.error });
     }
   };
+
+const handleSubmitPreviousTranslator = async (e) => {
+  e.preventDefault();
+  try {
+    setData({ ...data, error: null });
+    // await axios.post(
+    //   "/api/auth/register",
+    //   { user, languageFrom, languageTo, error},
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+    // when successful, refresh page to home page
+    props.history.push("/home");
+    console.log("HERE IS THE DATA POSTED for SUBMIT PREVIOUS TRANSLATOR button:\t",data)
+  } catch (err) {
+    setData({ ...data, error: err.response.data.error });
+  }
+};
 
   // If no token, go to login page
   if (!localStorage.getItem("token")) {
@@ -197,7 +225,33 @@ const Home = (props) => {
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
-        <Paper className={classes.paper}>xs=12 sm=6</Paper>
+        <Paper className={classes.paper}>
+          <ThemeProvider theme={theme}>
+              <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} >Select a Previous Translator</Typography>
+          </ThemeProvider>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Select your translator</FormLabel>
+              <RadioGroup aria-label="previousTranslatorInfo" name="previousTranslatorInfo" value={previousTranslatorInfo} onChange={handleChangeRadioButton}>
+                <FormControlLabel value="SajadGmail" control={<Radio />} label="Sajad G. English to Farsi" />
+                <FormControlLabel value="EkaterinaGmail" control={<Radio />} label="Ekaterina A. English to Russian" />
+                <FormControlLabel value="NataliaGmail" control={<Radio />} label="Natalia H. English to Polish" />
+                {/* {Languages.map((option) => (
+                  <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
+                ))} */}
+              </RadioGroup>
+          </FormControl>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              endIcon={<Icon>send</Icon>}
+              onClick={handleSubmitPreviousTranslator}
+            >
+              Submit
+            </Button>
+          </div>
+        </Paper>
       </Grid>
 
     </Grid>
