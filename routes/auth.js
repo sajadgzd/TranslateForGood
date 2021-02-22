@@ -6,7 +6,7 @@ const { requireLogin } = require("../middleware/auth");
 
 // Register user
 router.post("/register", async (req, res) => {
-  const { name, email, password, languageFrom, languageTo, timezone } = req.body;
+  const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone } = req.body;
   try {
     let user = await User.findOne({ email });
     if (user) {
@@ -19,6 +19,7 @@ router.post("/register", async (req, res) => {
       password: hashed_password,
       languageFrom,
       languageTo,
+      femaleTranslator,
       timezone,
     });
     await user.save();

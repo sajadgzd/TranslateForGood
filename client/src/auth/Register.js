@@ -9,6 +9,7 @@ const Register = (props) => {
     password: "",
     languageFrom: "",
     languageTo: "",
+    femaleTranslator: false,
     timezone: "",
     error: null,
   });
@@ -16,7 +17,7 @@ const Register = (props) => {
   const [showTranslator, setShowTranslator] = React.useState(false)
   const onClick = () => setShowTranslator(!showTranslator)
 
-  const { name, email, password, languageFrom, languageTo, timezone, error } = data;
+  const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone, error } = data;
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -28,7 +29,7 @@ const Register = (props) => {
       setData({ ...data, error: null });
       await axios.post(
         "/api/auth/register",
-        { name, email, password, languageFrom, languageTo, timezone },
+        { name, email, password, languageFrom, languageTo, femaleTranslator, timezone },
         {
           headers: {
             "Content-Type": "application/json",
@@ -163,6 +164,10 @@ const Register = (props) => {
                 </select>
               </div>
             </div>
+            <div className="form-check">
+              <input id="copy" type="checkbox" class="form-check-input" name = "femaleTranslator" value={true} onChange={handleChange}/>
+              <label htmlFor="form-check-translator">I am a female translator!</label>
+           </div>
           </div>
           : null }
           </div>
