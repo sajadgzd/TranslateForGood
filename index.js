@@ -24,6 +24,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api", require("./routes/new_request"));
 
 // Serve static assets (build folder) if in production
 if (process.env.NODE_ENV === 'production') {

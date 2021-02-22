@@ -60,11 +60,12 @@ const Home = (props) => {
     languageTo: "",
     error: null,
     femaleTranslatorBool: false,
-    UrgentTranslatorBool: false,
-    DocumentProofReadingBool: false,
+    urgentTranslatorBool: false,
+    documentProofReadingBool: false,
     previousTranslatorInfo: "",
     materialFromInputError: false,
-    materialToInputError: false
+    materialToInputError: false,
+    isActive: true
   });
 
   const getUser = async () => {
@@ -96,7 +97,7 @@ const Home = (props) => {
     setData({ ...data, [event.target.name]: event.target.value });
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, UrgentTranslatorBool, DocumentProofReadingBool, previousTranslatorInfo, materialFromInputError, materialToInputError } = data;
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, materialFromInputError, materialToInputError, isActive } = data;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,15 +115,15 @@ const Home = (props) => {
         setData({ ...data, materialToInputError: true});
         return;
       }
-        // await axios.post(
-        //   "/api/auth/register",
-        //   { user, languageFrom, languageTo, error},
-        //   {
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //   }
-        // );
+        await axios.post(
+          "/api/new_request",
+          { user, languageFrom, languageTo, urgentTranslatorBool, femaleTranslatorBool, documentProofReadingBool, isActive },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         // when successful, refresh page to home page
         props.history.push("/home");
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
@@ -229,11 +230,11 @@ const handleSubmitPreviousTranslator = async (e) => {
                   label="Female Translator"
                 />
                 <FormControlLabel
-                  control={<Checkbox checked={UrgentTranslatorBool} onChange={handleChangeCheckBox} name="UrgentTranslatorBool" />}
+                  control={<Checkbox checked={urgentTranslatorBool} onChange={handleChangeCheckBox} name="urgentTranslatorBool" />}
                   label="Urgent Translation"
                 />
                 <FormControlLabel
-                  control={<Checkbox checked={DocumentProofReadingBool} onChange={handleChangeCheckBox} name="DocumentProofReadingBool" />}
+                  control={<Checkbox checked={documentProofReadingBool} onChange={handleChangeCheckBox} name="documentProofReadingBool" />}
                   label="Document Proofreading"
                 />
               </FormGroup>

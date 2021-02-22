@@ -61,7 +61,7 @@ function ActiveRequestCard(props) {
                             <IconButton color="primary" aria-label="View attached documents" onClick={showAttachments}>
                                 <AttachFileIcon />
                             </IconButton>
-                            <Button variant="outlined" color="primary" onClick={selectRequest}>Select</Button>
+                            <Button  variant="contained" color="primary" onClick={selectRequest}>Select</Button>
                         </CardActions>
                     </Box>
                     

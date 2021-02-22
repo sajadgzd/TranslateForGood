@@ -27,6 +27,10 @@ const RequestSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
       requred: true,
+    },
+    isActive:{
+      type: Boolean,
+      default: true,
     }
   },
   { timestamps: true }

@@ -3,9 +3,9 @@ const Request = require("../models/request");
 
 // Register new request
 router.post("/new_request", async (req, res) => {
-  const { languageFrom, languageTo,urgentTranslation, femaleTranslator, documentProofreading,isActive } = req.body;
+  const { languageFrom, languageTo, urgentTranslation, femaleTranslator, documentProofreading, isActive } = req.body;
   try {
-    request = new Request({
+    let request = new Request({
 
         languageFrom, 
         languageTo,
