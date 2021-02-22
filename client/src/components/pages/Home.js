@@ -73,7 +73,7 @@ const Home = (props) => {
     });
     setData({ ...data, user: res.data});
   };
-  
+
   useEffect(() => {
     getUser();
   }, []);
@@ -98,7 +98,7 @@ const Home = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       setData({ ...data, error: null });
       if (data.languageFrom === "") {
@@ -126,9 +126,9 @@ const Home = (props) => {
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
-      
+
       }
-      
+
 
   };
 
@@ -182,7 +182,7 @@ const handleSubmitPreviousTranslator = async (e) => {
           <ThemeProvider theme={theme}>
             <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} >Request a Translator</Typography>
           </ThemeProvider>
-          
+
           <form className={classes.root} noValidate autoComplete="off">
             <div>
               <TextField required={true}
@@ -251,7 +251,7 @@ const handleSubmitPreviousTranslator = async (e) => {
             </Button>
             </div>
           </form>
-        
+
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
