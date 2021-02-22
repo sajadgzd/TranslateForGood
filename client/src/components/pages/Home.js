@@ -17,6 +17,8 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import ActiveRequestList from '../ActiveRequestList';
+
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -287,6 +289,7 @@ const handleSubmitPreviousTranslator = async (e) => {
       </Grid>
 
     </Grid>
+    <ActiveRequestList />
   </div>
 
   );
