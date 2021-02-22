@@ -22,9 +22,7 @@ const useStyles = makeStyles((theme) => ({
     return (
         <div>
             <h1>Matching Active Requests:</h1>
-            <Grid 
-                direction="column"
-                justify="space-evenly">
+            <Grid>
             <Grid item>
                 <ActiveRequestCard name ='Marina' createdAt='today' from = 'English' to='Russian'></ActiveRequestCard>
             </Grid>

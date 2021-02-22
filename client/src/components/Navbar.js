@@ -66,7 +66,12 @@ function Navbar(props) {
                 About
               </Link>
             </li>
-
+            {localStorage.getItem("token") ? 
+              <li className='nav-item'>
+                <Link to='/home' className='nav-links' onClick={closeMobileMenu}>
+                  Home
+                </Link>
+              </li>: <li></li>}
             {localStorage.getItem("token") ? 
               <li className='nav-item'>
                 <Link to='/profile' className='nav-links' onClick={closeMobileMenu}>
