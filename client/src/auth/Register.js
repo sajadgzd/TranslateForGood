@@ -1,16 +1,27 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Switch from '@material-ui/core/Switch';
+
 
 const Register = (props) => {
   const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
-    languageFrom: "",
-    languageTo: "",
+    languageFrom: [],
+    languageTo: [],
     femaleTranslator: false,
-    timezone: "",
+    timezone: "Eastern",
     error: null,
   });
 
@@ -43,6 +54,17 @@ const Register = (props) => {
     }
   };
 
+  const languages = ["Arabic","Bengali","Burmese","English",
+  "French","German","Gujarati","Hindi","Italian","Japanese",
+  "Javanese","Kannada","Korean","Malayalam","Mandarin Chinese",
+  "Marathi","Oriya","Panjabi","Persian","Polish","Portuguese",
+  "Russian","Spanish","Tamil","Telugu","Thai","Turkish",
+  "Ukrainian","Urdu","Vietnamese"];  
+
+  const handleChangeRadioButton = (event) => {
+    setData({ ...data, [event.target.name]: event.target.checked });
+  };
+  
   return (
     <div className="row">
       <div className="col-sm-2" />
@@ -86,97 +108,63 @@ const Register = (props) => {
               <label htmlFor="form-check-translator">I want to register as a translator!</label>
               { showTranslator ?
             <div id="translator">
-            <div className="form-group">
-              <label htmlFor="languageFrom">
-                Language you can translate from: </label>
-                <div className="ui-select">
-                <select name="languageFrom" className="form-control" value={languageFrom} onChange={handleChange}>
-                  <option>Select language from list ... </option>
-                  <option value="Arabic">Arabic</option>
-                  <option value="Bengali">Bengali</option>
-                  <option value="Burmese">Burmese</option>
-                  <option value="English">English</option>
-                  <option value="French">French</option>
-                  <option value="German">German</option>
-                  <option value="Gujarati">Gujarati</option>
-                  <option value="Hindi">Hindi</option>
-                  <option value="Italian">Italian</option>
-                  <option value="Japanese">Japanese</option>
-                  <option value="Javanese">Javanese</option>
-                  <option value="Kannada">Kannada</option>
-                  <option value="Korean">Korean</option>
-                  <option value="Malayalam">Malayalam</option>
-                  <option value="Mandarin Chinese">Mandarin Chinese</option>
-                  <option value="Marathi">Marathi</option>
-                  <option value="Oriya">Oriya</option>
-                  <option value="Panjabi">Panjabi</option>
-                  <option value="Persian">Persian</option>
-                  <option value="Polish">Polish</option>
-                  <option value="Portuguese">Portuguese</option>
-                  <option value="Russian">Russian</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="Tamil">Tamil</option>
-                  <option value="Telugu">Telugu</option>
-                  <option value="Thai">Thai</option>
-                  <option value="Turkish">Turkish</option>
-                  <option value="Ukrainian">Ukrainian</option>
-                  <option value="Urdu">Urdu</option>
-                  <option value="Vietnamese">Vietnamese</option>
-                </select>
+              <div id="ArrayOne" style={{ marginTop: '2rem' }}>
+              <FormControl className="languageFrom">
+              <FormLabel component="legend">Languages you can translate from:</FormLabel>
+                  <Select
+                      name="languageFrom"
+                      multiple
+                      value={languageFrom}
+                      onChange={handleChange}
+                      input={<Input />}
+                  >
+                  {languages.map((l) => (
+                  <MenuItem key={l} value={l} >
+                    {l}
+                  </MenuItem>
+                  ))}
+                  </Select>
+              </FormControl>
               </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="languageTo">
-                Language you can translate to: </label>
-                <div className="ui-select">
-                <select name="languageTo" className="form-control" value={languageTo} onChange={handleChange}>
-                  <option>Select language from list ... </option>
-                  <option value="Arabic">Arabic</option>
-                  <option value="Bengali">Bengali</option>
-                  <option value="Burmese">Burmese</option>
-                  <option value="English">English</option>
-                  <option value="French">French</option>
-                  <option value="German">German</option>
-                  <option value="Gujarati">Gujarati</option>
-                  <option value="Hindi">Hindi</option>
-                  <option value="Italian">Italian</option>
-                  <option value="Japanese">Japanese</option>
-                  <option value="Javanese">Javanese</option>
-                  <option value="Kannada">Kannada</option>
-                  <option value="Korean">Korean</option>
-                  <option value="Malayalam">Malayalam</option>
-                  <option value="Mandarin Chinese">Mandarin Chinese</option>
-                  <option value="Marathi">Marathi</option>
-                  <option value="Oriya">Oriya</option>
-                  <option value="Panjabi">Panjabi</option>
-                  <option value="Persian">Persian</option>
-                  <option value="Polish">Polish</option>
-                  <option value="Portuguese">Portuguese</option>
-                  <option value="Russian">Russian</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="Tamil">Tamil</option>
-                  <option value="Telugu">Telugu</option>
-                  <option value="Thai">Thai</option>
-                  <option value="Turkish">Turkish</option>
-                  <option value="Ukrainian">Ukrainian</option>
-                  <option value="Urdu">Urdu</option>
-                  <option value="Vietnamese">Vietnamese</option>
-                </select>
+              <div id="ArrayTwo" style={{ marginTop: '2rem' }}>
+              <FormControl className="languageTo">
+              <FormLabel component="legend">Languages you can translate to:</FormLabel>
+                  <Select
+                      name="languageTo"
+                      multiple
+                      value={languageTo}
+                      onChange={handleChange}
+                      input={<Input />}
+                  >
+                  {languages.map((l) => (
+                  <MenuItem key={l} value={l} >
+                    {l}
+                  </MenuItem>
+                  ))}
+                  </Select>
+              </FormControl>
               </div>
-            </div>
-            <div className="form-check">
-              <input id="copy" type="checkbox" class="form-check-input" name = "femaleTranslator" value={true} onChange={handleChange}/>
-              <label htmlFor="form-check-translator">I am a female translator!</label>
-           </div>
+              <div id="Female">
+              <FormControl component="fieldset" style={{ marginTop: '2rem' }}>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Switch checked={femaleTranslator} onChange={handleChangeRadioButton} name="femaleTranslator" />}
+                      label="I am female translator!"
+                    />
+                  </FormGroup>
+                <FormHelperText>We need to know if you are a female translator for special 
+                  cases when a female translator requested for doctor's appointment and others.</FormHelperText>
+              </FormControl>
+              </div>
           </div>
           : null }
           </div>
-            <div className="form-group">
+            <div className="form-group" style={{ marginTop: '2rem' }}>
               <label htmlFor="timezone">
                 Time zone: </label>
                 <div className="ui-select">
                 <select name="timezone" className="form-control" value={timezone} onChange={handleChange}>
-                  <option value="Eastern"  >(GMT-05:00) Eastern Time</option>
+                  <option value="Eastern" >(GMT-05:00) Eastern Time</option>
                   <option value="Hawaii"  >(GMT-10:00) Hawaii Time</option>
                   <option value="Alaska"  >(GMT-09:00) Alaska Time</option>
                   <option value="Pacific"  >(GMT-08:00) Pacific Time</option>
