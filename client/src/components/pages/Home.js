@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     '& .MuiTextField-root': {
-      margin: theme.spacing(1),
+      margin: theme.spacing(1), 
       width: '25ch',
     },
   },
@@ -116,7 +116,7 @@ const Home = (props) => {
         return;
       }
         await axios.post(
-          "/api/new_request",
+          "/api/requests/new_request",
           { user, languageFrom, languageTo, urgentTranslatorBool, femaleTranslatorBool, documentProofReadingBool, isActive },
           {
             headers: {

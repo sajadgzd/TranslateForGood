@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'black',
     borderRadius: 10,
     margin: '5px 0px',
-    padding: '2px 2px',
+    // padding: '2px 2px',
     backgroundColor: '#FAFAFA'
 },
   heading: {
