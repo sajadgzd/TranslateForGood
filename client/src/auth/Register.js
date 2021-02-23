@@ -3,10 +3,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Switch from '@material-ui/core/Switch';
 
 
 const Register = (props) => {
@@ -100,9 +104,9 @@ const Register = (props) => {
               <label htmlFor="form-check-translator">I want to register as a translator!</label>
               { showTranslator ?
             <div id="translator">
-              <div id="ArrayOne">
+              <div id="ArrayOne" style={{ marginTop: '2rem' }}>
               <FormControl className="languageFrom">
-              <label htmlFor="languageFrom">Languages you can translate from:</label>
+              <FormLabel component="legend">Languages you can translate from:</FormLabel>
                   <Select
                       name="languageFrom"
                       multiple
@@ -118,9 +122,9 @@ const Register = (props) => {
                   </Select>
               </FormControl>
               </div>
-              <div id="ArrayTwo">
+              <div id="ArrayTwo" style={{ marginTop: '2rem' }}>
               <FormControl className="languageTo">
-              <label htmlFor="languageTo">Languages you can translate to:</label>
+              <FormLabel component="legend">Languages you can translate to:</FormLabel>
                   <Select
                       name="languageTo"
                       multiple
@@ -136,14 +140,22 @@ const Register = (props) => {
                   </Select>
               </FormControl>
               </div>
-            <div className="form-check">
-              <input id="copy" type="checkbox" class="form-check-input" name = "femaleTranslator" value={true} onChange={handleChange}/>
-              <label htmlFor="form-check-translator">I am a female translator!</label>
-           </div>
+              <div id="Female">
+              <FormControl component="fieldset" style={{ marginTop: '2rem' }}>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Switch value={femaleTranslator} onChange={handleChange} name="femaleTranslator" />}
+                      label="I am female translator!"
+                    />
+                  </FormGroup>
+                <FormHelperText>We need to know if you are a female translator for special 
+                  cases when a female translator requested for doctor's appointment and others.</FormHelperText>
+              </FormControl>
+              </div>
           </div>
           : null }
           </div>
-            <div className="form-group">
+            <div className="form-group" style={{ marginTop: '2rem' }}>
               <label htmlFor="timezone">
                 Time zone: </label>
                 <div className="ui-select">
