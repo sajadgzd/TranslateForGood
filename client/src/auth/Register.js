@@ -21,7 +21,7 @@ const Register = (props) => {
     languageFrom: [],
     languageTo: [],
     femaleTranslator: false,
-    timezone: "",
+    timezone: "Eastern",
     error: null,
   });
 
@@ -164,7 +164,7 @@ const Register = (props) => {
                 Time zone: </label>
                 <div className="ui-select">
                 <select name="timezone" className="form-control" value={timezone} onChange={handleChange}>
-                  <option value="Eastern"  >(GMT-05:00) Eastern Time</option>
+                  <option value="Eastern" >(GMT-05:00) Eastern Time</option>
                   <option value="Hawaii"  >(GMT-10:00) Hawaii Time</option>
                   <option value="Alaska"  >(GMT-09:00) Alaska Time</option>
                   <option value="Pacific"  >(GMT-08:00) Pacific Time</option>
