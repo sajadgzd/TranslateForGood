@@ -10,14 +10,38 @@ const useStyles = makeStyles((theme) => ({
     }
   })); 
   
-  export default function ActiveRequestList() {
-    // const getRequests = async() =>{
-    //   const reqs = await axios.get("/api/requests");
-    //   return(reqs.data);
-    // }
-    // let newRequestList = getRequests();
+export default function ActiveRequestList() {
+
+  const [data, setData] = useState({
+    // user: "",
+    // languageFrom: "",
+    // languageTo: "",
+    // femaleTranslatorBool: false,
+    // urgentTranslatorBool: false,
+    // documentProofReadingBool: false,
+    // isActive: true
+    requests: ""
+  });
+
+  const getRequests = async () => {
+    const reqs = await axios.get("/api/requests");
+    setData({ ...data, requests: reqs.data});
+  };
+
+  useEffect(() => {
+    getRequests();
+  }, []);
 
 
+  let list = data.requests;
+  if (typeof list === 'string'){
+    list = [];
+  }
+  const result = list.map(request => 
+    <Grid item key = {request._id}>
+          <ActiveRequestCard name ='Marina' createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo}></ActiveRequestCard>
+      </Grid>
+      )
 
     // // retrieve active requests every minute
     // const MINUTE_MS = 60000;
@@ -36,12 +60,7 @@ const useStyles = makeStyles((theme) => ({
         <div>
             <h1>Matching Active Requests:</h1>
             <Grid>
-              <Grid item>
-                  <ActiveRequestCard name ='Marina' createdAt='today' from = 'English' to='Russian'></ActiveRequestCard>
-              </Grid>
-              <Grid item>
-                  <ActiveRequestCard name ='Stanley' createdAt='today' from = 'English' to='Polish'></ActiveRequestCard>
-              </Grid>
+              {result}
             </Grid>
         </div>
         

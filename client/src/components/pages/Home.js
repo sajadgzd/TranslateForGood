@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     '& .MuiTextField-root': {
-      margin: theme.spacing(1), 
+      margin: theme.spacing(1),
       width: '25ch',
     },
   },

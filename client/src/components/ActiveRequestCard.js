@@ -11,7 +11,7 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,13 +33,13 @@ const useStyles = makeStyles((theme) => ({
 function ActiveRequestCard(props) {
   const classes = useStyles();
   const selectRequest = () => void 0;
-  const showAttachments = () => void 0;
+  const timeOfRequest = moment(props.createdAt).format('LLL');
 
   return (  
         <Card className={classes.root}>
             <div style={{ width: '100%' }}>
                 <Box display="flex" p={1} >
-                    <Box p={1} flexGrow={1}>
+                    <Box p={1} flexGrow={1}> 
                         <CardContent>
                             <Box display="flex" p={1}>
                                 
@@ -47,7 +47,7 @@ function ActiveRequestCard(props) {
                                     {props.from} to {props.to}
                                 </Box>
                                 <Box p={1}>
-                                    {props.createdAt}
+                                    {timeOfRequest}
                                 </Box>
                                 <Box p={1}>
                                     {props.name}
@@ -58,9 +58,9 @@ function ActiveRequestCard(props) {
                 
                     <Box p={1}>
                         <CardActions>
-                            <IconButton color="primary" aria-label="View attached documents" onClick={showAttachments}>
+                            {/* <IconButton color="primary" aria-label="View attached documents" onClick={showAttachments}>
                                 <AttachFileIcon />
-                            </IconButton>
+                            </IconButton> */}
                             <Button  variant="contained" color="primary" onClick={selectRequest}>Select</Button>
                         </CardActions>
                     </Box>
