@@ -61,6 +61,10 @@ const Register = (props) => {
   "Russian","Spanish","Tamil","Telugu","Thai","Turkish",
   "Ukrainian","Urdu","Vietnamese"];  
 
+  const handleChangeRadioButton = (event) => {
+    setData({ ...data, [event.target.name]: event.target.checked });
+  };
+  
   return (
     <div className="row">
       <div className="col-sm-2" />
@@ -144,7 +148,7 @@ const Register = (props) => {
               <FormControl component="fieldset" style={{ marginTop: '2rem' }}>
                   <FormGroup>
                     <FormControlLabel
-                      control={<Switch value={femaleTranslator} onChange={handleChange} name="femaleTranslator" />}
+                      control={<Switch checked={femaleTranslator} onChange={handleChangeRadioButton} name="femaleTranslator" />}
                       label="I am female translator!"
                     />
                   </FormGroup>
