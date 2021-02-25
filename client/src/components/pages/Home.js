@@ -273,7 +273,7 @@ const handleSubmitPreviousTranslator = async (e) => {
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
-              <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+              <DialogTitle id="alert-dialog-title">{"Successfully Submitted"}</DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   Your request is successfully submitted and we are working on it! We will notify you once your translator is found!
