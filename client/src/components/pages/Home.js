@@ -18,6 +18,12 @@ import Icon from '@material-ui/core/Icon';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import ActiveRequestList from '../ActiveRequestList';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 
 
@@ -66,7 +72,9 @@ const Home = (props) => {
     previousTranslatorInfo: "",
     materialFromInputError: false,
     materialToInputError: false,
-    isActive: true
+    isActive: true,
+    openDialog: false,
+    materialRadioInputError: false
   });
 
   const getUser = async () => {
@@ -95,10 +103,23 @@ const Home = (props) => {
   };
 
   const handleChangeRadioButton = (event) => {
-    setData({ ...data, [event.target.name]: event.target.value });
+    setData({ ...data, [event.target.name]: event.target.value, materialRadioInputError: false});
+
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, materialFromInputError, materialToInputError, isActive } = data;
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, 
+          previousTranslatorInfo, materialFromInputError, materialToInputError, isActive, openDialog, materialRadioInputError } = data;
+
+  const handleCloseDialog = () => {
+    setData({...data, 
+             languageFrom: "",
+             languageTo: "",
+             femaleTranslatorBool: false,
+             urgentTranslatorBool: false,
+             documentProofReadingBool: false,
+             previousTranslatorInfo: "",
+             openDialog: false})
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -111,8 +132,8 @@ const Home = (props) => {
         // return;
         setData({ ...data, materialFromInputError: true});
         return;
-      } else if (data.languageTo === ""){
-        console.log("TO language Field IS EMPTY")
+      } else if (data.languageTo === "" || data.languageFrom === data.languageTo){
+        console.log("TO language field is empty or identical to language from")
         // return;
         setData({ ...data, materialToInputError: true});
         return;
@@ -129,6 +150,8 @@ const Home = (props) => {
         // when successful, refresh page to home page
         props.history.push("/home");
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
+        setData({ ...data, openDialog: true});
+
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
 
@@ -144,6 +167,7 @@ const handleSubmitPreviousTranslator = async (e) => {
     setData({ ...data, error: null });
     if (data.previousTranslatorInfo === "") {
       console.log("previousTranslatorInfo radio IS EMPTY")
+      setData({ ...data, materialRadioInputError: true});
       // return;
 
       return;
@@ -160,6 +184,8 @@ const handleSubmitPreviousTranslator = async (e) => {
     // when successful, refresh page to home page
     props.history.push("/home");
     console.log("HERE IS THE DATA POSTED for SUBMIT PREVIOUS TRANSLATOR button:\t", data.previousTranslatorInfo)
+
+    setData({ ...data, openDialog: true});
   } catch (err) {
     setData({ ...data, error: err.response.data.error });
   }
@@ -254,6 +280,24 @@ const handleSubmitPreviousTranslator = async (e) => {
             >
               Submit
             </Button>
+            <Dialog
+              open={openDialog}
+              onClose={handleCloseDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{"Request Successfully Submitted!"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Your request is successfully submitted and we are working on it! We will notify you once your translator is found!
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDialog} color="primary" autoFocus>
+                  Ok
+                </Button>
+              </DialogActions>
+            </Dialog>
             </div>
           </form>
 
@@ -264,15 +308,18 @@ const handleSubmitPreviousTranslator = async (e) => {
           <ThemeProvider theme={theme}>
               <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} > Or Select a Previous Translator</Typography>
           </ThemeProvider>
-          <FormControl component="fieldset">
+          <FormControl component="fieldset" error={data.materialRadioInputError}>
             <FormLabel component="legend">Select your translator</FormLabel>
-              <RadioGroup aria-label="previousTranslatorInfo" name="previousTranslatorInfo" value={previousTranslatorInfo} defaultValue="SajadGmail" onChange={handleChangeRadioButton}>
+              <RadioGroup aria-label="previousTranslatorInfo" name="previousTranslatorInfo" value={previousTranslatorInfo} 
+                defaultValue="SajadGmail" onChange={handleChangeRadioButton}
+                >
                 <FormControlLabel value="SajadGmail" control={<Radio defaultValue/>} label="Sajad G. English to Farsi" />
                 <FormControlLabel value="EkaterinaGmail" control={<Radio />} label="Ekaterina A. English to Russian" />
                 <FormControlLabel value="NataliaGmail" control={<Radio />} label="Natalia H. English to Polish" />
                 {/* {Languages.map((option) => (
                   <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
                 ))} */}
+                <FormHelperText>{"Please select an option"}</FormHelperText>
               </RadioGroup>
           </FormControl>
           <div>
