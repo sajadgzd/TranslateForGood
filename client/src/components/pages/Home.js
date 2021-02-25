@@ -108,7 +108,14 @@ const Home = (props) => {
           previousTranslatorInfo, materialFromInputError, materialToInputError, isActive, openDialog } = data;
 
   const handleCloseDialog = () => {
-    setData({ ...data, openDialog: false})
+    setData({...data, 
+             languageFrom: "",
+             languageTo: "",
+             femaleTranslatorBool: false,
+             urgentTranslatorBool: false,
+             documentProofReadingBool: false,
+             previousTranslatorInfo: null,
+             openDialog: false})
   };
 
   const handleSubmit = async (e) => {
