@@ -18,6 +18,11 @@ import Icon from '@material-ui/core/Icon';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import ActiveRequestList from '../ActiveRequestList';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 
@@ -66,7 +71,8 @@ const Home = (props) => {
     previousTranslatorInfo: "",
     materialFromInputError: false,
     materialToInputError: false,
-    isActive: true
+    isActive: true,
+    openDialog: false,
   });
 
   const getUser = async () => {
@@ -98,7 +104,12 @@ const Home = (props) => {
     setData({ ...data, [event.target.name]: event.target.value });
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, materialFromInputError, materialToInputError, isActive } = data;
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, 
+          previousTranslatorInfo, materialFromInputError, materialToInputError, isActive, openDialog } = data;
+
+  const handleCloseDialog = () => {
+    setData({ ...data, openDialog: false})
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -129,6 +140,8 @@ const Home = (props) => {
         // when successful, refresh page to home page
         props.history.push("/home");
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
+        setData({ ...data, openDialog: true});
+
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
 
@@ -254,6 +267,24 @@ const handleSubmitPreviousTranslator = async (e) => {
             >
               Submit
             </Button>
+            <Dialog
+              open={openDialog}
+              onClose={handleCloseDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Your request is successfully submitted and we are working on it! We will notify you once your translator is found!
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDialog} color="primary" autoFocus>
+                  Ok
+                </Button>
+              </DialogActions>
+            </Dialog>
             </div>
           </form>
 
