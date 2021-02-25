@@ -23,6 +23,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 
 
@@ -73,6 +74,7 @@ const Home = (props) => {
     materialToInputError: false,
     isActive: true,
     openDialog: false,
+    materialRadioInputError: false
   });
 
   const getUser = async () => {
@@ -101,11 +103,12 @@ const Home = (props) => {
   };
 
   const handleChangeRadioButton = (event) => {
-    setData({ ...data, [event.target.name]: event.target.value });
+    setData({ ...data, [event.target.name]: event.target.value, materialRadioInputError: false});
+
   };
 
   const { user, languageFrom, languageTo, error, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, 
-          previousTranslatorInfo, materialFromInputError, materialToInputError, isActive, openDialog } = data;
+          previousTranslatorInfo, materialFromInputError, materialToInputError, isActive, openDialog, materialRadioInputError } = data;
 
   const handleCloseDialog = () => {
     setData({...data, 
@@ -164,6 +167,7 @@ const handleSubmitPreviousTranslator = async (e) => {
     setData({ ...data, error: null });
     if (data.previousTranslatorInfo === "") {
       console.log("previousTranslatorInfo radio IS EMPTY")
+      setData({ ...data, materialRadioInputError: true});
       // return;
 
       return;
@@ -304,15 +308,18 @@ const handleSubmitPreviousTranslator = async (e) => {
           <ThemeProvider theme={theme}>
               <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} > Or Select a Previous Translator</Typography>
           </ThemeProvider>
-          <FormControl component="fieldset">
+          <FormControl component="fieldset" error={data.materialRadioInputError}>
             <FormLabel component="legend">Select your translator</FormLabel>
-              <RadioGroup aria-label="previousTranslatorInfo" name="previousTranslatorInfo" value={previousTranslatorInfo} defaultValue="SajadGmail" onChange={handleChangeRadioButton}>
+              <RadioGroup aria-label="previousTranslatorInfo" name="previousTranslatorInfo" value={previousTranslatorInfo} 
+                defaultValue="SajadGmail" onChange={handleChangeRadioButton}
+                >
                 <FormControlLabel value="SajadGmail" control={<Radio defaultValue/>} label="Sajad G. English to Farsi" />
                 <FormControlLabel value="EkaterinaGmail" control={<Radio />} label="Ekaterina A. English to Russian" />
                 <FormControlLabel value="NataliaGmail" control={<Radio />} label="Natalia H. English to Polish" />
                 {/* {Languages.map((option) => (
                   <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
                 ))} */}
+                <FormHelperText>{"Please select an option"}</FormHelperText>
               </RadioGroup>
           </FormControl>
           <div>
