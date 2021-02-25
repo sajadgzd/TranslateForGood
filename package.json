@@ -20,15 +20,21 @@
   },
   "homepage": "https://github.com/sajadgzd/TranslateForGood#readme",
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@mdi/font": "^5.9.55",
+    "@mdi/js": "^5.9.55",
+    "@mdi/react": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
     "mongoose": "^5.11.15",
     "mongoose-unique-validator": "^2.0.3",
     "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {

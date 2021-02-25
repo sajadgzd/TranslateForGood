@@ -10,8 +10,8 @@ function Footer() {
           <div className='footer-link-items'>
             <h2>How it works</h2>
             <Link to='/'>About the app</Link>
-            <Link to='/'>Reviews</Link>
-            <Link to='/'>Frequently Asked Questions</Link>
+            {/* <Link to='/'>Reviews</Link>
+            <Link to='/'>Frequently Asked Questions</Link> */}
             <Link to='/'>Limitations</Link>
             
           </div>

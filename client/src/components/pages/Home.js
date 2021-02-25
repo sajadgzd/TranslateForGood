@@ -17,6 +17,9 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import ActiveRequestList from '../ActiveRequestList';
+
+
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -58,11 +61,12 @@ const Home = (props) => {
     languageTo: "",
     error: null,
     femaleTranslatorBool: false,
-    UrgentTranslatorBool: false,
-    DocumentProofReadingBool: false,
+    urgentTranslatorBool: false,
+    documentProofReadingBool: false,
     previousTranslatorInfo: "",
     materialFromInputError: false,
-    materialToInputError: false
+    materialToInputError: false,
+    isActive: true
   });
 
   const getUser = async () => {
@@ -71,7 +75,7 @@ const Home = (props) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    setData({ ...data, user: res.data});
+    setData({ ...data, user: res.data});/////res.data._id
   };
 
   useEffect(() => {
@@ -94,12 +98,13 @@ const Home = (props) => {
     setData({ ...data, [event.target.name]: event.target.value });
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, UrgentTranslatorBool, DocumentProofReadingBool, previousTranslatorInfo, materialFromInputError, materialToInputError } = data;
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, materialFromInputError, materialToInputError, isActive } = data;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setData({...data, user: user}); //////////res.data._id
       setData({ ...data, error: null });
       if (data.languageFrom === "") {
         console.log("FROM language Field IS EMPTY")
@@ -112,15 +117,15 @@ const Home = (props) => {
         setData({ ...data, materialToInputError: true});
         return;
       }
-        // await axios.post(
-        //   "/api/auth/register",
-        //   { user, languageFrom, languageTo, error},
-        //   {
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //   }
-        // );
+        await axios.post(
+          "/api/requests/new_request",
+          {  user, languageFrom, languageTo, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         // when successful, refresh page to home page
         props.history.push("/home");
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
@@ -227,11 +232,11 @@ const handleSubmitPreviousTranslator = async (e) => {
                   label="Female Translator"
                 />
                 <FormControlLabel
-                  control={<Checkbox checked={UrgentTranslatorBool} onChange={handleChangeCheckBox} name="UrgentTranslatorBool" />}
+                  control={<Checkbox checked={urgentTranslatorBool} onChange={handleChangeCheckBox} name="urgentTranslatorBool" />}
                   label="Urgent Translation"
                 />
                 <FormControlLabel
-                  control={<Checkbox checked={DocumentProofReadingBool} onChange={handleChangeCheckBox} name="DocumentProofReadingBool" />}
+                  control={<Checkbox checked={documentProofReadingBool} onChange={handleChangeCheckBox} name="documentProofReadingBool" />}
                   label="Document Proofreading"
                 />
               </FormGroup>
@@ -287,6 +292,11 @@ const handleSubmitPreviousTranslator = async (e) => {
       </Grid>
 
     </Grid>
+    
+    {// Only translators can see the list of active requests
+      user.languageFrom === undefined || user.languageFrom.length == 0 ?
+      <></>: <ActiveRequestList />
+    }
   </div>
 
   );

@@ -12,7 +12,6 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
-      // unique: true,
     },
     password: {
       type: String,
@@ -40,4 +39,5 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.plugin(uniqueValidator);
+// Mongoose automatically looks for the plural, lowercased version of your model name. So will be 'users'
 module.exports = mongoose.model("User", UserSchema);
