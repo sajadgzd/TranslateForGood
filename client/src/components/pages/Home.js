@@ -118,7 +118,7 @@ const Home = (props) => {
         return;
       }
         await axios.post(
-          "/api/requests/new_request",
+          "/api/requests/new",
           {  user, languageFrom, languageTo, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
           {
             headers: {
@@ -132,8 +132,8 @@ const Home = (props) => {
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
 
-      }
-
+      } 
+ 
 
   };
 

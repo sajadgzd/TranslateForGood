@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
-var uniqueValidator = require('mongoose-unique-validator');
+const Schema = mongoose.Schema;
+
 
 const RequestSchema = new mongoose.Schema(
   { 
-    user:{
-      type: String,
-      default: "",
+    author:{
+      type: Schema.Types.ObjectId, 
+      ref: 'User'
     },
     languageFrom: {
       type: String,
@@ -20,17 +21,14 @@ const RequestSchema = new mongoose.Schema(
     urgentTranslation: {
       type: Boolean,
       default: false,
-      // required: true,
     },
     femaleTranslator:{
       type: Boolean,
       default: false,
-      // required: true,
     },
     documentProofreading:{
       type: Boolean,
       default: false,
-      // required: true,
     },
     isActive:{
       type: Boolean,
@@ -40,5 +38,4 @@ const RequestSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-RequestSchema.plugin(uniqueValidator);
 module.exports = mongoose.model("Request", RequestSchema);

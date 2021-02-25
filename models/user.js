@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 var uniqueValidator = require('mongoose-unique-validator');
+const Schema = mongoose.Schema;
 
 const UserSchema = new mongoose.Schema(
   {
@@ -33,7 +34,11 @@ const UserSchema = new mongoose.Schema(
     timezone:{
       type: String,
       requred: true,
-    }
+    },
+    requests:[{
+      type: Schema.Types.ObjectId, // filled with the unique IDs of requests
+      ref: "Request"
+    }]
   },
   { timestamps: true }
 );

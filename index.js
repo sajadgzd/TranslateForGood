@@ -23,9 +23,18 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+const UserControls = require("./routes/users.js")
+const RequestControls = require("./routes/requests.js")
 app.use("/api/auth", require("./routes/auth"));
-app.use("/api/requests", require("./routes/new_request"));
-app.use("/api/users", require("./routes/users"));
+
+app.get("/api/requests", RequestControls.getAll);
+app.post("/api/requests/new", RequestControls.create);
+app.get("/api/requests/active", RequestControls.getActive);
+
+app.get("/api/users", UserControls.getAll);
+app.get("/api/users/:id", UserControls.getById);
+app.get("/api/users/:id/requests", UserControls.getUserRequests);
+
 
 // Serve static assets (build folder) if in production
 if (process.env.NODE_ENV === 'production') {
