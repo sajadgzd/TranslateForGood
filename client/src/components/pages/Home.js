@@ -132,8 +132,8 @@ const Home = (props) => {
         // return;
         setData({ ...data, materialFromInputError: true});
         return;
-      } else if (data.languageTo === ""){
-        console.log("TO language Field IS EMPTY")
+      } else if (data.languageTo === "" || data.languageFrom === data.languageTo){
+        console.log("TO language field is empty or identical to language from")
         // return;
         setData({ ...data, materialToInputError: true});
         return;
