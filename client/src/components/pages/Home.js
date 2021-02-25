@@ -114,7 +114,7 @@ const Home = (props) => {
              femaleTranslatorBool: false,
              urgentTranslatorBool: false,
              documentProofReadingBool: false,
-             previousTranslatorInfo: null,
+             previousTranslatorInfo: "",
              openDialog: false})
   };
 
@@ -180,6 +180,8 @@ const handleSubmitPreviousTranslator = async (e) => {
     // when successful, refresh page to home page
     props.history.push("/home");
     console.log("HERE IS THE DATA POSTED for SUBMIT PREVIOUS TRANSLATOR button:\t", data.previousTranslatorInfo)
+
+    setData({ ...data, openDialog: true});
   } catch (err) {
     setData({ ...data, error: err.response.data.error });
   }
@@ -280,7 +282,7 @@ const handleSubmitPreviousTranslator = async (e) => {
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
-              <DialogTitle id="alert-dialog-title">{"Successfully Submitted"}</DialogTitle>
+              <DialogTitle id="alert-dialog-title">{"Request Successfully Submitted!"}</DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   Your request is successfully submitted and we are working on it! We will notify you once your translator is found!
