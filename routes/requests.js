@@ -11,7 +11,6 @@ let RequestController ={
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
-
   },
 
   getAll: async (req, res) => {
@@ -21,7 +20,6 @@ let RequestController ={
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
-
   },
 
   getActive: async (req, res) => {
@@ -48,10 +46,11 @@ let RequestController ={
         isActive: isActive
       });
       await request.save();
-      // let user = await (await User.findOne({_id: '603466948aaa26413c3fb636'})).exec();
-      // console.log(user);
-      //user.requests.push(request);
-      //await user.save();
+
+      // update user's requests array
+      let updatedUser = await User.findOne({_id: user._id});
+      updatedUser.requests.push(request);
+      await updatedUser.save();
 
       return res.status(201).json({ message: "New request created successfully!" });
     } catch (err) {

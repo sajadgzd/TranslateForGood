@@ -83,7 +83,7 @@ const Home = (props) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    setData({ ...data, user: res.data});/////res.data._id
+    setData({ ...data, user: res.data});
   };
 
   useEffect(() => {
