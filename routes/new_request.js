@@ -3,16 +3,17 @@ const Request = require("../models/request");
 
 // Register new request
 router.post("/new_request", async (req, res) => {
-  const { languageFrom, languageTo, urgentTranslation, femaleTranslator, documentProofreading, isActive } = req.body;
+  const { user, languageFrom, languageTo, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool,previousTranslatorInfo, isActive } = req.body;
+
   try {
     let request = new Request({
-
-        languageFrom, 
-        languageTo,
-        urgentTranslation, 
-        femaleTranslator, 
-        documentProofreading,
-        isActive
+      user: user,
+      languageFrom: languageFrom, 
+      languageTo: languageTo,
+      urgentTranslation: urgentTranslatorBool, 
+      femaleTranslator: femaleTranslatorBool, 
+      documentProofreading: documentProofReadingBool,
+      isActive: isActive
     });
     await request.save();
     return res.status(201).json({ message: "New request created successfully!" });

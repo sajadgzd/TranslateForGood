@@ -20,6 +20,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import ActiveRequestList from '../ActiveRequestList';
 
 
+
 // material-ui styles
 const theme = createMuiTheme();
 theme.typography.h3 = {
@@ -74,7 +75,7 @@ const Home = (props) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    setData({ ...data, user: res.data});
+    setData({ ...data, user: res.data});/////res.data._id
   };
 
   useEffect(() => {
@@ -103,6 +104,7 @@ const Home = (props) => {
     e.preventDefault();
 
     try {
+      setData({...data, user: user}); //////////res.data._id
       setData({ ...data, error: null });
       if (data.languageFrom === "") {
         console.log("FROM language Field IS EMPTY")
@@ -117,7 +119,7 @@ const Home = (props) => {
       }
         await axios.post(
           "/api/requests/new_request",
-          { user, languageFrom, languageTo, urgentTranslatorBool, femaleTranslatorBool, documentProofReadingBool, isActive },
+          {  user, languageFrom, languageTo, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
           {
             headers: {
               "Content-Type": "application/json",
@@ -290,7 +292,11 @@ const handleSubmitPreviousTranslator = async (e) => {
       </Grid>
 
     </Grid>
-    <ActiveRequestList />
+    
+    {// Only translators can see the list of active requests
+      user.languageFrom === undefined || user.languageFrom.length == 0 ?
+      <></>: <ActiveRequestList />
+    }
   </div>
 
   );
