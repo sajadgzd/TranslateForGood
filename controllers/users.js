@@ -23,24 +23,17 @@ let UserController = {
     }
   },
 
-  // get all existing users
-  getTest: async (req, res) => {
-    try {
-      let allUsers = await User.find({femaleTranslator: false});
-      res.json(allUsers);
-    } catch (error) {
-      return res.status(400).json({ error: err.message });
-    }
-  },
   // given user's id get all the requests they created
+  // actually returns the whole user object with list of requests objects.
+  // to get requests just do .request on the result of this query
   getUserRequests: async (req, res) => {
     try {
-      let requests = await User.findOne({_id: req.params.userId}).populate("requests");
+      let requests = await User.findOne({_id: req.params.id}).populate("requests"); 
       res.json(requests);
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
-  }
+  },
 }
 
 module.exports = UserController; 

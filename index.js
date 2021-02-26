@@ -28,26 +28,26 @@ const UserControls = require("./controllers/users");
 const RequestControls = require("./controllers/requests");
 const AuthControls = require("./controllers/auth");
 
+
+// Order matters here (https://stackoverflow.com/questions/51806260/express-router-order-of-request-executions-state-params-vs-state-absolute)
 app.post("/api/auth/register", AuthControls.register);
 app.post("/api/auth/login", AuthControls.login);
 app.get("/api/auth", requireLogin, AuthControls.current);
 
-app.get("/api/requests", RequestControls.getAll);
-
-app.get("/api/requests/:id", RequestControls.getById);////
-app.get("/api/requests/active", RequestControls.getActive);////
-
 app.post("/api/requests/new", RequestControls.create);
+app.get("/api/requests/active", RequestControls.getActive);
+app.get("/api/requests/all", RequestControls.getAll);
+app.get("/api/requests/:id", RequestControls.getRequestById);
 
-app.get("/api/users", UserControls.getAll);
-app.get("/api/users/test", UserControls.getTest);
-app.get("/api/users/:id", UserControls.getById);
 app.get("/api/users/:id/requests", UserControls.getUserRequests);
+app.get("/api/users/:id/user", UserControls.getById);
+app.get("/api/users/all", UserControls.getAll);
+
 
 
 // Serve static assets (build folder) if in production
 if (process.env.NODE_ENV === 'production') {
-  // Set static folder
+  // Set static folder 
   app.use(express.static('client/build'));
 // get anything, load index.html file
   app.get('*', (req, res) => {

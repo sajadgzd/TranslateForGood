@@ -28,7 +28,7 @@ export default function ActiveRequestList() {
           femaleTranslator = {request.femaleTranslator} 
           documentProofreading = {request.documentProofreading} 
           urgentTranslation= {request.urgentTranslation} 
-          name ={request.author} 
+          name ={request.author ? request.author.name : request.author} 
           createdAt= {request.createdAt} 
           from = {request.languageFrom} 
           to={request.languageTo}>
@@ -45,14 +45,14 @@ export default function ActiveRequestList() {
     }
     result = list.map(request => 
       <Grid item xs={3} item key = {request._id}>
-          <ActiveRequestCard name ={request.author} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo}></ActiveRequestCard>
+          <ActiveRequestCard name ={request.author ? request.author.name : request.author} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo}></ActiveRequestCard>
       </Grid>
       )
     setState({});
   }
 
   const getRequests = async () => {
-    const reqs = await axios.get("/api/requests");
+    const reqs = await axios.get("/api/requests/active");
     setRequest(reqs.data);
   };
  

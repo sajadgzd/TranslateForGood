@@ -1,12 +1,14 @@
 const Request = require("../models/request");
-const User = require("../models/user")
+const User = require("../models/user");
 
 
 let RequestController = {
-  getById: async (req, res) => {
+
+  getRequestById: async (req, res) => {
     try {
-      let request = await Request.find({_id: req.params.requestsId});
-      res.json(request);
+      let found = await Request.findOne({_id: req.params.id});
+      console.log(found);
+      res.json(found);
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
@@ -14,7 +16,7 @@ let RequestController = {
 
   getActive: async (req, res) => {
     try {
-      let allRequests = await Request.find({femaleTranslator: true});
+      let allRequests = await Request.find({isActive: true}).populate('author');
       res.json(allRequests);
     } catch (error) {
       return res.status(400).json({ error: err.message });
@@ -23,7 +25,7 @@ let RequestController = {
 
   getAll: async (req, res) => {
     try {
-      let allRequests = await Request.find({femaleTranslator: true});
+      let allRequests = await Request.find();
       res.json(allRequests);
     } catch (error) {
       return res.status(400).json({ error: err.message });
