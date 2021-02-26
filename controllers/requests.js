@@ -1,9 +1,8 @@
-const router = require("express").Router();
 const Request = require("../models/request");
 const User = require("../models/user")
 
 
-let RequestController ={
+let RequestController = {
   getById: async (req, res) => {
     try {
       let request = await Request.find({_id: req.params.requestsId});
@@ -13,24 +12,24 @@ let RequestController ={
     }
   },
 
-  getAll: async (req, res) => {
+  getActive: async (req, res) => {
     try {
-      let allRequests = await Request.find();
+      let allRequests = await Request.find({femaleTranslator: true});
       res.json(allRequests);
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
   },
 
-  getActive: async (req, res) => {
+  getAll: async (req, res) => {
     try {
-      let active = await Request.find({isActive: true});
-      res.json(active);
+      let allRequests = await Request.find({femaleTranslator: true});
+      res.json(allRequests);
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
   },
-
+ 
   create: async(req, res) => {
     const { user, languageFrom, languageTo, femaleTranslatorBool, 
             urgentTranslatorBool, documentProofReadingBool,

@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const cors = require("cors");
 const path = require('path')
+const { requireLogin } = require("./middleware/auth");
 
 
 const PORT = process.env.PORT || 5000;
@@ -23,15 +24,23 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-const UserControls = require("./routes/users.js")
-const RequestControls = require("./routes/requests.js")
-app.use("/api/auth", require("./routes/auth"));
+const UserControls = require("./controllers/users");
+const RequestControls = require("./controllers/requests");
+const AuthControls = require("./controllers/auth");
+
+app.post("/api/auth/register", AuthControls.register);
+app.post("/api/auth/login", AuthControls.login);
+app.get("/api/auth", requireLogin, AuthControls.current);
 
 app.get("/api/requests", RequestControls.getAll);
+
+app.get("/api/requests/:id", RequestControls.getById);////
+app.get("/api/requests/active", RequestControls.getActive);////
+
 app.post("/api/requests/new", RequestControls.create);
-app.get("/api/requests/active", RequestControls.getActive);
 
 app.get("/api/users", UserControls.getAll);
+app.get("/api/users/test", UserControls.getTest);
 app.get("/api/users/:id", UserControls.getById);
 app.get("/api/users/:id/requests", UserControls.getUserRequests);
 

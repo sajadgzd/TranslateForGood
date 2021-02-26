@@ -104,7 +104,7 @@ const Register = (props) => {
               />
             </div>
             <div className="form-check">
-              <input id="copy" type="checkbox" class="form-check-input" onClick={onClick}/>
+              <input id="copy" type="checkbox" className="form-check-input" onClick={onClick}/>
               <label htmlFor="form-check-translator">I want to register as a translator!</label>
               { showTranslator ?
             <div id="translator">

@@ -52,17 +52,16 @@ export default function ActiveRequestList() {
   }
 
   const getRequests = async () => {
-    const reqs = await axios.get("/api/requests/active");
+    const reqs = await axios.get("/api/requests");
     setRequest(reqs.data);
   };
-
+ 
   useEffect(() => {
     getRequests(); 
   }, []);
 
 
-  // getUserName("6035d317540e3934a4f65114");
-    const classes = useStyles();
+    const classes = useStyles(); 
     return (
         <div style={{ marginTop: 100 }}>
           <Grid container alignItems="center" spacing={3} >
