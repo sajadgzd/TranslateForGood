@@ -6,7 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
+import PersonPinIcon from '@material-ui/icons/PersonPin';
 import EmailIcon from '@material-ui/icons/Email';
 import TranslateIcon from '@material-ui/icons/Translate';
 import CheckIcon from '@material-ui/icons/Check';
@@ -39,28 +39,17 @@ const ProfileCard = () => {
   
   return (
     <div >
-      <Grid container spacing={10} style={{
-          marginTop:50,
-          marginLeft:200,
-          marginBottom:50,
-          display: "center"
-        }}>
-        <Grid item xs={4} style={{
+      <Grid container spacing={5} direction="column" alignItems="center" justify="center">
+        <Grid item xs={10} style={{
           display: "center",
-          marginTop:10
+          marginTop:20,
+          marginBottom:20,
         }}>
         <Card
             style={{
-              maxWidth: 400,
-              maxHeight:1000,
+              maxWidth: 700,
+              maxHeight: 1000,
             }}>
-              <div
-                style={{
-                  display: "center",
-                  alignItem: "center",
-                  justifyContent: "center"
-                }}
-              >
               <CardMedia
                 style={{
                   maxWidth: "250px",
@@ -71,13 +60,12 @@ const ProfileCard = () => {
                 component="img"
                 image="images/default_photo.png"
               />
-              </div>
               <CardContent>
                 <List>
                   <ListItem>
                     <ListItemAvatar>
                       <Avatar>
-                        <ImageIcon />
+                        <PersonPinIcon />
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText primary="NAME" secondary= {user && user.name} />
