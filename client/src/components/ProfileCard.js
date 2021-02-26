@@ -36,14 +36,14 @@ const ProfileCard = () => {
   useEffect(() => {
     getUser();
   }, []);
-
-
+  
   return (
     <div >
-      <Grid container spacing={3} style={{
+      <Grid container spacing={12} style={{
           marginTop:50,
           marginLeft:200,
-          marginBottom:50
+          marginBottom:50,
+          display: "center"
         }}>
         <Grid item xs={4} style={{
           display: "center",
@@ -94,33 +94,37 @@ const ProfileCard = () => {
                   <Divider variant="inset" component="li" />
                   { user && user.languageFrom != "" &&
                   <Box>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <GTranslateIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="LANGUAGE FROM" secondary={user && user.languageFrom} />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <TranslateIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="LANGUAGE TO" secondary={user && user.languageTo}/>
-                  </ListItem>
+                    <ListItem>
+                        <ListItemAvatar>
+                        <Avatar>
+                            <GTranslateIcon />
+                        </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary="LANGUAGE FROM" secondary={user && user.languageFrom} />
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                    <ListItem>
+                        <ListItemAvatar>
+                        <Avatar>
+                            <TranslateIcon />
+                        </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary="LANGUAGE TO" secondary={user && user.languageTo}/>
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
                   </Box>
                   }
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <CheckIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="FEMALE TRANSLATOR" />
-                  </ListItem>
-                  <Divider variant="inset" component="li" />
+                   { user && user.languageFrom != "" &&
+                  <Box>
+                    <ListItem>
+                        <ListItemAvatar>
+                        <Avatar>
+                            <CheckIcon />
+                        </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary="FEMALE TRANSLATOR" />
+                    </ListItem>
+                    </Box>}
                 </List>
               </CardContent>
             <CardActions>
@@ -129,12 +133,6 @@ const ProfileCard = () => {
             </Button>
           </CardActions>
         </Card>
-        </Grid>
-        <Grid item xs={8} >
-        { (user && user.languageFrom != "")
-          ? <div><Box> Your past translations -- will be a component -- </Box></div>
-          : <div><Box> Your past requests -- will be a component -- </Box></div>
-        }
         </Grid>
       </Grid>
     </div>
