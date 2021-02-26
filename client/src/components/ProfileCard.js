@@ -39,7 +39,7 @@ const ProfileCard = () => {
   
   return (
     <div >
-      <Grid container spacing={12} style={{
+      <Grid container spacing={10} style={{
           marginTop:50,
           marginLeft:200,
           marginBottom:50,
@@ -73,7 +73,7 @@ const ProfileCard = () => {
               />
               </div>
               <CardContent>
-                <List >
+                <List>
                   <ListItem>
                     <ListItemAvatar>
                       <Avatar>
@@ -81,7 +81,7 @@ const ProfileCard = () => {
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText primary="NAME" secondary= {user && user.name} />
-                  </ListItem>
+                  </ListItem >
                   <Divider variant="inset" component="li" />
                   <ListItem>
                     <ListItemAvatar>
@@ -94,27 +94,42 @@ const ProfileCard = () => {
                   <Divider variant="inset" component="li" />
                   { user && user.languageFrom != "" &&
                   <Box>
-                    <ListItem>
+                    <ListItem component="div">
                         <ListItemAvatar>
                         <Avatar>
                             <GTranslateIcon />
                         </Avatar>
                         </ListItemAvatar>
-                        <ListItemText primary="LANGUAGE FROM" secondary={user && user.languageFrom} />
+                        <ListItemText primary="LANGUAGE FROM" secondary={
+                                user && user.languageFrom.map(
+                                        (language) => 
+                                            <li key={language}>
+                                                {language}
+                                            </li>
+                                    )
+                            } />
                     </ListItem>
                     <Divider variant="inset" component="li" />
-                    <ListItem>
-                        <ListItemAvatar>
+                    <ListItem component="div">
+                        <ListItemAvatar >
                         <Avatar>
                             <TranslateIcon />
                         </Avatar>
                         </ListItemAvatar>
-                        <ListItemText primary="LANGUAGE TO" secondary={user && user.languageTo}/>
+                        <ListItemText
+                            primary="LANGUAGE TO" secondary={
+                                user && user.languageTo.map(
+                                        (language) => 
+                                            <li key={language}>
+                                                {language}
+                                            </li>
+                                    )
+                            }/>
                     </ListItem>
                     <Divider variant="inset" component="li" />
                   </Box>
                   }
-                   { user && user.languageFrom != "" &&
+                   { user && user.femaleTranslator == true &&
                   <Box>
                     <ListItem>
                         <ListItemAvatar>
@@ -122,7 +137,7 @@ const ProfileCard = () => {
                             <CheckIcon />
                         </Avatar>
                         </ListItemAvatar>
-                        <ListItemText primary="FEMALE TRANSLATOR" />
+                        <ListItemText primary="FEMALE TRANSLATOR" secondary="You agree to be matched with users who wish to work with a female translator"/>
                     </ListItem>
                     </Box>}
                 </List>
