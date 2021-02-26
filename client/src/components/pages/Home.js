@@ -83,7 +83,7 @@ const Home = (props) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    setData({ ...data, user: res.data});/////res.data._id
+    setData({ ...data, user: res.data});
   };
 
   useEffect(() => {
@@ -139,7 +139,7 @@ const Home = (props) => {
         return;
       }
         await axios.post(
-          "/api/requests/new_request",
+          "/api/requests/new",
           {  user, languageFrom, languageTo, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
           {
             headers: {
@@ -155,8 +155,8 @@ const Home = (props) => {
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
 
-      }
-
+      } 
+ 
 
   };
 

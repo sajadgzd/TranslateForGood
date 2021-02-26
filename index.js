@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const cors = require("cors");
 const path = require('path')
+const { requireLogin } = require("./middleware/auth");
 
 
 const PORT = process.env.PORT || 5000;
@@ -23,13 +24,30 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/requests", require("./routes/new_request"));
-app.use("/api/users", require("./routes/users"));
+const UserControls = require("./controllers/users");
+const RequestControls = require("./controllers/requests");
+const AuthControls = require("./controllers/auth");
+
+
+// Order matters here (https://stackoverflow.com/questions/51806260/express-router-order-of-request-executions-state-params-vs-state-absolute)
+app.post("/api/auth/register", AuthControls.register);
+app.post("/api/auth/login", AuthControls.login);
+app.get("/api/auth", requireLogin, AuthControls.current);
+
+app.post("/api/requests/new", RequestControls.create);
+app.get("/api/requests/active", RequestControls.getActive);
+app.get("/api/requests/all", RequestControls.getAll);
+app.get("/api/requests/:id", RequestControls.getRequestById);
+
+app.get("/api/users/:id/requests", UserControls.getUserRequests);
+app.get("/api/users/:id/user", UserControls.getById);
+app.get("/api/users/all", UserControls.getAll);
+
+
 
 // Serve static assets (build folder) if in production
 if (process.env.NODE_ENV === 'production') {
-  // Set static folder
+  // Set static folder 
   app.use(express.static('client/build'));
 // get anything, load index.html file
   app.get('*', (req, res) => {
