@@ -1,5 +1,16 @@
 const User = require("../models/user");
+const multer = require("multer")
 
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, './client/public/oploads')
+  },
+  filename: (req, file, callback) => {
+    callback(null, file.originalname);
+  }
+})
+
+const upload = multer({storage: storage});
 
 let UserController = { 
 
@@ -34,6 +45,21 @@ let UserController = {
       return res.status(400).json({ error: err.message });
     }
   },
+
+  // upload user image 
+  uploadImage: async (req, res) => (dispatch) => {
+    dispatch({ type: LOADING_USER});
+    const newImage = req.file.originalname;
+    const user = req.body;
+    try {
+      User.findByIdAndUpdate({_id: user._id}, newImage)
+      res.send({type: 'PUT'});
+
+      return res.status(201).json({ message: "Image updated successfully!" });
+    } catch (error) {
+      return res.status(400).json({ error: err.message });
+    }
+  }
 }
 
 module.exports = UserController; 
