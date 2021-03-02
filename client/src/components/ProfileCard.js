@@ -26,6 +26,9 @@ import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import GTranslateIcon from '@material-ui/icons/GTranslate';
 
+import EditProfileCard from './EditProfileCard';
+
+
 const ProfileCard = (props) => {
 
   const [user, setUser] = useState(null);
@@ -50,9 +53,8 @@ const ProfileCard = (props) => {
       // send the image to the server
       const formData = new FormData();
       formData.append("image", image, image.name);
-      await axios.put("/api/users/uploadimage", {user, formData});
     //   props.history.push("/profile");
-    //   console.log("clicked")
+      console.log("clicked")
   }
 
   const handleEditPicture = () => {
@@ -60,123 +62,141 @@ const ProfileCard = (props) => {
       fileInput.click();
   }
 
+  const handleUpdate = () => {
+
+  }
+
+  const [editMode, setEditMode] = useState(false);
+
+  const changeToFalse = () => {
+      setEditMode(false);
+  }
+
   return (
     <div >
-      <Grid container spacing={5} direction="column" alignItems="center" justify="center">
-        <Grid item xs={10} style={{
-          display: "center",
-          marginTop:20,
-          marginBottom:20,
-        }}>
-        <Card
-            style={{
-              maxWidth: 700,
-              maxHeight: 1000,
-            }}>
+          {editMode ? (
             <Box>
-               <CardMedia
+                <EditProfileCard changeToFalse={changeToFalse} user={user}/>
+            </Box>
+            ) : (
+            <Grid container spacing={10} direction="column" alignItems="center" justify="center">
+                <Box>
+                <Grid item xs={10} style={{
+                display: "center",
+                marginTop:50,
+                marginBottom:50,
+                }}>
+                <Card
                     style={{
-                        maxWidth: "250px",
-                        maxHeight: "250px",
-                        marginTop:"15px",
-                        borderRadius:"50%",
-                        textAlign: "center",
-                        position: "relative",
-                    }}
-                    component="img"
-                    image={user && user.image}
-                />
-                <Input 
-                    type="file" 
-                    id="imageInput"
-                    placeholder="Upload a picture" 
-                    onChange={handleImageChange} 
-                    hidden="hidden">
-                </Input>
-                <Tooltip title="Edit profile picture" placement="top">
-                    <IconButton onClick={handleEditPicture}>
-                        <EditIcon color="primary"/>
-                    </IconButton>
-                </Tooltip>
-                </Box>
-              <CardContent>
-                <List>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <PersonPinIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="NAME" secondary= {user && user.name} />
-                  </ListItem >
-                  <Divider variant="inset" component="li" />
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <EmailIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="EMAIL" secondary={user && user.email} />
-                  </ListItem>
-                  <Divider variant="inset" component="li" />
-                  { user && user.languageFrom != "" &&
-                  <Box>
-                    <ListItem component="div">
-                        <ListItemAvatar>
-                        <Avatar>
-                            <GTranslateIcon />
-                        </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary="LANGUAGE FROM" secondary={
-                                user && user.languageFrom.map(
-                                        (language) => 
-                                            <li key={language}>
-                                                {language}
-                                            </li>
-                                    )
-                            } />
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
-                    <ListItem component="div">
-                        <ListItemAvatar >
-                        <Avatar>
-                            <TranslateIcon />
-                        </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary="LANGUAGE TO" secondary={
-                                user && user.languageTo.map(
-                                        (language) => 
-                                            <li key={language}>
-                                                {language}
-                                            </li>
-                                    )
-                            }/>
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
-                  </Box>
-                  }
-                   { user && user.femaleTranslator == true &&
-                  <Box>
-                    <ListItem>
-                        <ListItemAvatar>
-                        <Avatar>
-                            <CheckIcon />
-                        </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary="FEMALE TRANSLATOR" secondary="You agree to be matched with users who wish to work with a female translator"/>
-                    </ListItem>
-                    </Box>}
-                </List>
-              </CardContent>
-            <CardActions>
-            <Button size="large" color="primary">
-              Update
-            </Button>
-          </CardActions>
-        </Card>
-        </Grid>
-      </Grid>
+                    maxWidth: 700,
+                    maxHeight: 1000,
+                    }}>
+                    <Box>
+                    <CardMedia
+                            style={{
+                                maxWidth: "250px",
+                                maxHeight: "250px",
+                                marginTop:"15px",
+                                borderRadius:"50%",
+                                textAlign: "center",
+                                position: "relative",
+                            }}
+                            component="img"
+                            image={user && user.image}
+                        />
+                        <Input 
+                            type="file" 
+                            id="imageInput"
+                            placeholder="Upload a picture" 
+                            onChange={handleImageChange} 
+                            hidden="hidden">
+                        </Input>
+                        <Tooltip title="Edit profile picture" placement="top">
+                            <IconButton onClick={handleEditPicture}>
+                                <EditIcon color="primary"/>
+                            </IconButton>
+                        </Tooltip>
+                        </Box>
+                    <CardContent>
+                        <List>
+                        <ListItem>
+                            <ListItemAvatar>
+                            <Avatar>
+                                <PersonPinIcon />
+                            </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="NAME" secondary= {user && user.name} />
+                        </ListItem >
+                        <Divider variant="inset" component="li" />
+                        <ListItem>
+                            <ListItemAvatar>
+                            <Avatar>
+                                <EmailIcon />
+                            </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="EMAIL" secondary={user && user.email} />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        { user && user.languageFrom != "" &&
+                        <Box>
+                            <ListItem component="div">
+                                <ListItemAvatar>
+                                <Avatar>
+                                    <GTranslateIcon />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary="LANGUAGE FROM" secondary={
+                                        user && user.languageFrom.map(
+                                                (language) => 
+                                                    <li key={language}>
+                                                        {language}
+                                                    </li>
+                                            )
+                                    } />
+                            </ListItem>
+                            <Divider variant="inset" component="li" />
+                            <ListItem component="div">
+                                <ListItemAvatar >
+                                <Avatar>
+                                    <TranslateIcon />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="LANGUAGE TO" secondary={
+                                        user && user.languageTo.map(
+                                                (language) => 
+                                                    <li key={language}>
+                                                        {language}
+                                                    </li>
+                                            )
+                                    }/>
+                            </ListItem>
+                            <Divider variant="inset" component="li" />
+                        </Box>
+                        }
+                        { user && user.femaleTranslator == true &&
+                        <Box>
+                            <ListItem>
+                                <ListItemAvatar>
+                                <Avatar>
+                                    <CheckIcon />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary="FEMALE TRANSLATOR" secondary="You agree to be matched with users who wish to work with a female translator"/>
+                            </ListItem>
+                            </Box>}
+                        </List>
+                    </CardContent>
+                    <CardActions>
+                    <Button size="large" color="primary" onClick={() => setEditMode(true)}>
+                    Update
+                    </Button>
+                </CardActions>
+                </Card>
+                </Grid>
+            </Box>
+          </Grid>
+        )}
     </div>
   );
 }

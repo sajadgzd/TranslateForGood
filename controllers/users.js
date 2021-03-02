@@ -47,19 +47,19 @@ let UserController = {
   },
 
   // upload user image 
-  uploadImage: async (req, res) => (dispatch) => {
-    dispatch({ type: LOADING_USER});
-    const newImage = req.file.originalname;
-    const user = req.body;
-    try {
-      User.findByIdAndUpdate({_id: user._id}, newImage)
-      res.send({type: 'PUT'});
+  // uploadImage: async (req, res) => (dispatch) => {
+  //   dispatch({ type: LOADING_USER});
+  //   const newImage = req.file.originalname;
+  //   const user = req.body;
+  //   try {
+  //     User.findByIdAndUpdate({_id: user._id}, newImage)
+  //     res.send({type: 'PUT'});
 
-      return res.status(201).json({ message: "Image updated successfully!" });
-    } catch (error) {
-      return res.status(400).json({ error: err.message });
-    }
-  }
+  //     return res.status(201).json({ message: "Image updated successfully!" });
+  //   } catch (error) {
+  //     return res.status(400).json({ error: err.message });
+  //   }
+  // }
 }
 
 module.exports = UserController; 
