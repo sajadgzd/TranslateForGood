@@ -50,53 +50,63 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
 const EditProfileCard = ({changeToFalse, user}) => {
 
     const [data, setData] = useState({
+        user: user,
         name: (user && user.name),
         email: (user && user.email),
-        password: "",
         languageFrom: (user && user.languageFrom),
         languageTo: (user && user.languageTo),
         femaleTranslator: (user && user.femaleTranslator),
         timezone: (user && user.timezone),
         error: null,
-      });
+    });
     
-      const [showTranslator, setShowTranslator] = useState(false)
-      const onClickEditLanguages = () => setShowTranslator(true)
-      const onClicStopBeingTranslator = () => setShowTranslator(false)
-      const onClickBecomeTranslator = () => setShowTranslator(!showTranslator)
-    
-      const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone, error } = data;
-    
-      const handleChange = (e) => {
+    const [showTranslator, setShowTranslator] = useState(false)
+
+    const onClickEditLanguages = () => setShowTranslator(true)
+    const onClickBecomeTranslator = () => setShowTranslator(true)
+    const onClickStopBeingTranslator = () => { 
+        setShowTranslator(false);
+        setData({ ...data, languageFrom: "", languageTo: "", femaleTranslator:false});
+    }
+
+    const { name, email, languageFrom, languageTo, femaleTranslator, timezone, error } = data;
+
+    const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
-      };
-    
-      const handleUpdate = async (e) => {
-        console.log("clicked");
-        // e.preventDefault();
-        // try {
-        //   setData({ ...data, error: null });
-        //   await axios.post(
-        //     "/api/auth/register",
-        //     { name, email, password, languageFrom, languageTo, femaleTranslator, timezone },
-        //     {
-        //       headers: {
-        //         "Content-Type": "application/json",
-        //       },
-        //     }
-        //   );
-        // } catch (err) {
-        //   setData({ ...data, error: err.response.data.error });
-        // }
-      };
-    
+    };
+
     const handleChangeRadioButton = (event) => {
         setData({ ...data, [event.target.name]: event.target.checked });
-      };
+    };
+
+    const handleUpdate = async (e) => {
+        // console.log("clicked");
+        console.log("HERE IS THE DATA POSTED for UPDATE PROFILE:\t",data)
+        e.preventDefault();
+        try {
+            // setData({ ...data, error: null });
+            // if(!showTranslator) {
+            //     setData({ ...data, languageFrom: "", languageTo: "", femaleTranslator:false});
+            //     console.log("NOT a translator ");
+            // } 
+            setData({ ...data, error: null });
+            await axios.put(
+                "/api/users/edit",
+                { user, name, email, languageFrom, languageTo, femaleTranslator, timezone },
+                {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                }
+            );
+            // changeToFalse();
+        } catch (err) {
+            setData({ ...data, error: err.response.data.error });
+        }
+    };
 
     const classes = useStyles();
 
@@ -108,6 +118,7 @@ const EditProfileCard = ({changeToFalse, user}) => {
                                             <Select
                                                 name="languageFrom"
                                                 multiple
+                                                displayEmpty={true}
                                                 value={languageFrom}
                                                 onChange={handleChange}
                                                 input={<Input />}
@@ -126,6 +137,7 @@ const EditProfileCard = ({changeToFalse, user}) => {
                                                 <Select
                                                     name="languageTo"
                                                     multiple
+                                                    displayEmpty={true}
                                                     value={languageTo}
                                                     onChange={handleChange}
                                                     input={<Input />}
@@ -140,6 +152,21 @@ const EditProfileCard = ({changeToFalse, user}) => {
                                                 </div>
                                             </div>
                                         </div>
+    
+    const showFemaleTranslatorCheck = <div>
+                                    <div id="Female">
+                                        <FormControl component="fieldset" style={{ marginTop: '1rem' }}>
+                                            <FormGroup>
+                                                <FormControlLabel
+                                                    control={<Switch checked={femaleTranslator} name="femaleTranslator" onChange={handleChangeRadioButton}/>}
+                                                    label="I am female translator"
+                                                />
+                                            </FormGroup>
+                                            <FormHelperText>Remainder: We need to know if you are a female translator for special 
+                                            cases when a female translator is requested for doctor's appointment and others.</FormHelperText>
+                                        </FormControl>
+                                    </div>
+                                </div>
 
     return(
         <div className={classes.root}>
@@ -183,43 +210,22 @@ const EditProfileCard = ({changeToFalse, user}) => {
                                                 onChange={handleChange}
                                             > </TextField>
                                         </div>
-                                        <div>
-                                            <TextField required={true}
-                                                id="password"
-                                                label="Password"
-                                                name="password"
-                                                error={data.materialFromInputError}
-                                                value={password}
-                                                onChange={handleChange}
-                                        ></TextField>
-                                        </div>
                                     </div>
                                     <div className="form-check">
                                     {(user && user.languageFrom != "") ? 
                                         (
                                             <div>
-                                                <div id="Female">
-                                                    <FormControl component="fieldset" style={{ marginTop: '1rem' }}>
-                                                        <FormGroup>
-                                                            <FormControlLabel
-                                                                control={<Switch checked={femaleTranslator} name="femaleTranslator" onChange={handleChangeRadioButton}/>}
-                                                                label="I am female translator"
-                                                            />
-                                                        </FormGroup>
-                                                        <FormHelperText>Remainder: We need to know if you are a female translator for special 
-                                                        cases when a female translator is requested for doctor's appointment and others.</FormHelperText>
-                                                    </FormControl>
-                                                </div>
+                                                {showFemaleTranslatorCheck}
                                                 <div>
                                                     <FormControl component="fieldset" error={data.materialRadioInputError} style={{marginTop: '1rem'}}>
                                                         <RadioGroup 
                                                                 name="editTranslatorInfo" 
                                                             >
-                                                            <FormControlLabel value="editLangauges" onChange={onClickEditLanguages} control={<Radio defaultValue/>} label="Edit my langauges" />
+                                                            <FormControlLabel value="editLangauges" onChange={onClickEditLanguages} control={<Radio />} label="Edit my langauges" />
                                                             { showTranslator ?
                                                                 showLanguagesToAndFrom
                                                             : null }
-                                                            <FormControlLabel value="stopBeingTranslator" onChange={onClicStopBeingTranslator} control={<Radio />} label="I don't want to be a translator anymore" />
+                                                            <FormControlLabel value="stopBeingTranslator" onChange={onClickStopBeingTranslator} control={<Radio />} label="I don't want to be a translator anymore" />
                                                         </RadioGroup>
                                                     </FormControl>
                                                 </div>
@@ -239,7 +245,16 @@ const EditProfileCard = ({changeToFalse, user}) => {
                                                         label="I'd like to become a translator"
                                                     />
                                                     { showTranslator ?
-                                                                showLanguagesToAndFrom
+                                                                (
+                                                                    <div>
+                                                                        <div>
+                                                                            {showFemaleTranslatorCheck}
+                                                                        </div>
+                                                                        <div>
+                                                                            {showLanguagesToAndFrom}
+                                                                        </div>
+                                                                    </div>
+                                                                )
                                                             : null }
                                                 </FormGroup>
                                             </FormControl>
@@ -252,11 +267,11 @@ const EditProfileCard = ({changeToFalse, user}) => {
                                         <div className="ui-select">
                                         <select name="timezone" className="form-control" value={timezone} onChange={handleChange}>
                                         <option value="Eastern" >(GMT-05:00) Eastern Time</option>
-                                        <option value="Hawaii"  >(GMT-10:00) Hawaii Time</option>
-                                        <option value="Alaska"  >(GMT-09:00) Alaska Time</option>
-                                        <option value="Pacific"  >(GMT-08:00) Pacific Time</option>
-                                        <option value="Mountain"  >(GMT-07:00) Mountain Time</option>
-                                        <option value="Central"  >(GMT-06:00) Central Time</option>
+                                        <option value="Hawaii" >(GMT-10:00) Hawaii Time</option>
+                                        <option value="Alaska" >(GMT-09:00) Alaska Time</option>
+                                        <option value="Pacific" >(GMT-08:00) Pacific Time</option>
+                                        <option value="Mountain" >(GMT-07:00) Mountain Time</option>
+                                        <option value="Central" >(GMT-06:00) Central Time</option>
                                         </select>
                                     </div>
                                 </div>

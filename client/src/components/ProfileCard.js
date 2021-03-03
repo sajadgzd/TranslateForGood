@@ -25,6 +25,7 @@ import TranslateIcon from '@material-ui/icons/Translate';
 import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import GTranslateIcon from '@material-ui/icons/GTranslate';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 
 import EditProfileCard from './EditProfileCard';
 
@@ -48,22 +49,16 @@ const ProfileCard = (props) => {
   }, []);
   
   const handleImageChange = async (event) => {
-      const image = event.target.files[0];
-      setFileName(image);
-      // send the image to the server
-      const formData = new FormData();
-      formData.append("image", image, image.name);
-    //   props.history.push("/profile");
-      console.log("clicked")
+    //   const image = event.target.files[0];
+    //   setFileName(image);
+    //   const formData = new FormData();
+    //   formData.append("image", image, image.name);
+    //   console.log("clicked")
   }
 
   const handleEditPicture = () => {
-      const fileInput = document.getElementById("imageInput");
-      fileInput.click();
-  }
-
-  const handleUpdate = () => {
-
+    //   const fileInput = document.getElementById("imageInput");
+    //   fileInput.click(); 
   }
 
   const [editMode, setEditMode] = useState(false);
@@ -152,7 +147,7 @@ const ProfileCard = (props) => {
                                                     {language}
                                                 </li>
                                         )
-                                } />
+                                    } />
                             </ListItem>
                             <Divider variant="inset" component="li" />
                             <ListItem component="div">
@@ -184,12 +179,21 @@ const ProfileCard = (props) => {
                                 </ListItemAvatar>
                                 <ListItemText primary="FEMALE TRANSLATOR" secondary="You agree to be matched with users who wish to work with a female translator"/>
                             </ListItem>
-                            </Box>}
+                            </Box>
+                        }
+                        <ListItem>
+                            <ListItemAvatar>
+                            <Avatar>
+                                <AccessTimeIcon />
+                            </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="TIME ZONE" secondary={user && user.timezone} />
+                        </ListItem>
                         </List>
                     </CardContent>
                     <CardActions>
                     <Button size="large" color="primary" onClick={() => setEditMode(true)}>
-                    Update
+                        Update
                     </Button>
                 </CardActions>
                 </Card>
