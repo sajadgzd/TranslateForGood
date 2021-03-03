@@ -24,9 +24,16 @@ let UserController = {
   },
   getTranslators: async (req, res) => {
     try {
+      if(req.query.femaleTranslatorBool == true){
       let translators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool})
       res.json(translators);
       console.log("The translators for particular request: ",translators);
+      }
+      else{
+      let translators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
+      res.json(translators);
+      console.log("The translators for particular request: ",translators);
+      }
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
