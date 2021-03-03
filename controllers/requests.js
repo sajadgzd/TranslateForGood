@@ -31,14 +31,6 @@ let RequestController = {
       return res.status(400).json({ error: err.message });
     }
   },
-  getLatest: async (req, res) => {
-    try {
-      let latest = await Request.findOne().sort({createdAt: -1}).populate('author');;
-      res.json(latest);
-    } catch (error) {
-      return res.status(400).json({ error: err.message });
-    }
-  },
  
   create: async(req, res) => {
     const { user, languageFrom, languageTo, femaleTranslatorBool, 

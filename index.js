@@ -35,13 +35,13 @@ app.post("/api/auth/login", AuthControls.login);
 app.get("/api/auth", requireLogin, AuthControls.current);
 
 app.post("/api/requests/new", RequestControls.create);
-app.get("/api/requests/latest", RequestControls.getLatest);
 app.get("/api/requests/active", RequestControls.getActive);
 app.get("/api/requests/all", RequestControls.getAll);
 app.get("/api/requests/:id", RequestControls.getRequestById);
 
 app.get("/api/users/:id/requests", UserControls.getUserRequests);
 app.get("/api/users/:id/user", UserControls.getById);
+app.get("/api/users/translators", UserControls.getTranslators);
 app.get("/api/users/all", UserControls.getAll);
 
 
