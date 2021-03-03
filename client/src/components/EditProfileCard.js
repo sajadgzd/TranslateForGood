@@ -69,7 +69,7 @@ const EditProfileCard = ({changeToFalse, user}) => {
     const onClickBecomeTranslator = () => setShowTranslator(true)
     const onClickStopBeingTranslator = () => { 
         setShowTranslator(false);
-        setData({ ...data, languageFrom: "", languageTo: "", femaleTranslator:false});
+        setData({ ...data, languageFrom: [], languageTo: [], femaleTranslator:false});
     }
 
     const { name, email, languageFrom, languageTo, femaleTranslator, timezone, error } = data;
@@ -83,15 +83,9 @@ const EditProfileCard = ({changeToFalse, user}) => {
     };
 
     const handleUpdate = async (e) => {
-        // console.log("clicked");
         console.log("HERE IS THE DATA POSTED for UPDATE PROFILE:\t",data)
         e.preventDefault();
         try {
-            // setData({ ...data, error: null });
-            // if(!showTranslator) {
-            //     setData({ ...data, languageFrom: "", languageTo: "", femaleTranslator:false});
-            //     console.log("NOT a translator ");
-            // } 
             setData({ ...data, error: null });
             await axios.put(
                 "/api/users/edit",
@@ -102,7 +96,6 @@ const EditProfileCard = ({changeToFalse, user}) => {
                 },
                 }
             );
-            // changeToFalse();
         } catch (err) {
             setData({ ...data, error: err.response.data.error });
         }
