@@ -88,8 +88,8 @@ const ProfileCard = (props) => {
                 }}>
                 <Card
                     style={{
-                    maxWidth: 700,
-                    maxHeight: 1000,
+                    minWidth: 500,
+                    minHeight: 550,
                     }}>
                     <Box>
                     <CardMedia
@@ -146,13 +146,13 @@ const ProfileCard = (props) => {
                                 </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText primary="LANGUAGE FROM" secondary={
-                                        user && user.languageFrom.map(
-                                                (language) => 
-                                                    <li key={language}>
-                                                        {language}
-                                                    </li>
-                                            )
-                                    } />
+                                    user && user.languageFrom.map(
+                                            (language) => 
+                                                <li key={language}>
+                                                    {language}
+                                                </li>
+                                        )
+                                } />
                             </ListItem>
                             <Divider variant="inset" component="li" />
                             <ListItem component="div">

@@ -21,8 +21,34 @@ import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Switch from '@material-ui/core/Switch';
 import Checkbox from '@material-ui/core/Checkbox';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Languages from '../util/languages';
+
+// material-ui styles
+const theme = createMuiTheme();
+theme.typography.h3 = {
+  fontSize: '1.2rem',
+  '@media (min-width:600px)': {
+    fontSize: '1.5rem',
+  },
+  [theme.breakpoints.up('md')]: {
+    fontSize: '2rem',
+  },
+};
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
+  },
+  formControl: {
+    margin: theme.spacing(2),
+  }
+}));
 
 
 const EditProfileCard = ({changeToFalse, user}) => {
@@ -39,7 +65,9 @@ const EditProfileCard = ({changeToFalse, user}) => {
       });
     
       const [showTranslator, setShowTranslator] = useState(false)
-      const onClick = () => setShowTranslator(!showTranslator)
+      const onClickEditLanguages = () => setShowTranslator(true)
+      const onClicStopBeingTranslator = () => setShowTranslator(false)
+      const onClickBecomeTranslator = () => setShowTranslator(!showTranslator)
     
       const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone, error } = data;
     
@@ -66,12 +94,55 @@ const EditProfileCard = ({changeToFalse, user}) => {
         // }
       };
     
-      const handleChangeRadioButton = (event) => {
+    const handleChangeRadioButton = (event) => {
         setData({ ...data, [event.target.name]: event.target.checked });
       };
 
+    const classes = useStyles();
+
+    const showLanguagesToAndFrom = <div>
+                                 <div id="translator">
+                                    <div id="ArrayOne" style={{ marginTop: '1rem', marginLeft: '1rem'}}>
+                                        <FormControl>
+                                            <FormLabel component="legend">Languages you can translate from:</FormLabel>
+                                            <Select
+                                                name="languageFrom"
+                                                multiple
+                                                value={languageFrom}
+                                                onChange={handleChange}
+                                                input={<Input />}
+                                                >
+                                                {Languages.map((option) => (
+                                                    <MenuItem key={option} value={option}>
+                                                        {option}
+                                                    </MenuItem>
+                                                ))}
+                                                </Select>
+                                                </FormControl>
+                                                </div>
+                                                <div id="ArrayTwo" style={{ marginTop: '2rem', marginLeft: '1rem', marginBottom: '2rem'}}>
+                                                <FormControl>
+                                                <FormLabel component="legend">Languages you can translate to:</FormLabel>
+                                                <Select
+                                                    name="languageTo"
+                                                    multiple
+                                                    value={languageTo}
+                                                    onChange={handleChange}
+                                                    input={<Input />}
+                                                >
+                                                {Languages.map((option) => (
+                                                    <MenuItem key={option} value={option}>
+                                                        {option}
+                                                    </MenuItem>
+                                                ))}
+                                                </Select>
+                                                </FormControl>
+                                                </div>
+                                            </div>
+                                        </div>
+
     return(
-        <div>
+        <div className={classes.root}>
             <Grid container spacing={10} direction="column" alignItems="center" justify="center">
                 <Box>
                     <Grid item xs={10} style={{
@@ -85,20 +156,20 @@ const EditProfileCard = ({changeToFalse, user}) => {
                         maxHight: 600,
                         }}>
                         <CardContent>
-                            <Button size="large" color="primary" onClick={() => changeToFalse()}>
+                            <Button size="large" color="primary" onClick={() => changeToFalse()} style={{marginLeft:'1rem'}}>
                                 Go Back
                             </Button>
                             <div>
-                                <form>
+                                <form className={classes.formControl}>
                                     <div>
                                         <div>
                                             <TextField required={true}
-                                            id="name"
-                                            label="Name"
-                                            name="name"
-                                            error={data.materialFromInputError}
-                                            value={name}
-                                            onChange={handleChange}
+                                                id="name"
+                                                label="Name"
+                                                name="name"
+                                                error={data.materialFromInputError}
+                                                value={name}
+                                                onChange={handleChange}
                                             >
                                             </TextField>
                                         </div>
@@ -114,106 +185,68 @@ const EditProfileCard = ({changeToFalse, user}) => {
                                         </div>
                                         <div>
                                             <TextField required={true}
-                                            id="password"
-                                            label="Password"
-                                            name="password"
-                                            error={data.materialFromInputError}
-                                            value={password}
-                                            onChange={handleChange}
+                                                id="password"
+                                                label="Password"
+                                                name="password"
+                                                error={data.materialFromInputError}
+                                                value={password}
+                                                onChange={handleChange}
                                         ></TextField>
                                         </div>
-                                    </div>
-                                    <div>
                                     </div>
                                     <div className="form-check">
                                     {(user && user.languageFrom != "") ? 
                                         (
                                             <div>
                                                 <div id="Female">
-                                                    <FormControl component="fieldset" style={{ marginTop: '2rem' }}>
+                                                    <FormControl component="fieldset" style={{ marginTop: '1rem' }}>
                                                         <FormGroup>
                                                             <FormControlLabel
-                                                             control={<Switch checked={femaleTranslator} name="femaleTranslator" onChange={handleChangeRadioButton}/>}
-                                                                label="I am female translator!"
+                                                                control={<Switch checked={femaleTranslator} name="femaleTranslator" onChange={handleChangeRadioButton}/>}
+                                                                label="I am female translator"
                                                             />
                                                         </FormGroup>
                                                         <FormHelperText>Remainder: We need to know if you are a female translator for special 
-                                                        cases when a female translator requested for doctor's appointment and others.</FormHelperText>
+                                                        cases when a female translator is requested for doctor's appointment and others.</FormHelperText>
                                                     </FormControl>
                                                 </div>
                                                 <div>
-                                                    <FormControl component="fieldset" error={data.materialRadioInputError}>
-                                                        <RadioGroup aria-label="previousTranslatorInfo" name="previousTranslatorInfo" 
-                                                            defaultValue="SajadGmail" 
+                                                    <FormControl component="fieldset" error={data.materialRadioInputError} style={{marginTop: '1rem'}}>
+                                                        <RadioGroup 
+                                                                name="editTranslatorInfo" 
                                                             >
-                                                            <FormControlLabel value="remainTranslator" onChange={onClick} control={<Radio defaultValue/>} label="Edit my langauges" />
+                                                            <FormControlLabel value="editLangauges" onChange={onClickEditLanguages} control={<Radio defaultValue/>} label="Edit my langauges" />
                                                             { showTranslator ?
-                                                                <div id="translator">
-                                                                <div id="ArrayOne" style={{ marginTop: '2rem' }}>
-                                                                <FormControl className="languageFrom">
-                                                                <FormLabel component="legend">Languages you can translate from:</FormLabel>
-                                                                    <Select
-                                                                        name="languageFrom"
-                                                                        multiple
-                                                                        value={languageFrom}
-                                                                        onChange={handleChange}
-                                                                        input={<Input />}
-                                                                    >
-                                                                    {Languages.map((option) => (
-                                                                        <MenuItem key={option} value={option}>
-                                                                            {option}
-                                                                        </MenuItem>
-                                                                    ))}
-                                                                    </Select>
-                                                                </FormControl>
-                                                                </div>
-                                                                <div id="ArrayTwo" style={{ marginTop: '2rem' }}>
-                                                                <FormControl className="languageTo">
-                                                                <FormLabel component="legend">Languages you can translate to:</FormLabel>
-                                                                    <Select
-                                                                        name="languageTo"
-                                                                        multiple
-                                                                        value={languageTo}
-                                                                        onChange={handleChange}
-                                                                        input={<Input />}
-                                                                    >
-                                                                    {Languages.map((option) => (
-                                                                        <MenuItem key={option} value={option}>
-                                                                            {option}
-                                                                        </MenuItem>
-                                                                    ))}
-                                                                    </Select>
-                                                                </FormControl>
-                                                                </div>
-                                                            </div>
+                                                                showLanguagesToAndFrom
                                                             : null }
-                                                            <FormControlLabel value="stopBeingTranslator" onChange={onClick} control={<Radio />} label="I don't want to be a translator anymore" />
+                                                            <FormControlLabel value="stopBeingTranslator" onChange={onClicStopBeingTranslator} control={<Radio />} label="I don't want to be a translator anymore" />
                                                         </RadioGroup>
                                                     </FormControl>
                                                 </div>
                                             </div>
                                         ) : (
-                                            <FormControl>
+                                            <FormControl style={{marginTop: '1rem'}}>
                                                 <FormGroup>
                                                     <FormControlLabel
                                                         control={
                                                             <Checkbox
                                                             // checked={implementFunction}
                                                             // onChange={this.handleChange('checkedA')}
-                                                            value="checkedA"
+                                                            value="becomeTranslatorCheck"
+                                                            onChange={onClickBecomeTranslator}
                                                             />
                                                         }
                                                         label="I'd like to become a translator"
                                                     />
+                                                    { showTranslator ?
+                                                                showLanguagesToAndFrom
+                                                            : null }
                                                 </FormGroup>
                                             </FormControl>
                                         )
                                     }
-                                     <div>
                                     </div>
-                                    
-                                </div>
-                                    <div className="form-group" style={{ marginTop: '2rem' }}>
+                                    <div className="form-group" style={{ marginTop: '2rem', marginLeft: '1rem'}}>
                                     <label htmlFor="timezone">
                                         My time zone: </label>
                                         <div className="ui-select">
@@ -228,14 +261,12 @@ const EditProfileCard = ({changeToFalse, user}) => {
                                     </div>
                                 </div>
                                 {error ? <p className="text-danger">{error}</p> : null}
-                                <div className="text-center">
-                                </div>
                             </form>
                             </div>
                         </CardContent>
                         <CardActions>
-                        <Button size="large" color="primary" onClick={handleUpdate}>
-                        Update
+                        <Button size="large" color="primary" onClick={handleUpdate} style={{marginLeft: '1rem'}}>
+                            Update
                         </Button>
                     </CardActions>
                     </Card>
