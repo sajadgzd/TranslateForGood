@@ -33,7 +33,7 @@ import EditProfileCard from './EditProfileCard';
 const ProfileCard = (props) => {
 
   const [user, setUser] = useState(null);
-  const [fileName, setFileName] = useState(null);
+//   const [fileName, setFileName] = useState(null);
 
   const getUser = async () => {
     const res = await axios.get("/api/auth", {
@@ -65,6 +65,7 @@ const ProfileCard = (props) => {
 
   const changeToFalse = () => {
       setEditMode(false);
+      getUser();
   }
 
   return (
