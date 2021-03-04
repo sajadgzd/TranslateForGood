@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const bcrypt = require("bcryptjs");
 
 let UserController = { 
 
@@ -52,9 +53,12 @@ let UserController = {
 
   updateUserInfo: async (req, res) => {
     try {
-      const { user, name, email, languageFrom, 
+      const { user, name, email, password, languageFrom, 
             languageTo, femaleTranslator, timezone } = req.body;
-      await User.updateOne( {_id: user._id}, {$set: {"name": name, "email": email, "languageFrom": languageFrom, "languageTo": languageTo, "femaleTranslator": femaleTranslator, "timezone": timezone}});
+      
+      const hashed_password = await bcrypt.hash(password, 10);
+      
+      await User.updateOne( {_id: user._id}, {$set: {"name": name, "email": email, "password": hashed_password, "languageFrom": languageFrom, "languageTo": languageTo, "femaleTranslator": femaleTranslator, "timezone": timezone}});
       return res.status(201).json({ message: "User updated succesfully!" });
     } catch (error) {
       return res.status(400).json({ error: err.message });

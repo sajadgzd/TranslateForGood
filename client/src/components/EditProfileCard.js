@@ -23,12 +23,17 @@ import Switch from '@material-ui/core/Switch';
 import Checkbox from '@material-ui/core/Checkbox';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
-
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Slide from '@material-ui/core/Slide';
+
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import Languages from '../util/languages';
 
@@ -68,6 +73,7 @@ const EditProfileCard = (props) => {
         user: user,
         name: (user && user.name),
         email: (user && user.email),
+        password: (user && user.password),
         languageFrom: (user && user.languageFrom),
         languageTo: (user && user.languageTo),
         femaleTranslator: (user && user.femaleTranslator),
@@ -84,7 +90,7 @@ const EditProfileCard = (props) => {
         setData({ ...data, languageFrom: [], languageTo: [], femaleTranslator:false});
     }
 
-    const { name, email, languageFrom, languageTo, femaleTranslator, timezone, error } = data;
+    const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone, error } = data;
 
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -100,6 +106,14 @@ const EditProfileCard = (props) => {
         setOpen(true);
       };
 
+    const [values, setValues] = React.useState({
+        showPassword: false,
+    });
+    
+    const handleClickShowPassword = () => {
+        setValues({ ...values, showPassword: !values.showPassword });
+    };
+
     const handleUpdate = async (e) => {
         console.log("HERE IS THE DATA POSTED for UPDATE PROFILE:\t",data);
         e.preventDefault();
@@ -107,7 +121,7 @@ const EditProfileCard = (props) => {
             setData({ ...data, error: null });
             await axios.put(
                 "/api/users/edit",
-                { user, name, email, languageFrom, languageTo, femaleTranslator, timezone },
+                { user, name, email, password, languageFrom, languageTo, femaleTranslator, timezone },
                 {
                 headers: {
                     "Content-Type": "application/json",
@@ -223,6 +237,27 @@ const EditProfileCard = (props) => {
                                                 onChange={handleChange}
                                             > </TextField>
                                         </div>
+                                        <div>
+                                            <FormControl style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                                <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+                                                <Input
+                                                    id="password"
+                                                    name="password"
+                                                    type={values.showPassword ? 'text' : 'password'}
+                                                    onChange={handleChange}
+                                                    endAdornment={
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        >
+                                                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                    }
+                                                />
+                                            </FormControl>
+                                        </div>
                                     </div>
                                     <div className="form-check">
                                     {(user && user.languageFrom != "") ? 
@@ -323,3 +358,4 @@ const EditProfileCard = (props) => {
 }
 
 export default EditProfileCard;
+
