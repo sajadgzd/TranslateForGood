@@ -39,11 +39,11 @@ app.get("/api/requests/active", RequestControls.getActive);
 app.get("/api/requests/all", RequestControls.getAll);
 app.get("/api/requests/:id", RequestControls.getRequestById);
 
+app.put("/api/users/edit", UserControls.updateUserInfo);
 app.get("/api/users/:id/requests", UserControls.getUserRequests);
 app.get("/api/users/:id/user", UserControls.getById);
 app.get("/api/users/translators", UserControls.getTranslators);
 app.get("/api/users/all", UserControls.getAll);
-
 
 
 // Serve static assets (build folder) if in production

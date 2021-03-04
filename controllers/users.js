@@ -1,6 +1,5 @@
 const User = require("../models/user");
 
-
 let UserController = { 
 
   // get user by id
@@ -50,6 +49,18 @@ let UserController = {
       return res.status(400).json({ error: err.message });
     }
   },
+
+  updateUserInfo: async (req, res) => {
+    try {
+      const { user, name, email, languageFrom, 
+            languageTo, femaleTranslator, timezone } = req.body;
+      await User.updateOne( {_id: user._id}, {$set: {"name": name, "email": email, "languageFrom": languageFrom, "languageTo": languageTo, "femaleTranslator": femaleTranslator, "timezone": timezone}});
+      return res.status(201).json({ message: "User updated succesfully!" });
+    } catch (error) {
+      return res.status(400).json({ error: err.message });
+    }
+  }
+
 }
 
-module.exports = UserController; 
+module.exports = UserController;

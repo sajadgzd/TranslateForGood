@@ -35,6 +35,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       requred: true,
     },
+    image:{
+      type: String, 
+      default: "images/default_photo.png",
+      required: true,
+    },
     requests:[{
       type: Schema.Types.ObjectId, // filled with the unique IDs of requests
       ref: "Request"
