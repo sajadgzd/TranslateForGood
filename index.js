@@ -41,6 +41,7 @@ app.get("/api/requests/:id", RequestControls.getRequestById);
 
 app.get("/api/users/:id/requests", UserControls.getUserRequests);
 app.get("/api/users/:id/user", UserControls.getById);
+app.get("/api/users/translators", UserControls.getTranslators);
 app.get("/api/users/all", UserControls.getAll);
 
 

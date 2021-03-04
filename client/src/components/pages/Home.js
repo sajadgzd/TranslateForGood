@@ -151,7 +151,13 @@ const Home = (props) => {
         props.history.push("/home");
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
         setData({ ...data, openDialog: true});
-
+        //Looking for matching translators for each request
+        await axios.get(
+          "/api/users/translators", { 
+            params: {
+              languageFrom, languageTo, femaleTranslatorBool 
+            }
+          });
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
 
