@@ -43,6 +43,10 @@ const UserSchema = new mongoose.Schema(
     requests:[{
       type: Schema.Types.ObjectId, // filled with the unique IDs of requests
       ref: "Request"
+    }],
+    matchedRequests: [{
+      type: Schema.Types.ObjectId,
+      ref: "Request"
     }]
   },
   { timestamps: true }

@@ -8,6 +8,10 @@ const RequestSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId, 
       ref: 'User'
     },
+    matchedTranslators: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }],
     languageFrom: {
       type: String,
       trim: true,
