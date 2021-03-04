@@ -153,7 +153,7 @@ const Home = (props) => {
         setData({ ...data, openDialog: true});
         //Looking for matching translators for each request
         await axios.get(
-          "/api/users/translators", { 
+          "/api/users/matchedTranslators", { 
             params: {
               languageFrom, languageTo, femaleTranslatorBool 
             }

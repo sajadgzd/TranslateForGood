@@ -21,17 +21,17 @@ let UserController = {
       return res.status(400).json({ error: err.message });
     }
   },
-  getTranslators: async (req, res) => {
+  getMatchedTranslators: async (req, res) => {
     try {
       if(req.query.femaleTranslatorBool == true){
-      let translators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool})
-      res.json(translators);
-      console.log("The translators for particular request: ",translators);
+      let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool})
+      res.json(matchedTranslators);
+      console.log("The matchedTranslators for particular request: ",matchedTranslators);
       }
       else{
-      let translators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
-      res.json(translators);
-      console.log("The translators for particular request: ",translators);
+      let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
+      res.json(matchedTranslators);
+      console.log("The matchedTranslators for particular request: ",matchedTranslators);
       }
     } catch (error) {
       return res.status(400).json({ error: err.message });
