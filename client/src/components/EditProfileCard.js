@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import axios from "axios";
 
@@ -23,6 +23,12 @@ import Switch from '@material-ui/core/Switch';
 import Checkbox from '@material-ui/core/Checkbox';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Slide from '@material-ui/core/Slide';
 
 import Languages from '../util/languages';
 
@@ -50,7 +56,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const EditProfileCard = ({changeToFalse, user}) => {
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
+const EditProfileCard = (props) => {
+
+    const user = props.user;
 
     const [data, setData] = useState({
         user: user,
@@ -82,8 +94,14 @@ const EditProfileCard = ({changeToFalse, user}) => {
         setData({ ...data, [event.target.name]: event.target.checked });
     };
 
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
+
     const handleUpdate = async (e) => {
-        console.log("HERE IS THE DATA POSTED for UPDATE PROFILE:\t",data)
+        console.log("HERE IS THE DATA POSTED for UPDATE PROFILE:\t",data);
         e.preventDefault();
         try {
             setData({ ...data, error: null });
@@ -96,6 +114,8 @@ const EditProfileCard = ({changeToFalse, user}) => {
                 },
                 }
             );
+            handleClickOpen();
+            console.log("Clicked")
         } catch (err) {
             setData({ ...data, error: err.response.data.error });
         }
@@ -176,7 +196,7 @@ const EditProfileCard = ({changeToFalse, user}) => {
                         maxHight: 600,
                         }}>
                         <CardContent>
-                            <Button size="large" color="primary" onClick={() => changeToFalse()} style={{marginLeft:'1rem'}}>
+                            <Button size="large" color="primary" onClick={() => props.changeToFalse()} style={{marginLeft:'1rem'}}>
                                 Go Back
                             </Button>
                             <div>
@@ -279,6 +299,23 @@ const EditProfileCard = ({changeToFalse, user}) => {
                     </CardActions>
                     </Card>
                     </Grid>
+                    <Dialog
+                        open={open}
+                        TransitionComponent={Transition}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Your profile has been succesfully updated!
+                        </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={props.changeToFalse} color="primary" autoFocus justify="center">
+                            Go back to my profile
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
                 </Box>
             </Grid>
         </div>
