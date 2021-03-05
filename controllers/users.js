@@ -43,9 +43,9 @@ let UserController = {
         res.json(matchedTranslators);
         console.log("The matchedTranslators for particular request: ", matchedTranslators);
       }
-      else{
+      else {
         let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
-        
+
         let request = await Request.findOne({_id: requestID});
         
         // update matchedRequests for every matchedTranslators found.
@@ -54,8 +54,16 @@ let UserController = {
             await matchedTranslators[i].save();
         }
 
+        // update matchedTranslators for the new matchedRequest found.
+        for (let i = 0; i < matchedTranslators.length; i++) {
+          request.matchedTranslators.push(matchedTranslators[i]._id);
+        }
+        await request.save();
+
+
         res.json(matchedTranslators);
         console.log("The matchedTranslators for particular request: ", matchedTranslators);
+        console.log("The matchedRequest for all matchedTranslators: ", request);
 
       }
     } catch (err) {
