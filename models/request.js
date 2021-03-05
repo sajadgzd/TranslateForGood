@@ -22,9 +22,9 @@ const RequestSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    urgentTranslation: {
-      type: Boolean,
-      default: false,
+    dueDateTime: {
+      type: Date,
+      required: true,
     },
     femaleTranslator:{
       type: Boolean,
