@@ -87,8 +87,7 @@ let UserController = {
   getTranslatorsMatchedRequests: async(req, res) => {
     try {
       //get matchedRequests that are active to the particular translators
-      console.log("BE req.params.userID:\t", req.params)
-      let matchedRequests = await User.findOne({_id: "604195e49ad9a9140424f434"}).populate("matchedRequests"); 
+      let matchedRequests = await User.findOne({_id: req.query.userID}).populate("matchedRequests"); 
       res.json(matchedRequests.matchedRequests);
       console.log("matchedRequests for a particular user:\t", matchedRequests.matchedRequests)
     } catch (err) {

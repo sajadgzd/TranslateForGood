@@ -51,16 +51,13 @@ export default function ActiveRequestList(props) {
     setState({});
   }
   let userID = props.user._id;
-  console.log("FE ACTIVEREQ USERID IS:\t", typeof userID)
   const getRequests = async () => {
-    console.log("FE 2 ACTIVEREQ USERID IS:\t", userID)
-    // const reqs = await axios.get("/api/requests/active");
     const reqs = await axios.get("/api/users/translatorsMatchedRequests", { 
         params: {
           userID
         }
       });
-    console.log("/api/users/translatorsMatchedRequests:\t", reqs)
+    // console.log("/api/users/translatorsMatchedRequests:\t", reqs)
     setRequest(reqs.data);
   };
  
