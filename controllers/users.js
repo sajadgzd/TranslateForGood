@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Request = require("../models/request");
 const bcrypt = require("bcryptjs");
 
 let UserController = { 
@@ -25,28 +26,38 @@ let UserController = {
   getMatchedTranslators: async (req, res) => {
     try {
       console.log("THIS IS req.query.user.email:\t", JSON.parse(req.query.user).email);
+      let userEmail = JSON.parse(req.query.user).email;
       if(req.query.femaleTranslatorBool == true){
         let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool})
-
+        
         console.log("typeof matchedTranslators", typeof matchedTranslators)
-        console.log(" matchedTranslators.matchedRequests", typeof matchedTranslators.matchedRequests)
+        
+        let request = await Request.findOne({_id: "60417c63b64cb1074280e48f"});
+        
+        // update matchedRequests for every matchedTranslators found.
+        for (let i = 0; i < matchedTranslators.length; i++) {
+            // let updatedmatchedTranslators = await User.findOne({_id: matchedTranslators[i]._id});
+            matchedTranslators[i].matchedRequests.push(request);
+            await matchedTranslators[i].save();
+        }
 
-        // for (let i = 0; i < matchedTranslators.length; i++) {
-        //   matchedTranslators[i].matchedRequests.push(JSON.parse(req.query.user).email);
-        // }
         res.json(matchedTranslators);
         console.log("The matchedTranslators for particular request: ", matchedTranslators);
-
       }
       else{
         let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
-        
 
         console.log("typeof matchedTranslators", typeof matchedTranslators)
-        console.log(" matchedTranslators.matchedRequests", typeof matchedTranslators.matchedRequests)
-        // for (let i = 0; i < matchedTranslators.length; i++) {
-        //   matchedTranslators[i].matchedRequests.push(JSON.parse(req.query.user).email);
-        // }
+
+        let request = await Request.findOne({_id: "60417c63b64cb1074280e48f"});
+        
+        // update matchedRequests for every matchedTranslators found.
+        for (let i = 0; i < matchedTranslators.length; i++) {
+            // let updatedmatchedTranslators = await User.findOne({_id: matchedTranslators[i]._id});
+            matchedTranslators[i].matchedRequests.push(request);
+            await matchedTranslators[i].save();
+        }
+
         res.json(matchedTranslators);
         console.log("The matchedTranslators for particular request: ", matchedTranslators);
 
