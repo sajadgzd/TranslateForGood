@@ -7,7 +7,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
-export default function ActiveRequestList() {
+export default function ActiveRequestList(props) {
 
   const useStyles = makeStyles(theme => ({
     root: {
@@ -50,9 +50,17 @@ export default function ActiveRequestList() {
       )
     setState({});
   }
-
+  let userID = props.user._id;
+  console.log("FE ACTIVEREQ USERID IS:\t", typeof userID)
   const getRequests = async () => {
-    const reqs = await axios.get("/api/requests/active");
+    console.log("FE 2 ACTIVEREQ USERID IS:\t", userID)
+    // const reqs = await axios.get("/api/requests/active");
+    const reqs = await axios.get("/api/users/translatorsMatchedRequests", { 
+        params: {
+          userID
+        }
+      });
+    console.log("/api/users/translatorsMatchedRequests:\t", reqs)
     setRequest(reqs.data);
   };
  
@@ -66,7 +74,7 @@ export default function ActiveRequestList() {
         <div style={{ marginTop: 100 }}>
           <Grid container alignItems="center" spacing={3} >
             <Grid  item xs={11}>
-            <Typography align="center" variant="h3" gutterBottom>
+            <Typography align="center" variant="h4" gutterBottom>
               Matching Active Requests
             </Typography>
             </Grid> 

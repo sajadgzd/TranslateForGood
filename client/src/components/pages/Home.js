@@ -353,7 +353,7 @@ const handleSubmitPreviousTranslator = async (e) => {
     
     {// Only translators can see the list of active requests
       user.languageFrom === undefined || user.languageFrom.length == 0 ?
-      <></>: <ActiveRequestList />
+      <></>: <ActiveRequestList user={user}/>
     }
   </div>
 
