@@ -27,7 +27,6 @@ export default function MatchedRequestList(props) {
         <MatchedRequestCard 
           femaleTranslator = {request.femaleTranslator} 
           documentProofreading = {request.documentProofreading} 
-          urgentTranslation= {request.urgentTranslation} 
           name ={request.author ? request.author.name : request.author} 
           createdAt= {request.createdAt} 
           from = {request.languageFrom} 
