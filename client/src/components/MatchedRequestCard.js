@@ -37,7 +37,7 @@ const colorVocabIcon = {'true': "secondary", 'false': "disabled"};
 const colorVocabCustomIcon = {'true': "#dc004e", 'false': "#D3D3D3"};
 
 
-function ActiveRequestCard(props) {
+function MatchedRequestCard(props) {
   const classes = useStyles();
   const selectRequest = () => void 0;
   const timeOfRequest = moment(props.createdAt).format('LLL');
@@ -76,4 +76,4 @@ function ActiveRequestCard(props) {
   );
 }
 
-export default ActiveRequestCard;
+export default MatchedRequestCard;

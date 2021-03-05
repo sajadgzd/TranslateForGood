@@ -41,7 +41,7 @@ let UserController = {
         }
 
         res.json(matchedTranslators);
-        console.log("The matchedTranslators for particular request: ", matchedTranslators);
+        // console.log("The matchedTranslators for particular request: ", matchedTranslators);
       }
       else {
         let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
@@ -80,6 +80,25 @@ let UserController = {
       let requests = await User.findOne({_id: req.params.id}).populate("requests"); 
       res.json(requests);
     } catch (error) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  getTranslatorsMatchedRequests: async(req, res) => {
+    try {
+      //get matchedRequests that are active to the particular translators
+      let matchedRequests = await User.findOne({_id: req.query.userID})
+      .populate([{
+        path: 'matchedRequests',
+        model: 'Request',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      }]);
+      res.json(matchedRequests.matchedRequests);
+      // console.log("matchedRequests for a particular user:\t", matchedRequests.matchedRequests)
+    } catch (err) {
       return res.status(400).json({ error: err.message });
     }
   },
