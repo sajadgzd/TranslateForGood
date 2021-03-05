@@ -155,7 +155,7 @@ const Home = (props) => {
         await axios.get(
           "/api/users/matchedTranslators", { 
             params: {
-              languageFrom, languageTo, femaleTranslatorBool 
+              languageFrom, languageTo, femaleTranslatorBool, user
             }
           });
       } catch (err) {
