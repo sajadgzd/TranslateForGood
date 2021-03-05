@@ -24,17 +24,35 @@ let UserController = {
   },
   getMatchedTranslators: async (req, res) => {
     try {
+      console.log("THIS IS req.query.user.email:\t", JSON.parse(req.query.user).email);
       if(req.query.femaleTranslatorBool == true){
-      let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool})
-      res.json(matchedTranslators);
-      console.log("The matchedTranslators for particular request: ",matchedTranslators);
+        let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool})
+
+        console.log("typeof matchedTranslators", typeof matchedTranslators)
+        console.log(" matchedTranslators.matchedRequests", typeof matchedTranslators.matchedRequests)
+
+        // for (let i = 0; i < matchedTranslators.length; i++) {
+        //   matchedTranslators[i].matchedRequests.push(JSON.parse(req.query.user).email);
+        // }
+        res.json(matchedTranslators);
+        console.log("The matchedTranslators for particular request: ", matchedTranslators);
+
       }
       else{
-      let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
-      res.json(matchedTranslators);
-      console.log("The matchedTranslators for particular request: ",matchedTranslators);
+        let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
+        
+
+        console.log("typeof matchedTranslators", typeof matchedTranslators)
+        console.log(" matchedTranslators.matchedRequests", typeof matchedTranslators.matchedRequests)
+        // for (let i = 0; i < matchedTranslators.length; i++) {
+        //   matchedTranslators[i].matchedRequests.push(JSON.parse(req.query.user).email);
+        // }
+        res.json(matchedTranslators);
+        console.log("The matchedTranslators for particular request: ", matchedTranslators);
+
       }
-    } catch (error) {
+    } catch (err) {
+      console.log(err);
       return res.status(400).json({ error: err.message });
     }
   },
