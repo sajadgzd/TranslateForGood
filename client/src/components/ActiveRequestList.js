@@ -57,7 +57,7 @@ export default function ActiveRequestList(props) {
           userID
         }
       });
-    // console.log("/api/users/translatorsMatchedRequests:\t", reqs)
+    console.log("/api/users/translatorsMatchedRequests:\t", reqs)
     setRequest(reqs.data);
   };
  
