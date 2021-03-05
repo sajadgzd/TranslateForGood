@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import ActiveRequestCard from './ActiveRequestCard';
+import MatchedRequestCard from './MatchedRequestCard';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
-export default function ActiveRequestList(props) {
+export default function MatchedRequestList(props) {
 
   const useStyles = makeStyles(theme => ({
     root: {
@@ -24,7 +24,7 @@ export default function ActiveRequestList(props) {
 
   let result = list.map(request => 
     <Grid item xs={3} key = {request._id}>
-        <ActiveRequestCard 
+        <MatchedRequestCard 
           femaleTranslator = {request.femaleTranslator} 
           documentProofreading = {request.documentProofreading} 
           urgentTranslation= {request.urgentTranslation} 
@@ -33,7 +33,7 @@ export default function ActiveRequestList(props) {
           from = {request.languageFrom} 
           to={request.languageTo}>
         
-        </ActiveRequestCard>
+        </MatchedRequestCard>
     </Grid>
     )
 
@@ -45,7 +45,7 @@ export default function ActiveRequestList(props) {
     }
     result = list.map(request => 
       <Grid item xs={3} item key = {request._id}>
-          <ActiveRequestCard name ={request.author ? request.author.name : request.author} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo}></ActiveRequestCard>
+          <MatchedRequestCard name ={request.author ? request.author.name : request.author} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo}></MatchedRequestCard>
       </Grid>
       )
     setState({});

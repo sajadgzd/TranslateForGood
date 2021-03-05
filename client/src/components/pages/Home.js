@@ -17,7 +17,7 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import ActiveRequestList from '../ActiveRequestList';
+import MatchedRequestList from '../MatchedRequestList';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -353,7 +353,7 @@ const handleSubmitPreviousTranslator = async (e) => {
     
     {// Only translators can see the list of active requests
       user.languageFrom === undefined || user.languageFrom.length == 0 ?
-      <></>: <ActiveRequestList user={user}/>
+      <></>: <MatchedRequestList user={user}/>
     }
   </div>
 
