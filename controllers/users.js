@@ -88,7 +88,6 @@ let UserController = {
     try {
       //get matchedRequests that are active to the particular translators
       let matchedRequests = await User.findOne({_id: req.query.userID})
-      // .populate("matchedRequests").populate("author");
       .populate([{
         path: 'matchedRequests',
         model: 'Request',
