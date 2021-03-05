@@ -69,17 +69,32 @@ export default function ActiveRequestList(props) {
     const classes = useStyles(); 
     return (
         <div style={{ marginTop: 100 }}>
-          <Grid container alignItems="center" spacing={3} >
-            <Grid  item xs={11}>
-            <Typography align="center" variant="h4" gutterBottom>
-              Matching Active Requests
-            </Typography>
-            </Grid> 
-            <Grid item xs={1}>
-              <IconButton  color="primary" aria-label="Refresh Active requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
-            </Grid>            
-              {result}
-          </Grid>
+          {// Only show if there is any result
+            result === undefined || result.length == 0 ?
+            <Grid container alignItems="center" spacing={3} >
+              <Grid  item xs={11}>
+              <Typography align="center" variant="h4" gutterBottom>
+                You are not matched with any requests at the moment.
+              </Typography>
+              </Grid> 
+              <Grid item xs={1}>
+                <IconButton  color="primary" aria-label="Refresh Active requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
+              </Grid>            
+                {result}
+            </Grid>
+            : 
+            <Grid container alignItems="center" spacing={3} >
+              <Grid  item xs={11}>
+              <Typography align="center" variant="h4" gutterBottom>
+                You are matched with the following requests
+              </Typography>
+              </Grid> 
+              <Grid item xs={1}>
+                <IconButton  color="primary" aria-label="Refresh Active requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
+              </Grid>            
+                {result}
+            </Grid>
+          }
         </div>  
 
     );
