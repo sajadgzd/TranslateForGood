@@ -78,7 +78,7 @@ export default function MatchedRequestList(props) {
               </Typography>
               </Grid> 
               <Grid item xs={1}>
-                <IconButton  color="primary" aria-label="Refresh Active requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
+                <IconButton  color="primary" aria-label="Refresh matched requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
               </Grid>            
                 {result}
             </Grid>
@@ -90,7 +90,7 @@ export default function MatchedRequestList(props) {
               </Typography>
               </Grid> 
               <Grid item xs={1}>
-                <IconButton  color="primary" aria-label="Refresh Active requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
+                <IconButton  color="primary" aria-label="Refresh matched requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
               </Grid>            
                 {result}
             </Grid>
