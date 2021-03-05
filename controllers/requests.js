@@ -46,14 +46,18 @@ let RequestController = {
         documentProofreading: documentProofReadingBool,
         isActive: isActive
       });
-      await request.save();
+      let requestID;
+      await request.save(function(err,doc) {
+        requestID = doc.id;
+        console.log("NEWLY CREATED REQUEST ID:\t", doc.id);
+      });
 
       // update user's requests array
       let updatedUser = await User.findOne({_id: user._id});
       updatedUser.requests.push(request);
       await updatedUser.save();
 
-      return res.status(201).json({ message: "New request created successfully!" });
+      return res.status(201).json({ message: "New request created successfully!", requestID: requestID });
     } catch (err) {
       // console.log(err);
       return res.status(400).json({ error: err.message });

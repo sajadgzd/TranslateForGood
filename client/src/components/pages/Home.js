@@ -138,6 +138,7 @@ const Home = (props) => {
         setData({ ...data, materialToInputError: true});
         return;
       }
+      let newRequestID;
         await axios.post(
           "/api/requests/new",
           {  user, languageFrom, languageTo, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
@@ -146,7 +147,11 @@ const Home = (props) => {
               "Content-Type": "application/json",
             },
           }
-        );
+        ).then(function(response){
+          // console.log("RESPONSE FROM NEW REQUEST:\t", response.data.requestID)
+          newRequestID = response.data.requestID;
+        });
+        console.log("NEW REQUEST ID:\t", newRequestID)
         // when successful, refresh page to home page
         props.history.push("/home");
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
@@ -155,7 +160,7 @@ const Home = (props) => {
         await axios.get(
           "/api/users/matchedTranslators", { 
             params: {
-              languageFrom, languageTo, femaleTranslatorBool 
+              languageFrom, languageTo, femaleTranslatorBool, user, newRequestID
             }
           });
       } catch (err) {
