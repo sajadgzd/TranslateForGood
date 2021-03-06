@@ -28,17 +28,18 @@ let UserController = {
       // let userEmail = JSON.parse(req.query.user).email;
       let requestID = req.query.newRequestID;
       console.log("req.query.newRequestID", requestID);
+
       let matchedTranslators;
 
-      if(req.query.femaleTranslatorBool == true){
+      if(req.query.femaleTranslatorBool == "true"){
+        console.log("female translation requested");
         matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool});
         res.json(matchedTranslators);
         // console.log("The matchedTranslators for particular request: ", matchedTranslators);
       }
       else {
-        matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo});
+        matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
         res.json(matchedTranslators);
-
       }
 
       let request = await Request.findOne({_id: requestID});
