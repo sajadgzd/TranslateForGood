@@ -130,6 +130,9 @@ const Home = (props) => {
     setDateTime(date);
   };
 
+  // Create new request, return its ID
+  // Show 'Request submitted dialog window"
+  // Run matching algoritm
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -165,6 +168,7 @@ const Home = (props) => {
         props.history.push("/home");
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
         setData({ ...data, openDialog: true});
+
         //Looking for matching translators for each request
         await axios.get(
           "/api/users/matchedTranslators", { 

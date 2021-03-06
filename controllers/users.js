@@ -28,44 +28,35 @@ let UserController = {
       // let userEmail = JSON.parse(req.query.user).email;
       let requestID = req.query.newRequestID;
       console.log("req.query.newRequestID", requestID);
+      let matchedTranslators;
 
       if(req.query.femaleTranslatorBool == true){
-        let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool})
-        
-        let request = await Request.findOne({_id: requestID});
-        
-        // update matchedRequests for every matchedTranslators found.
-        for (let i = 0; i < matchedTranslators.length; i++) {
-            matchedTranslators[i].matchedRequests.push(request);
-            await matchedTranslators[i].save();
-        }
-
+        matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool});
         res.json(matchedTranslators);
         // console.log("The matchedTranslators for particular request: ", matchedTranslators);
       }
       else {
-        let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
-
-        let request = await Request.findOne({_id: requestID});
-        
-        // update matchedRequests for every matchedTranslators found.
-        for (let i = 0; i < matchedTranslators.length; i++) {
-            matchedTranslators[i].matchedRequests.push(request);
-            await matchedTranslators[i].save();
-        }
-
-        // update matchedTranslators for the new matchedRequest found.
-        for (let i = 0; i < matchedTranslators.length; i++) {
-          request.matchedTranslators.push(matchedTranslators[i]._id);
-        }
-        await request.save();
-
-
+        matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo});
         res.json(matchedTranslators);
-        console.log("The matchedTranslators for particular request: ", matchedTranslators);
-        console.log("The matchedRequest for all matchedTranslators: ", request);
 
       }
+
+      let request = await Request.findOne({_id: requestID});
+        
+      // update matchedRequests for every matchedTranslators found.
+      for (let i = 0; i < matchedTranslators.length; i++) {
+          matchedTranslators[i].matchedRequests.push(request);
+          await matchedTranslators[i].save();
+      }
+
+      // update matchedTranslators for the new matchedRequest found.
+      for (let i = 0; i < matchedTranslators.length; i++) {
+        request.matchedTranslators.push(matchedTranslators[i]._id);
+      }
+      await request.save();
+      console.log("The matchedTranslators for particular request: ", matchedTranslators);
+      console.log("The matchedRequest for all matchedTranslators: ", request);
+
     } catch (err) {
       console.log(err);
       return res.status(400).json({ error: err.message });
