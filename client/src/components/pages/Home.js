@@ -25,6 +25,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 
 // material-ui styles
@@ -66,8 +68,8 @@ const Home = (props) => {
     languageFrom: "",
     languageTo: "",
     error: null,
+    dueDateTime:"",
     femaleTranslatorBool: false,
-    urgentTranslatorBool: false,
     documentProofReadingBool: false,
     previousTranslatorInfo: "",
     materialFromInputError: false,
@@ -107,18 +109,25 @@ const Home = (props) => {
 
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, 
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, 
           previousTranslatorInfo, materialFromInputError, materialToInputError, isActive, openDialog, materialRadioInputError } = data;
 
   const handleCloseDialog = () => {
     setData({...data, 
              languageFrom: "",
              languageTo: "",
+             dueDateTime: "",
              femaleTranslatorBool: false,
-             urgentTranslatorBool: false,
              documentProofReadingBool: false,
              previousTranslatorInfo: "",
              openDialog: false})
+  };
+
+  const [dueDateTime, setDateTime] = useState(new Date());
+
+  const handleDateChange = (date) => {
+    console.log(date);
+    setDateTime(date);
   };
 
   const handleSubmit = async (e) => {
@@ -141,7 +150,7 @@ const Home = (props) => {
       let newRequestID;
         await axios.post(
           "/api/requests/new",
-          {  user, languageFrom, languageTo, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
+          {  user, languageFrom, languageTo, dueDateTime, femaleTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
           {
             headers: {
               "Content-Type": "application/json",
@@ -259,6 +268,16 @@ const handleSubmitPreviousTranslator = async (e) => {
                   </MenuItem>
                 ))}
               </TextField>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <DateTimePicker
+                  required={true}
+                  value={dueDateTime}
+                  disablePast
+                  onChange={handleDateChange}
+                  label="Select the due date for your request"
+                  minDate={new Date()}
+                />
+              </MuiPickersUtilsProvider>
             </div>
             <div>
             <FormControl component="fieldset" className={classes.formControl}>
@@ -267,10 +286,6 @@ const handleSubmitPreviousTranslator = async (e) => {
                 <FormControlLabel
                   control={<Checkbox checked={femaleTranslatorBool} onChange={handleChangeCheckBox} name="femaleTranslatorBool" />}
                   label="Female Translator"
-                />
-                <FormControlLabel
-                  control={<Checkbox checked={urgentTranslatorBool} onChange={handleChangeCheckBox} name="urgentTranslatorBool" />}
-                  label="Urgent Translation"
                 />
                 <FormControlLabel
                   control={<Checkbox checked={documentProofReadingBool} onChange={handleChangeCheckBox} name="documentProofReadingBool" />}

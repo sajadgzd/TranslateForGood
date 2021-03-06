@@ -33,15 +33,15 @@ let RequestController = {
   },
  
   create: async(req, res) => {
-    const { user, languageFrom, languageTo, femaleTranslatorBool, 
-            urgentTranslatorBool, documentProofReadingBool,
+    const { user, languageFrom, languageTo, dueDateTime,
+            femaleTranslatorBool, documentProofReadingBool, 
             previousTranslatorInfo, isActive } = req.body;
     try {
       let request = new Request({
         author: user,
         languageFrom: languageFrom, 
         languageTo: languageTo,
-        urgentTranslation: urgentTranslatorBool, 
+        dueDateTime: dueDateTime,
         femaleTranslator: femaleTranslatorBool, 
         documentProofreading: documentProofReadingBool,
         isActive: isActive

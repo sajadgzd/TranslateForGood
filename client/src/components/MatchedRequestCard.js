@@ -63,7 +63,6 @@ function MatchedRequestCard(props) {
                 </Typography >
                 <Box style={{ marginTop: 20 }}>
                     <Tooltip title="Only Female Translator"><Icon path={mdiFaceWoman} size={1.5} color={colorVocabCustomIcon[props.femaleTranslator]}/></Tooltip>
-                    <Tooltip title="Urgent Request"><AlarmIcon color={colorVocabIcon[props.urgentTranslation]} fontSize="large"/></Tooltip>
                     <Tooltip title="Document Proofreading"><DescriptionIcon color={colorVocabIcon[props.documentProofreading]} fontSize="large"/></Tooltip>
                 </Box>
             </CardContent>
