@@ -68,12 +68,13 @@ const Home = (props) => {
     languageFrom: "",
     languageTo: "",
     error: null,
-    dueDateTime:"",
+    dueDateTime:null,
     femaleTranslatorBool: false,
     documentProofReadingBool: false,
     previousTranslatorInfo: "",
     materialFromInputError: false,
     materialToInputError: false,
+    materialDateTimeInputError: false,
     isActive: true,
     openDialog: false,
     materialRadioInputError: false
@@ -106,28 +107,25 @@ const Home = (props) => {
 
   const handleChangeRadioButton = (event) => {
     setData({ ...data, [event.target.name]: event.target.value, materialRadioInputError: false});
-
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, 
-          previousTranslatorInfo, materialFromInputError, materialToInputError, isActive, openDialog, materialRadioInputError } = data;
+  const handleDateChange = (date) => {
+    setData({...data, materialDateTimeInputError:false, dueDateTime:date});
+  };
+
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, dueDateTime,
+          previousTranslatorInfo, materialFromInputError, materialToInputError, materialDateTimeInputError, isActive, openDialog, materialRadioInputError } = data;
 
   const handleCloseDialog = () => {
     setData({...data, 
              languageFrom: "",
              languageTo: "",
-             dueDateTime: "",
+             dueDateTime: null,
              femaleTranslatorBool: false,
              documentProofReadingBool: false,
              previousTranslatorInfo: "",
+             materialDateTimeInputError:false,
              openDialog: false})
-  };
-
-  const [dueDateTime, setDateTime] = useState(new Date());
-
-  const handleDateChange = (date) => {
-    console.log(date);
-    setDateTime(date);
   };
 
   // Create new request, return its ID
@@ -135,7 +133,6 @@ const Home = (props) => {
   // Run matching algoritm
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setData({...data, user: user}); //////////res.data._id
       setData({ ...data, error: null });
@@ -148,6 +145,10 @@ const Home = (props) => {
         console.log("TO language field is empty or identical to language from")
         // return;
         setData({ ...data, materialToInputError: true});
+        return;
+      } else if(dueDateTime == null || dueDateTime == undefined) {
+        console.log("Data field is empty")
+        setData({ ...data, materialDateTimeInputError: true});
         return;
       }
       let newRequestID;
@@ -275,11 +276,14 @@ const handleSubmitPreviousTranslator = async (e) => {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <DateTimePicker
                   required={true}
-                  value={dueDateTime}
+                  id="select-due-date-time"
+                  label="Due date"
+                  name="dueDateTime"
                   disablePast
+                  error={materialDateTimeInputError}
+                  value={dueDateTime}
                   onChange={handleDateChange}
-                  label="Select the due date for your request"
-                  minDate={new Date()}
+                  helperText="Please select the due date for your request"
                 />
               </MuiPickersUtilsProvider>
             </div>
