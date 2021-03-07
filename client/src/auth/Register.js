@@ -23,12 +23,26 @@ const Register = (props) => {
     femaleTranslator: false,
     timezone: "Eastern",
     error: null,
+    country: "",
   });
+
+  const moment = require('moment-timezone');
+  const lookup = require('country-code-lookup')
+
+  let countriesList = moment.tz.countries().map(country => 
+    <option key = {country} value = {country}>{lookup.byIso(country).country}</option>);
+  const [timezonesList, setTimezonesList] = React.useState(<></>);
+
+  const handleCountryChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+    setTimezonesList(moment.tz.zonesForCountry(e.target.value).map(tz => 
+      <option key = {tz} value = {tz}>{tz}</option>));
+  };
 
   const [showTranslator, setShowTranslator] = React.useState(false)
   const onClick = () => setShowTranslator(!showTranslator)
 
-  const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone, error } = data;
+  const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone, error, country } = data;
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -160,16 +174,18 @@ const Register = (props) => {
           : null }
           </div>
             <div className="form-group" style={{ marginTop: '2rem' }}>
+            <label htmlFor="country">
+                Country: </label>
+                <div className="ui-select">
+                <select name="country" className="form-control" value={country} onChange={handleCountryChange}>
+                  {countriesList}
+                </select>
+              </div>
               <label htmlFor="timezone">
                 Time zone: </label>
-                <div className="ui-select">
+                <div className="ui-select"> 
                 <select name="timezone" className="form-control" value={timezone} onChange={handleChange}>
-                  <option value="Eastern" >(GMT-05:00) Eastern Time</option>
-                  <option value="Hawaii"  >(GMT-10:00) Hawaii Time</option>
-                  <option value="Alaska"  >(GMT-09:00) Alaska Time</option>
-                  <option value="Pacific"  >(GMT-08:00) Pacific Time</option>
-                  <option value="Mountain"  >(GMT-07:00) Mountain Time</option>
-                  <option value="Central"  >(GMT-06:00) Central Time</option>
+                  {timezonesList}
                 </select>
               </div>
             </div>
