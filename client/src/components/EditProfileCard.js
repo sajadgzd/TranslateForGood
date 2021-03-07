@@ -68,7 +68,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const EditProfileCard = (props) => {
 
     const moment = require('moment-timezone');
-    const lookup = require('country-code-lookup')
+    const lookup = require('country-code-lookup');
 
     let countriesList = moment.tz.countries().map(country => 
         <option key = {country} value = {country}>{lookup.byIso(country).country}</option>);

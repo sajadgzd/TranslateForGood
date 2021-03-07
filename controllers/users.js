@@ -4,7 +4,44 @@ const bcrypt = require("bcryptjs");
 const moment = require('moment-timezone');
 const weigths = {timezoneW: 0.7, activityW: 0.3};
 
+const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
+  try{
+    let acceptanceScore = 1 - activityScore;
+    let timeZoneDiff = (2600 - Math.abs(parseInt(moment().tz(requesterTZ).format('ZZ')) - parseInt(moment().tz(translatorTZ).format('ZZ'))))/2600;
+    let UF = weigths.timezoneW*timeZoneDiff + weigths.activityW*acceptanceScore;
+    console.log("UF score is ", UF);
+    return UF;
+  } catch (error) {
+    return res.status(400).json({ error: err.message });
+  }
+};
 
+const timeActivityTable = (day, hour) => {
+  if (hour >= 0 && hour < 6) { //any day of week 12am-6am
+    return 1;
+  } else if (day != 0 && day != 6 && hour >= 8 && hour < 17){ // weekday 8am-5pm
+    return 3;
+  } else if ((day != 0 && day != 6 && hour >= 17 && hour < 22) || ((day == 0 || day == 6) && (hour >= 8 && hour < 22))){ // weekday 5pm-10pm or weekend 8am-10pm
+    return 4;
+  } else {
+    return 2;
+  }
+};
+
+const getTimeActivityScore = (translatorTZ) => {
+  try {
+    let addH = parseInt(moment.tz(moment.tz.guess()).format('ZZ'))/100; // current timezone offset
+    let subH = parseInt(moment.tz(translatorTZ).format('ZZ'))/100; // translator timezone offset
+    let [convertedWeekday, convertedHour] = moment().subtract(addH, 'h').add(subH, 'h').format('d,HH').split(',');
+    let timeActivityScore = timeActivityTable(parseInt(convertedWeekday), parseInt(convertedHour));
+    console.log("In translator's timezone: weekday is", convertedWeekday, ", hour is ", convertedHour);
+    console.log("S score is ", timeActivityScore);
+    return timeActivityScore;
+  } catch (error) {
+    return res.status(400).json({ error: err.message });
+  }
+  
+};
 
 let UserController = { 
 
@@ -50,14 +87,11 @@ let UserController = {
 
       // calculate UF, S for each translator
       for (let i = 0; i < matchedTranslators.length; i++) {
-        let acceptanceScore = 1 - matchedTranslators[i].translationActivity.acceptanceRate;
-        let timeZoneDiff = (2600 - Math.abs(parseInt(moment().tz(request.author.timezone).format('ZZ')) - parseInt(moment().tz(matchedTranslators[i].timezone).format('ZZ'))))/2600;
-        let UF = weigths.timezoneW*timeZoneDiff + weigths.activityW*acceptanceScore;
-
-        console.log('timezones: ', moment().tz(request.author.timezone).format('ZZ'), moment().tz(matchedTranslators[i].timezone).format('ZZ'));
-        console.log(acceptanceScore, timeZoneDiff);
-        console.log("UF score for ", matchedTranslators[i].name, " is ", UF);
-        potentialTranslators.push((matchedTranslators[i], UF));
+        
+        let UF = getUtilityFunctionScore(matchedTranslators[i].translationActivity.acceptanceRate, matchedTranslators[i].timezone, request.author.timezone);
+        let S = getTimeActivityScore(matchedTranslators[i].timezone);
+        
+        potentialTranslators.push((matchedTranslators[i], S, UF));
       }
     //   console.log(potentialTranslators); 
       

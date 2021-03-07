@@ -34,7 +34,7 @@ const Register = (props) => {
   const [timezonesList, setTimezonesList] = useState(<></>);
 
   const handleCountryChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+    setData({ ...data, [e.target.name]: e.target.value }); 
     setTimezonesList(moment.tz.zonesForCountry(e.target.value).map(tz => 
       <option key = {tz} value = {tz}>{tz}</option>));
   };

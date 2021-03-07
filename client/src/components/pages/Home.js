@@ -28,7 +28,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-
 // material-ui styles
 const theme = createMuiTheme();
 theme.typography.h3 = {
