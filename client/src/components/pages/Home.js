@@ -75,6 +75,7 @@ const Home = (props) => {
     materialFromInputError: false,
     materialToInputError: false,
     materialDateTimeInputError: false,
+    dueDateHelperText:"Please select the due date for your request at least ONE HOUR from now",
     isActive: true,
     openDialog: false,
     materialRadioInputError: false
@@ -114,7 +115,8 @@ const Home = (props) => {
   };
 
   const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, dueDateTime,
-          previousTranslatorInfo, materialFromInputError, materialToInputError, materialDateTimeInputError, isActive, openDialog, materialRadioInputError } = data;
+          previousTranslatorInfo, materialFromInputError, materialToInputError, materialDateTimeInputError, 
+          dueDateHelperText, isActive, openDialog, materialRadioInputError } = data;
 
   const handleCloseDialog = () => {
     setData({...data, 
@@ -125,6 +127,7 @@ const Home = (props) => {
              documentProofReadingBool: false,
              previousTranslatorInfo: "",
              materialDateTimeInputError:false,
+             dueDateHelperText:"Please select the due date for your request at least ONE HOUR from now",
              openDialog: false})
   };
 
@@ -142,13 +145,21 @@ const Home = (props) => {
         setData({ ...data, materialFromInputError: true});
         return;
       } else if (data.languageTo === "" || data.languageFrom === data.languageTo){
-        console.log("TO language field is empty or identical to language from")
+        console.log("TO language field is empty or identical to language from");
         // return;
         setData({ ...data, materialToInputError: true});
         return;
       } else if(dueDateTime == null || dueDateTime == undefined) {
-        console.log("Due date field is empty")
-        setData({ ...data, materialDateTimeInputError: true});
+        console.log("Due date field is empty");
+        setData({ ...data, materialDateTimeInputError: true, dueDateHelperText:"Please provide the due date for your request"});
+        return;
+      } 
+      // User tries to submit a due date shorter than an hour
+      // 3540000 milliseconds is 59 minutes - that's to make time change
+      // easier for the users as they only see current hour not seconds 
+      else if(dueDateTime < (new Date().getTime() + 3540000)) {
+        console.log("Due date is shorter than an hour")
+        setData({ ...data, materialDateTimeInputError: true, dueDateHelperText:"Your due date is too soon. We need at least an hour to work on your request"});
         return;
       }
       let newRequestID;
@@ -179,10 +190,7 @@ const Home = (props) => {
           });
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
-
-      } 
- 
-
+      }
   };
 
 const handleSubmitPreviousTranslator = async (e) => {
@@ -283,9 +291,7 @@ const handleSubmitPreviousTranslator = async (e) => {
                   error={materialDateTimeInputError}
                   value={dueDateTime}
                   onChange={handleDateChange}
-                  // minDate={new Date(new Date().getTime() + 60*60*1000)}
-                  minDateMessage={"Due date must be at least 60 minutes from now"}
-                  helperText="Please select the due date for your request"
+                  helperText={dueDateHelperText}
                 />
               </MuiPickersUtilsProvider>
             </div>
