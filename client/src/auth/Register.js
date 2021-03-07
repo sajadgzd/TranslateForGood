@@ -21,17 +21,17 @@ const Register = (props) => {
     languageFrom: [],
     languageTo: [],
     femaleTranslator: false,
-    timezone: "Eastern",
+    timezone: "America/New_York",
     error: null,
     country: "",
   });
 
   const moment = require('moment-timezone');
-  const lookup = require('country-code-lookup')
+  const lookup = require('country-code-lookup');
 
   let countriesList = moment.tz.countries().map(country => 
     <option key = {country} value = {country}>{lookup.byIso(country).country}</option>);
-  const [timezonesList, setTimezonesList] = React.useState(<></>);
+  const [timezonesList, setTimezonesList] = useState(<></>);
 
   const handleCountryChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -39,7 +39,7 @@ const Register = (props) => {
       <option key = {tz} value = {tz}>{tz}</option>));
   };
 
-  const [showTranslator, setShowTranslator] = React.useState(false)
+  const [showTranslator, setShowTranslator] = useState(false)
   const onClick = () => setShowTranslator(!showTranslator)
 
   const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone, error, country } = data;

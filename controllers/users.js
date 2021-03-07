@@ -1,13 +1,17 @@
 const User = require("../models/user");
 const Request = require("../models/request");
 const bcrypt = require("bcryptjs");
+const moment = require('moment-timezone');
+const weigths = {timezoneW: 0.7, activityW: 0.3};
+
+
 
 let UserController = { 
 
   // get user by id
   getById: async (req, res) => {
     try {
-      let found = await User.findOne({_id: req.params.id});
+      let found = await User.findOne({_id: req.query.id});
       res.json(found);
     } catch (error) {
       return res.status(400).json({ error: err.message });
@@ -27,22 +31,36 @@ let UserController = {
     try {
       // let userEmail = JSON.parse(req.query.user).email;
       let requestID = req.query.newRequestID;
-      console.log("req.query.newRequestID", requestID);
+      let request = await Request.findOne({_id: requestID}).populate("author");
+      //console.log("request", request.author);
 
       let matchedTranslators;
 
       if(req.query.femaleTranslatorBool == "true"){
-        console.log("female translation requested");
         matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool});
         res.json(matchedTranslators);
-        // console.log("The matchedTranslators for particular request: ", matchedTranslators);
       }
       else {
         matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
         res.json(matchedTranslators);
       }
 
-      let request = await Request.findOne({_id: requestID});
+      // finish matching algorithm here
+      let potentialTranslators = [];
+
+      // calculate UF, S for each translator
+      for (let i = 0; i < matchedTranslators.length; i++) {
+        let acceptanceScore = 1 - matchedTranslators[i].translationActivity.acceptanceRate;
+        let timeZoneDiff = (2600 - Math.abs(parseInt(moment().tz(request.author.timezone).format('ZZ')) - parseInt(moment().tz(matchedTranslators[i].timezone).format('ZZ'))))/2600;
+        let UF = weigths.timezoneW*timeZoneDiff + weigths.activityW*acceptanceScore;
+
+        console.log('timezones: ', moment().tz(request.author.timezone).format('ZZ'), moment().tz(matchedTranslators[i].timezone).format('ZZ'));
+        console.log(acceptanceScore, timeZoneDiff);
+        console.log("UF score for ", matchedTranslators[i].name, " is ", UF);
+        potentialTranslators.push((matchedTranslators[i], UF));
+      }
+    //   console.log(potentialTranslators); 
+      
         
       // update matchedRequests for every matchedTranslators found.
       for (let i = 0; i < matchedTranslators.length; i++) {
@@ -55,8 +73,8 @@ let UserController = {
         request.matchedTranslators.push(matchedTranslators[i]._id);
       }
       await request.save();
-      console.log("The matchedTranslators for particular request: ", matchedTranslators);
-      console.log("The matchedRequest for all matchedTranslators: ", request);
+    //   console.log("The matchedTranslators for particular request: ", matchedTranslators);
+    //   console.log("The matchedRequest for all matchedTranslators: ", request);
 
     } catch (err) {
       console.log(err);

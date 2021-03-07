@@ -163,10 +163,10 @@ const Home = (props) => {
           // console.log("RESPONSE FROM NEW REQUEST:\t", response.data.requestID)
           newRequestID = response.data.requestID;
         });
-        console.log("NEW REQUEST ID:\t", newRequestID)
+        // console.log("NEW REQUEST ID:\t", newRequestID)
         // when successful, refresh page to home page
         props.history.push("/home");
-        console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
+        // console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
         setData({ ...data, openDialog: true});
 
         //Looking for matching translators for each request

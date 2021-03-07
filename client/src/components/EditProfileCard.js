@@ -72,7 +72,7 @@ const EditProfileCard = (props) => {
 
     let countriesList = moment.tz.countries().map(country => 
         <option key = {country} value = {country}>{lookup.byIso(country).country}</option>);
-    const [timezonesList, setTimezonesList] = React.useState(<></>);
+    const [timezonesList, setTimezonesList] = useState(<></>);
 
     const handleCountryChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -336,7 +336,7 @@ const EditProfileCard = (props) => {
                                         My time zone: </label>
                                         <div className="ui-select">
                                         <select name="timezone" className="form-control" value={timezone} onChange={handleChange}>
-                                        {{timezonesList}}
+                                        {timezonesList}
                                         </select>
                                     </div>
                                 </div>
