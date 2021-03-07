@@ -147,7 +147,7 @@ const Home = (props) => {
         setData({ ...data, materialToInputError: true});
         return;
       } else if(dueDateTime == null || dueDateTime == undefined) {
-        console.log("Data field is empty")
+        console.log("Due date field is empty")
         setData({ ...data, materialDateTimeInputError: true});
         return;
       }
@@ -283,6 +283,8 @@ const handleSubmitPreviousTranslator = async (e) => {
                   error={materialDateTimeInputError}
                   value={dueDateTime}
                   onChange={handleDateChange}
+                  // minDate={new Date(new Date().getTime() + 60*60*1000)}
+                  minDateMessage={"Due date must be at least 60 minutes from now"}
                   helperText="Please select the due date for your request"
                 />
               </MuiPickersUtilsProvider>
