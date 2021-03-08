@@ -26,6 +26,10 @@ const UserSchema = new mongoose.Schema(
       type: [],
       requred: true,
     },
+    proofRead:{
+      type: [],
+      requred: true,
+    },
     femaleTranslator:{
       type: Boolean,
       default: false,

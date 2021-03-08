@@ -6,7 +6,7 @@ let authController = {
   
   // register new user
   register: async (req, res) => { 
-    const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone } = req.body;
+    const { name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone } = req.body;
     try {
       let user = await User.findOne({ email });
       if (user) {
@@ -19,6 +19,7 @@ let authController = {
         password: hashed_password,
         languageFrom,
         languageTo,
+        proofRead,
         femaleTranslator,
         timezone,
       });
@@ -54,7 +55,7 @@ let authController = {
         user: {
           _id: user._id,
           name: user.name,
-          email: user.email,
+          email: user.email
         },
       });
     } catch (err) {
