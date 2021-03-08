@@ -68,12 +68,14 @@ const Home = (props) => {
     languageFrom: "",
     languageTo: "",
     error: null,
-    dueDateTime:"",
+    dueDateTime:null,
     femaleTranslatorBool: false,
     documentProofReadingBool: false,
     previousTranslatorInfo: "",
     materialFromInputError: false,
     materialToInputError: false,
+    materialDateTimeInputError: false,
+    dueDateHelperText:"Please select the due date for your request at least ONE HOUR from now",
     isActive: true,
     openDialog: false,
     materialRadioInputError: false
@@ -106,28 +108,27 @@ const Home = (props) => {
 
   const handleChangeRadioButton = (event) => {
     setData({ ...data, [event.target.name]: event.target.value, materialRadioInputError: false});
-
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, 
-          previousTranslatorInfo, materialFromInputError, materialToInputError, isActive, openDialog, materialRadioInputError } = data;
+  const handleDateChange = (date) => {
+    setData({...data, materialDateTimeInputError:false, dueDateTime:date});
+  };
+
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, dueDateTime,
+          previousTranslatorInfo, materialFromInputError, materialToInputError, materialDateTimeInputError, 
+          dueDateHelperText, isActive, openDialog, materialRadioInputError } = data;
 
   const handleCloseDialog = () => {
     setData({...data, 
              languageFrom: "",
              languageTo: "",
-             dueDateTime: "",
+             dueDateTime: null,
              femaleTranslatorBool: false,
              documentProofReadingBool: false,
              previousTranslatorInfo: "",
+             materialDateTimeInputError:false,
+             dueDateHelperText:"Please select the due date for your request at least ONE HOUR from now",
              openDialog: false})
-  };
-
-  const [dueDateTime, setDateTime] = useState(new Date());
-
-  const handleDateChange = (date) => {
-    console.log(date);
-    setDateTime(date);
   };
 
   // Create new request, return its ID
@@ -135,7 +136,6 @@ const Home = (props) => {
   // Run matching algoritm
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setData({...data, user: user}); //////////res.data._id
       setData({ ...data, error: null });
@@ -145,9 +145,21 @@ const Home = (props) => {
         setData({ ...data, materialFromInputError: true});
         return;
       } else if (data.languageTo === "" || data.languageFrom === data.languageTo){
-        console.log("TO language field is empty or identical to language from")
+        console.log("TO language field is empty or identical to language from");
         // return;
         setData({ ...data, materialToInputError: true});
+        return;
+      } else if(dueDateTime == null || dueDateTime == undefined) {
+        console.log("Due date field is empty");
+        setData({ ...data, materialDateTimeInputError: true, dueDateHelperText:"Please provide the due date for your request"});
+        return;
+      } 
+      // User tries to submit a due date shorter than an hour
+      // 3540000 milliseconds is 59 minutes - that's to make time change
+      // easier for the users as they only see current hour not seconds 
+      else if(dueDateTime < (new Date().getTime() + 3540000)) {
+        console.log("Due date is shorter than an hour")
+        setData({ ...data, materialDateTimeInputError: true, dueDateHelperText:"Your due date is too soon. We need at least an hour to work on your request"});
         return;
       }
       let newRequestID;
@@ -178,10 +190,7 @@ const Home = (props) => {
           });
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
-
-      } 
- 
-
+      }
   };
 
 const handleSubmitPreviousTranslator = async (e) => {
@@ -275,11 +284,14 @@ const handleSubmitPreviousTranslator = async (e) => {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <DateTimePicker
                   required={true}
-                  value={dueDateTime}
+                  id="select-due-date-time"
+                  label="Due date"
+                  name="dueDateTime"
                   disablePast
+                  error={materialDateTimeInputError}
+                  value={dueDateTime}
                   onChange={handleDateChange}
-                  label="Select the due date for your request"
-                  minDate={new Date()}
+                  helperText={dueDateHelperText}
                 />
               </MuiPickersUtilsProvider>
             </div>
