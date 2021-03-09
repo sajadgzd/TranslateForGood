@@ -39,7 +39,8 @@ const colorVocabCustomIcon = {'true': "#dc004e", 'false': "#D3D3D3"};
 
 function MatchedRequestCard(props) {
   const classes = useStyles();
-  const selectRequest = () => void 0;
+  const AcceptMachedTranslationRequest = () => void 0;
+  const DeclineMachedTranslationRequest = () => void 0;
   const timeOfRequest = moment(props.createdAt).format('LLL');
 
   return (  
@@ -68,7 +69,8 @@ function MatchedRequestCard(props) {
             </CardContent>
             
             <CardActions className={classes.root}>
-                <Button variant="contained" size="small" color="primary" onClick={selectRequest}>Select</Button>
+                <Button variant="outlined" size="small" color="primary" onClick={AcceptMachedTranslationRequest}>Accept</Button>
+                <Button variant="outlined" size="small" color="secondary" onClick={DeclineMachedTranslationRequest}>Decline</Button>
             </CardActions>
                     
         </Card> 
