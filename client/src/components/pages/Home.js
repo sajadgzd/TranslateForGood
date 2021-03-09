@@ -17,7 +17,7 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import ActiveRequestList from '../ActiveRequestList';
+import MatchedRequestList from '../MatchedRequestList';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -25,6 +25,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 
 // material-ui styles
@@ -66,8 +68,8 @@ const Home = (props) => {
     languageFrom: "",
     languageTo: "",
     error: null,
+    dueDateTime:"",
     femaleTranslatorBool: false,
-    urgentTranslatorBool: false,
     documentProofReadingBool: false,
     previousTranslatorInfo: "",
     materialFromInputError: false,
@@ -107,20 +109,30 @@ const Home = (props) => {
 
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, 
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, 
           previousTranslatorInfo, materialFromInputError, materialToInputError, isActive, openDialog, materialRadioInputError } = data;
 
   const handleCloseDialog = () => {
     setData({...data, 
              languageFrom: "",
              languageTo: "",
+             dueDateTime: "",
              femaleTranslatorBool: false,
-             urgentTranslatorBool: false,
              documentProofReadingBool: false,
              previousTranslatorInfo: "",
              openDialog: false})
   };
 
+  const [dueDateTime, setDateTime] = useState(new Date());
+
+  const handleDateChange = (date) => {
+    console.log(date);
+    setDateTime(date);
+  };
+
+  // Create new request, return its ID
+  // Show 'Request submitted dialog window"
+  // Run matching algoritm
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -138,24 +150,30 @@ const Home = (props) => {
         setData({ ...data, materialToInputError: true});
         return;
       }
+      let newRequestID;
         await axios.post(
           "/api/requests/new",
-          {  user, languageFrom, languageTo, femaleTranslatorBool, urgentTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
+          {  user, languageFrom, languageTo, dueDateTime, femaleTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
           {
             headers: {
               "Content-Type": "application/json",
             },
           }
-        );
+        ).then(function(response){
+          // console.log("RESPONSE FROM NEW REQUEST:\t", response.data.requestID)
+          newRequestID = response.data.requestID;
+        });
+        console.log("NEW REQUEST ID:\t", newRequestID)
         // when successful, refresh page to home page
         props.history.push("/home");
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
         setData({ ...data, openDialog: true});
+
         //Looking for matching translators for each request
         await axios.get(
           "/api/users/matchedTranslators", { 
             params: {
-              languageFrom, languageTo, femaleTranslatorBool, user
+              languageFrom, languageTo, femaleTranslatorBool, user, newRequestID
             }
           });
       } catch (err) {
@@ -254,6 +272,16 @@ const handleSubmitPreviousTranslator = async (e) => {
                   </MenuItem>
                 ))}
               </TextField>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <DateTimePicker
+                  required={true}
+                  value={dueDateTime}
+                  disablePast
+                  onChange={handleDateChange}
+                  label="Select the due date for your request"
+                  minDate={new Date()}
+                />
+              </MuiPickersUtilsProvider>
             </div>
             <div>
             <FormControl component="fieldset" className={classes.formControl}>
@@ -262,10 +290,6 @@ const handleSubmitPreviousTranslator = async (e) => {
                 <FormControlLabel
                   control={<Checkbox checked={femaleTranslatorBool} onChange={handleChangeCheckBox} name="femaleTranslatorBool" />}
                   label="Female Translator"
-                />
-                <FormControlLabel
-                  control={<Checkbox checked={urgentTranslatorBool} onChange={handleChangeCheckBox} name="urgentTranslatorBool" />}
-                  label="Urgent Translation"
                 />
                 <FormControlLabel
                   control={<Checkbox checked={documentProofReadingBool} onChange={handleChangeCheckBox} name="documentProofReadingBool" />}
@@ -348,7 +372,7 @@ const handleSubmitPreviousTranslator = async (e) => {
     
     {// Only translators can see the list of active requests
       user.languageFrom === undefined || user.languageFrom.length == 0 ?
-      <></>: <ActiveRequestList />
+      <></>: <MatchedRequestList user={user}/>
     }
   </div>
 

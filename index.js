@@ -43,6 +43,7 @@ app.put("/api/users/edit", UserControls.updateUserInfo);
 app.get("/api/users/:id/requests", UserControls.getUserRequests);
 app.get("/api/users/:id/user", UserControls.getById);
 app.get("/api/users/matchedTranslators", UserControls.getMatchedTranslators);
+app.get("/api/users/translatorsMatchedRequests", UserControls.getTranslatorsMatchedRequests)
 app.get("/api/users/all", UserControls.getAll);
 
 

@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Request = require("../models/request");
 const bcrypt = require("bcryptjs");
 
 let UserController = { 
@@ -24,33 +25,39 @@ let UserController = {
   },
   getMatchedTranslators: async (req, res) => {
     try {
-      console.log("THIS IS req.query.user.email:\t", JSON.parse(req.query.user).email);
-      if(req.query.femaleTranslatorBool == true){
-        let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool})
+      // let userEmail = JSON.parse(req.query.user).email;
+      let requestID = req.query.newRequestID;
+      console.log("req.query.newRequestID", requestID);
 
-        console.log("typeof matchedTranslators", typeof matchedTranslators)
-        console.log(" matchedTranslators.matchedRequests", typeof matchedTranslators.matchedRequests)
+      let matchedTranslators;
 
-        // for (let i = 0; i < matchedTranslators.length; i++) {
-        //   matchedTranslators[i].matchedRequests.push(JSON.parse(req.query.user).email);
-        // }
+      if(req.query.femaleTranslatorBool == "true"){
+        console.log("female translation requested");
+        matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool});
         res.json(matchedTranslators);
-        console.log("The matchedTranslators for particular request: ", matchedTranslators);
-
+        // console.log("The matchedTranslators for particular request: ", matchedTranslators);
       }
-      else{
-        let matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
+      else {
+        matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
+        res.json(matchedTranslators);
+      }
+
+      let request = await Request.findOne({_id: requestID});
         
-
-        console.log("typeof matchedTranslators", typeof matchedTranslators)
-        console.log(" matchedTranslators.matchedRequests", typeof matchedTranslators.matchedRequests)
-        // for (let i = 0; i < matchedTranslators.length; i++) {
-        //   matchedTranslators[i].matchedRequests.push(JSON.parse(req.query.user).email);
-        // }
-        res.json(matchedTranslators);
-        console.log("The matchedTranslators for particular request: ", matchedTranslators);
-
+      // update matchedRequests for every matchedTranslators found.
+      for (let i = 0; i < matchedTranslators.length; i++) {
+          matchedTranslators[i].matchedRequests.push(request);
+          await matchedTranslators[i].save();
       }
+
+      // update matchedTranslators for the new matchedRequest found.
+      for (let i = 0; i < matchedTranslators.length; i++) {
+        request.matchedTranslators.push(matchedTranslators[i]._id);
+      }
+      await request.save();
+      console.log("The matchedTranslators for particular request: ", matchedTranslators);
+      console.log("The matchedRequest for all matchedTranslators: ", request);
+
     } catch (err) {
       console.log(err);
       return res.status(400).json({ error: err.message });
@@ -65,6 +72,25 @@ let UserController = {
       let requests = await User.findOne({_id: req.params.id}).populate("requests"); 
       res.json(requests);
     } catch (error) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  getTranslatorsMatchedRequests: async(req, res) => {
+    try {
+      //get matchedRequests that are active to the particular translators
+      let matchedRequests = await User.findOne({_id: req.query.userID})
+      .populate([{
+        path: 'matchedRequests',
+        model: 'Request',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      }]);
+      res.json(matchedRequests.matchedRequests);
+      // console.log("matchedRequests for a particular user:\t", matchedRequests.matchedRequests)
+    } catch (err) {
       return res.status(400).json({ error: err.message });
     }
   },
