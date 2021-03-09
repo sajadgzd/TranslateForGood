@@ -178,13 +178,15 @@ const Register = (props) => {
                 Country: </label>
                 <div className="ui-select">
                 <select name="country" className="form-control" value={country} onChange={handleCountryChange}>
+                  <option defaultValue>Choose your country</option>
                   {countriesList}
                 </select>
               </div>
               <label htmlFor="timezone">
                 Time zone: </label>
                 <div className="ui-select"> 
-                <select name="timezone" className="form-control" value={timezone} onChange={handleChange}>
+                <select  name="timezone" className="form-control" value={timezone} onChange={handleChange}>
+                  <option defaultValue>Choose your time zone</option>
                   {timezonesList}
                 </select>
               </div>
