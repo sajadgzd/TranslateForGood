@@ -30,7 +30,8 @@ export default function MatchedRequestList(props) {
           name ={request.author ? request.author.name : request.author} 
           createdAt= {request.createdAt} 
           from = {request.languageFrom} 
-          to={request.languageTo}>
+          to={request.languageTo}
+          due={request.dueDateTime}>
         
         </MatchedRequestCard>
     </Grid>
@@ -44,7 +45,7 @@ export default function MatchedRequestList(props) {
     }
     result = list.map(request => 
       <Grid item xs={3} item key = {request._id}>
-          <MatchedRequestCard name ={request.author ? request.author.name : request.author} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo}></MatchedRequestCard>
+          <MatchedRequestCard name ={request.author ? request.author.name : request.author} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo} due={request.dueDateTime}></MatchedRequestCard>
       </Grid>
       )
     setState({});

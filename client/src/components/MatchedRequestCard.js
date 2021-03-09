@@ -63,11 +63,12 @@ function MatchedRequestCard(props) {
     //     });
   };
   const timeOfRequest = moment(props.createdAt).format('LLL');
+  const dueDateTime = moment(props.due).format('LLL');
 
   return (  
         <Card className={classes.root}>
             <CardContent >
-            <Grid container justify="center" alignItems="center"><Avatar alt="Profie Picture" className={classes.large}  src={defaultImage} /></Grid>
+                <Grid container justify="center" alignItems="center"><Avatar alt="Profie Picture" className={classes.large}  src={defaultImage} /></Grid>
                 
                 <Typography gutterBottom component={'span'}>
                     <Typography gutterBottom align='center' component={'span'} variant="h6" component="h1" style={{ fontWeight: 600 }}>
@@ -81,6 +82,10 @@ function MatchedRequestCard(props) {
                     <Box display='block'>
                         <Box fontWeight="bold" display="inline">User:</Box>          
                         <Box m={1} display="inline">{props.name}</Box>
+                    </Box>
+                    <Box display='block'>
+                        <Box fontWeight="bold" display="inline">Due Time:</Box>          
+                        <Box m={1} display="inline">{dueDateTime}</Box>
                     </Box>
                 </Typography >
                 <Box style={{ marginTop: 20 }}>
