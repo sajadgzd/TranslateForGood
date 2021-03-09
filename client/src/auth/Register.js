@@ -11,6 +11,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Switch from '@material-ui/core/Switch';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import TextField from '@material-ui/core/TextField';
 
 
 const Register = (props) => {
@@ -20,27 +22,79 @@ const Register = (props) => {
     password: "",
     languageFrom: [],
     languageTo: [],
+    proofRead: [],
     femaleTranslator: false,
-    timezone: "Eastern",
+    materialInputErrorName: false,
+    materialInputErrorEmail: false,
+    materialInputErrorPassword: false,
+    materialInputErrorTimezone: false,
+    timezone: "",
     error: null,
+    country: "",
   });
 
-  const [showTranslator, setShowTranslator] = React.useState(false)
-  const onClick = () => setShowTranslator(!showTranslator)
+  const moment = require('moment-timezone');
+  const lookup = require('country-code-lookup');
 
-  const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone, error } = data;
+  let countriesList = moment.tz.countries().map(country => 
+    <option key = {country} value = {country}>{lookup.byIso(country).country}</option>);
+  const [timezonesList, setTimezonesList] = useState(<></>);
 
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+  const handleCountryChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value }); 
+    setTimezonesList(moment.tz.zonesForCountry(e.target.value).map(tz => 
+      <option key = {tz} value = {tz}>{tz}</option>));
   };
 
+  const [showTranslator, setShowTranslator] = useState(false)
+  const onClick = () => setShowTranslator(!showTranslator)
+
+  const { name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone, error, country} = data;
+  const [languagesSelected, setlanguegesSelected] = React.useState([]);
+  const [languagesSelectedTo, setlanguegesSelectedTo] = React.useState([]);
+  const [languagesSelectedFrom, setlanguegesSelectedFrom] = React.useState([]);
+ 
+  
+  const handleChange = (e) => {
+      setData({ ...data, materialInputErrorName: false, materialInputErrorEmail: false, materialInputErrorPassword: false, materialInputErrorTimezone: false, [e.target.name]: e.target.value });
+  };
+  const handleArray = (e) => {
+    if(e.target.name == "languageFrom"){
+      setlanguegesSelectedFrom(e.target.value);
+    }
+    if(e.target.name == "languageTo"){
+      setlanguegesSelectedTo(e.target.value);
+    }
+  };
+  const handleMerge = (e) => {
+    var result = languagesSelectedFrom.concat(languagesSelectedTo);
+    let uniqueArray = [...new Set(result)];
+    setlanguegesSelected(uniqueArray);
+  };
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setData({ ...data, error: null });
+      if (data.name === ""){
+        setData({ ...data, materialInputErrorName: true});
+        return;
+      }
+      if (data.email === "") {
+        setData({ ...data, materialInputErrorEmail: true});
+        return;
+      }
+      if (data.password === "") {
+        setData({ ...data, materialInputErrorPassword: true});
+        return;
+      }
+      if (data.timezone === "") {
+        setData({ ...data, materialInputErrorTimezone: true});
+        return;
+      }
       await axios.post(
         "/api/auth/register",
-        { name, email, password, languageFrom, languageTo, femaleTranslator, timezone },
+        { name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone },
         {
           headers: {
             "Content-Type": "application/json",
@@ -59,7 +113,8 @@ const Register = (props) => {
   "Javanese","Kannada","Korean","Malayalam","Mandarin Chinese",
   "Marathi","Oriya","Panjabi","Persian","Polish","Portuguese",
   "Russian","Spanish","Tamil","Telugu","Thai","Turkish",
-  "Ukrainian","Urdu","Vietnamese"];  
+  "Ukrainian","Urdu","Vietnamese"];
+
 
   const handleChangeRadioButton = (event) => {
     setData({ ...data, [event.target.name]: event.target.checked });
@@ -75,33 +130,36 @@ const Register = (props) => {
           <form>
             <div className="form-group">
               <label htmlFor="name">Name</label>
-              <input
+              <TextField required={true}
                 className="form-control"
                 type="name"
                 name="name"
+                error={data.materialInputErrorName}
                 value={name}
                 onChange={handleChange}
-              />
+                ></TextField>
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
-              <input
+              <TextField required={true}
                 className="form-control"
                 type="email"
                 name="email"
+                error={data.materialInputErrorEmail}
                 value={email}
                 onChange={handleChange}
-              />
+                ></TextField>
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input
+              <TextField required={true}
                 className="form-control"
                 type="password"
                 name="password"
+                error={data.materialInputErrorPassword}
                 value={password}
                 onChange={handleChange}
-              />
+                ></TextField>
             </div>
             <div className="form-check">
               <input id="copy" type="checkbox" className="form-check-input" onClick={onClick}/>
@@ -109,13 +167,13 @@ const Register = (props) => {
               { showTranslator ?
             <div id="translator">
               <div id="ArrayOne" style={{ marginTop: '2rem' }}>
-              <FormControl className="languageFrom">
-              <FormLabel component="legend">Languages you can translate from:</FormLabel>
+              <FormControl variant="filled" className="form-control">
+              <InputLabel id="demo-simple-select-filled-label">Languages you can translate from:</InputLabel>
                   <Select
                       name="languageFrom"
                       multiple
                       value={languageFrom}
-                      onChange={handleChange}
+                      onChange={e => { handleChange(e); handleArray(e)}}
                       input={<Input />}
                   >
                   {languages.map((l) => (
@@ -127,16 +185,35 @@ const Register = (props) => {
               </FormControl>
               </div>
               <div id="ArrayTwo" style={{ marginTop: '2rem' }}>
-              <FormControl className="languageTo">
-              <FormLabel component="legend">Languages you can translate to:</FormLabel>
+              <FormControl variant="filled" className="form-control">
+              <InputLabel id="demo-simple-select-filled-label">Languages you can translate to:</InputLabel>
                   <Select
                       name="languageTo"
                       multiple
                       value={languageTo}
-                      onChange={handleChange}
+                      onClick={handleMerge}
+                      onChange={e => { handleChange(e); handleArray(e)}}
                       input={<Input />}
                   >
                   {languages.map((l) => (
+                  <MenuItem key={l} value={l} >
+                    {l}
+                  </MenuItem>
+                  ))}
+                  </Select>
+              </FormControl>
+              </div>
+              <div id="ArrayThree" style={{ marginTop: '2rem' }}>
+              <FormControl variant="filled" className="form-control">
+              <InputLabel id="demo-simple-select-filled-label">Languages you feel comfortable to proofread:</InputLabel>
+                  <Select
+                      name="proofRead"
+                      multiple
+                      value={proofRead}
+                      onChange={handleChange}
+                      input={<Input />}
+                  >
+                  {languagesSelected.map((l) => (
                   <MenuItem key={l} value={l} >
                     {l}
                   </MenuItem>
@@ -159,20 +236,42 @@ const Register = (props) => {
           </div>
           : null }
           </div>
-            <div className="form-group" style={{ marginTop: '2rem' }}>
-              <label htmlFor="timezone">
-                Time zone: </label>
-                <div className="ui-select">
-                <select name="timezone" className="form-control" value={timezone} onChange={handleChange}>
-                  <option value="Eastern" >(GMT-05:00) Eastern Time</option>
-                  <option value="Hawaii"  >(GMT-10:00) Hawaii Time</option>
-                  <option value="Alaska"  >(GMT-09:00) Alaska Time</option>
-                  <option value="Pacific"  >(GMT-08:00) Pacific Time</option>
-                  <option value="Mountain"  >(GMT-07:00) Mountain Time</option>
-                  <option value="Central"  >(GMT-06:00) Central Time</option>
-                </select>
-              </div>
-            </div>
+            <FormControl className="form-control" style={{ marginBottom: '2rem' }}>
+              <InputLabel htmlFor="age-native-helper">Country</InputLabel>
+                <NativeSelect
+                  required={true}
+                  error={data.materialInputErrorTimezone}
+                  value={country} 
+                  onChange={handleCountryChange}
+                  inputProps={{
+                    name: 'country',
+                    id: 'age-native-helper',
+                  }}
+                >
+                 <option aria-label="None" value="" />
+                 <option defaultValue>Choose your country</option>
+                  {countriesList}
+                </NativeSelect>
+              <FormHelperText>Please select the UTC you are located.</FormHelperText>
+            </FormControl>
+            <FormControl className="form-control" style={{ marginBottom: '2rem' }}>
+              <InputLabel htmlFor="age-native-helper">Time Zone</InputLabel>
+                <NativeSelect
+                  required={true}
+                  error={data.materialInputErrorTimezone}
+                  value={timezone}
+                  onChange={handleChange}
+                  inputProps={{
+                    name: 'timezone',
+                    id: 'age-native-helper',
+                  }}
+                >
+                 <option aria-label="None" value="" />
+                 <option defaultValue>Choose your time zone</option>
+                  {timezonesList}
+                </NativeSelect>
+              <FormHelperText>Please select the UTC you are located.</FormHelperText>
+            </FormControl>
             {error ? <p className="text-danger">{error}</p> : null}
             <div className="text-center">
               <button className="btn btn-primary" onClick={handleSubmit}>
