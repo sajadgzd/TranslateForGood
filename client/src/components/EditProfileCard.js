@@ -76,9 +76,9 @@ const EditProfileCard = (props) => {
 
     const handleCountryChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
-        console.log(e.target.value);
-        setTimezonesList(moment.tz.zonesForCountry(e.target.value).map(tz => 
-        <option key = {tz} value = {tz}>{tz}</option>));
+        console.log('selected country is', e.target.value);
+        setTimezonesList(moment.tz.zonesForCountry(e.target.value).map(timezone => 
+        <option key = {timezone} value = {timezone}>{timezone}</option>));
     };
 
     const user = props.user;

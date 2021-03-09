@@ -18,13 +18,13 @@ const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
 
 const timeActivityTable = (day, hour) => {
   if (hour >= 0 && hour < 6) { //any day of week 12am-6am
-    return 1;
+    return 0;
   } else if (day != 0 && day != 6 && hour >= 8 && hour < 17){ // weekday 8am-5pm
-    return 3;
+    return 0.7;
   } else if ((day != 0 && day != 6 && hour >= 17 && hour < 22) || ((day == 0 || day == 6) && (hour >= 8 && hour < 22))){ // weekday 5pm-10pm or weekend 8am-10pm
-    return 4;
+    return 1;
   } else {
-    return 2;
+    return 0.3;
   }
 };
 
