@@ -48,8 +48,20 @@ const colorVocabCustomIcon = {'true': "#dc004e", 'false': "#D3D3D3"};
 
 function MatchedRequestCard(props) {
   const classes = useStyles();
-  const AcceptMachedTranslationRequest = () => void 0;
-  const DeclineMachedTranslationRequest = () => void 0;
+  const handleAcceptMachedTranslationRequest = () => {
+    //   await axios.post(
+    //         // 
+    //     ).then(function(response){
+    //       // console.log("RESPONSE FROM Accept:\t", response.data)
+    //     });
+  };
+  const handleDeclineMachedTranslationRequest = () => {
+    //   await axios.post(
+    //     //   
+    //     ).then(function(response){
+    //       // console.log("RESPONSE FROM Decline:\t", response.data)
+    //     });
+  };
   const timeOfRequest = moment(props.createdAt).format('LLL');
 
   return (  
@@ -78,8 +90,8 @@ function MatchedRequestCard(props) {
             </CardContent>
             
             <CardActions className={classes.root}>
-                <Button variant="outlined" size="small" color="primary" onClick={AcceptMachedTranslationRequest} className={classes.acceptButtonColor}>Accept</Button>
-                <Button variant="outlined" size="small" color="secondary" onClick={DeclineMachedTranslationRequest} >Decline</Button>
+                <Button variant="outlined" size="small" color="primary" onClick={handleAcceptMachedTranslationRequest} className={classes.acceptButtonColor}>Accept</Button>
+                <Button variant="outlined" size="small" color="secondary" onClick={handleDeclineMachedTranslationRequest} >Decline</Button>
             </CardActions>
                     
         </Card> 
