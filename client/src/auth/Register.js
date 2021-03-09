@@ -24,18 +24,32 @@ const Register = (props) => {
     languageTo: [],
     proofRead: [],
     femaleTranslator: false,
-    timezone: "",
-    error: null,
     materialInputErrorName: false,
     materialInputErrorEmail: false,
     materialInputErrorPassword: false,
     materialInputErrorTimezone: false,
+    timezone: "",
+    error: null,
+    country: "",
   });
 
-  const [showTranslator, setShowTranslator] = React.useState(false)
+  const moment = require('moment-timezone');
+  const lookup = require('country-code-lookup');
+
+  let countriesList = moment.tz.countries().map(country => 
+    <option key = {country} value = {country}>{lookup.byIso(country).country}</option>);
+  const [timezonesList, setTimezonesList] = useState(<></>);
+
+  const handleCountryChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value }); 
+    setTimezonesList(moment.tz.zonesForCountry(e.target.value).map(tz => 
+      <option key = {tz} value = {tz}>{tz}</option>));
+  };
+
+  const [showTranslator, setShowTranslator] = useState(false)
   const onClick = () => setShowTranslator(!showTranslator)
 
-  const { name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone, error } = data;
+  const { name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone, error, country} = data;
   const [languagesSelected, setlanguegesSelected] = React.useState([]);
   const [languagesSelectedTo, setlanguegesSelectedTo] = React.useState([]);
   const [languagesSelectedFrom, setlanguegesSelectedFrom] = React.useState([]);
@@ -223,6 +237,24 @@ const Register = (props) => {
           : null }
           </div>
             <FormControl className="form-control" style={{ marginBottom: '2rem' }}>
+              <InputLabel htmlFor="age-native-helper">Country</InputLabel>
+                <NativeSelect
+                  required={true}
+                  error={data.materialInputErrorTimezone}
+                  value={country} 
+                  onChange={handleCountryChange}
+                  inputProps={{
+                    name: 'country',
+                    id: 'age-native-helper',
+                  }}
+                >
+                 <option aria-label="None" value="" />
+                 <option defaultValue>Choose your country</option>
+                  {countriesList}
+                </NativeSelect>
+              <FormHelperText>Please select the UTC you are located.</FormHelperText>
+            </FormControl>
+            <FormControl className="form-control" style={{ marginBottom: '2rem' }}>
               <InputLabel htmlFor="age-native-helper">Time Zone</InputLabel>
                 <NativeSelect
                   required={true}
@@ -235,7 +267,8 @@ const Register = (props) => {
                   }}
                 >
                  <option aria-label="None" value="" />
-                 <option value="UTC+14:00 Pacific/Kiritimati">UTC+14:00 Pacific/Kiritimati</option>
+                 <option defaultValue>Choose your time zone</option>
+                  {timezonesList}
                 </NativeSelect>
               <FormHelperText>Please select the UTC you are located.</FormHelperText>
             </FormControl>
