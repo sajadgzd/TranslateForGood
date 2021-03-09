@@ -173,7 +173,7 @@ const Home = (props) => {
         await axios.get(
           "/api/users/matchedTranslators", { 
             params: {
-              languageFrom, languageTo, femaleTranslatorBool, user, newRequestID
+              languageFrom, languageTo, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
             }
           });
       } catch (err) {

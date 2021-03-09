@@ -26,7 +26,10 @@ const Register = (props) => {
     femaleTranslator: false,
     timezone: "",
     error: null,
-    materialInputError: false,
+    materialInputErrorName: false,
+    materialInputErrorEmail: false,
+    materialInputErrorPassword: false,
+    materialInputErrorTimezone: false,
   });
 
   const [showTranslator, setShowTranslator] = React.useState(false)
@@ -39,7 +42,7 @@ const Register = (props) => {
  
   
   const handleChange = (e) => {
-      setData({ ...data, materialInputError: false, [e.target.name]: e.target.value });
+      setData({ ...data, materialInputErrorName: false, materialInputErrorEmail: false, materialInputErrorPassword: false, materialInputErrorTimezone: false, [e.target.name]: e.target.value });
   };
   const handleArray = (e) => {
     if(e.target.name == "languageFrom"){
@@ -59,9 +62,20 @@ const Register = (props) => {
     e.preventDefault();
     try {
       setData({ ...data, error: null });
-      if (data.name === "" || data.email === "" || data.password === "" || data.timezone === "") {
-        console.log("Some of requered fields during registration new user are empty!")
-        setData({ ...data, materialInputError: true});
+      if (data.name === ""){
+        setData({ ...data, materialInputErrorName: true});
+        return;
+      }
+      if (data.email === "") {
+        setData({ ...data, materialInputErrorEmail: true});
+        return;
+      }
+      if (data.password === "") {
+        setData({ ...data, materialInputErrorPassword: true});
+        return;
+      }
+      if (data.timezone === "") {
+        setData({ ...data, materialInputErrorTimezone: true});
         return;
       }
       await axios.post(
@@ -106,7 +120,7 @@ const Register = (props) => {
                 className="form-control"
                 type="name"
                 name="name"
-                error={data.materialInputError}
+                error={data.materialInputErrorName}
                 value={name}
                 onChange={handleChange}
                 ></TextField>
@@ -117,7 +131,7 @@ const Register = (props) => {
                 className="form-control"
                 type="email"
                 name="email"
-                error={data.materialInputError}
+                error={data.materialInputErrorEmail}
                 value={email}
                 onChange={handleChange}
                 ></TextField>
@@ -128,7 +142,7 @@ const Register = (props) => {
                 className="form-control"
                 type="password"
                 name="password"
-                error={data.materialInputError}
+                error={data.materialInputErrorPassword}
                 value={password}
                 onChange={handleChange}
                 ></TextField>
@@ -212,7 +226,7 @@ const Register = (props) => {
               <InputLabel htmlFor="age-native-helper">Time Zone</InputLabel>
                 <NativeSelect
                   required={true}
-                  error={data.materialInputError}
+                  error={data.materialInputErrorTimezone}
                   value={timezone}
                   onChange={handleChange}
                   inputProps={{

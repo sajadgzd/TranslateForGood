@@ -30,14 +30,22 @@ let UserController = {
       console.log("req.query.newRequestID", requestID);
 
       let matchedTranslators;
-
-      if(req.query.femaleTranslatorBool == "true"){
+      
+      if(req.query.femaleTranslatorBool == "true" && req.query.documentProofReadingBool == "false"){
         console.log("female translation requested");
         matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool});
         res.json(matchedTranslators);
         // console.log("The matchedTranslators for particular request: ", matchedTranslators);
-      }
-      else {
+      }else if(req.query.femaleTranslatorBool == "true" && req.query.documentProofReadingBool == "true"){
+        console.log("female translation requested and document profreading requested");
+        matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool, proofRead: req.query.languageFrom});
+        res.json(matchedTranslators);
+      }else if(req.query.femaleTranslatorBool == "false" && req.query.documentProofReadingBool == "true"){
+        console.log("document profreading requested");
+        matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, proofRead: req.query.languageFrom});
+        res.json(matchedTranslators);
+      } else {
+        console.log("no female, no profread - requested");
         matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
         res.json(matchedTranslators);
       }
