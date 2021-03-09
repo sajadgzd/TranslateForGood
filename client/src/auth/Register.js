@@ -12,6 +12,7 @@ import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Switch from '@material-ui/core/Switch';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import TextField from '@material-ui/core/TextField';
 
 
 const Register = (props) => {
@@ -25,6 +26,7 @@ const Register = (props) => {
     femaleTranslator: false,
     timezone: "",
     error: null,
+    materialInputError: false,
   });
 
   const [showTranslator, setShowTranslator] = React.useState(false)
@@ -34,11 +36,10 @@ const Register = (props) => {
   const [languagesSelected, setlanguegesSelected] = React.useState([]);
   const [languagesSelectedTo, setlanguegesSelectedTo] = React.useState([]);
   const [languagesSelectedFrom, setlanguegesSelectedFrom] = React.useState([]);
-  const [errors, setErrors] = React.useState({});
  
   
   const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+      setData({ ...data, materialInputError: false, [e.target.name]: e.target.value });
   };
   const handleArray = (e) => {
     if(e.target.name == "languageFrom"){
@@ -53,37 +54,16 @@ const Register = (props) => {
     let uniqueArray = [...new Set(result)];
     setlanguegesSelected(uniqueArray);
   };
-  const handleValidation = (e) =>{
-    let errors = {};
-    let formIsValid = true;
-    if(!data.name){
-       formIsValid = false;
-       errors["name"] = "Cannot be empty";
-    }
-    if(!data.email){
-       formIsValid = false;
-       errors["email"] = "Cannot be empty";
-    }
-   if(!data.password){
-    formIsValid = false;
-    errors["password"] = "Cannot be empty";
-  }
-  if(!data.timezone){
-    formIsValid = false;
-    errors["timezone"] = "Cannot be empty";
-  }
-   setErrors({errors: errors});
-   return formIsValid;
-}
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(handleValidation()){
-      alert("Form submitted");
-   }else{
-      alert("Form has errors: ", errors.value)
-   }
     try {
       setData({ ...data, error: null });
+      if (data.name === "" || data.email === "" || data.password === "" || data.timezone === "") {
+        console.log("Some of requered fields during registration new user are empty!")
+        setData({ ...data, materialInputError: true});
+        return;
+      }
       await axios.post(
         "/api/auth/register",
         { name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone },
@@ -122,33 +102,36 @@ const Register = (props) => {
           <form>
             <div className="form-group">
               <label htmlFor="name">Name</label>
-              <input
+              <TextField required={true}
                 className="form-control"
                 type="name"
                 name="name"
+                error={data.materialInputError}
                 value={name}
                 onChange={handleChange}
-              />
+                ></TextField>
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
-              <input
+              <TextField required={true}
                 className="form-control"
                 type="email"
                 name="email"
+                error={data.materialInputError}
                 value={email}
                 onChange={handleChange}
-              />
+                ></TextField>
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input
+              <TextField required={true}
                 className="form-control"
                 type="password"
                 name="password"
+                error={data.materialInputError}
                 value={password}
                 onChange={handleChange}
-              />
+                ></TextField>
             </div>
             <div className="form-check">
               <input id="copy" type="checkbox" className="form-check-input" onClick={onClick}/>
@@ -228,6 +211,8 @@ const Register = (props) => {
             <FormControl className="form-control" style={{ marginBottom: '2rem' }}>
               <InputLabel htmlFor="age-native-helper">Time Zone</InputLabel>
                 <NativeSelect
+                  required={true}
+                  error={data.materialInputError}
                   value={timezone}
                   onChange={handleChange}
                   inputProps={{
@@ -236,32 +221,6 @@ const Register = (props) => {
                   }}
                 >
                  <option aria-label="None" value="" />
-                 <option value="UTC-12:00 Baker Island, Howland Island">UTC-12:00 Baker Island, Howland Island</option>
-                 <option value="UTC-11:00 Pacific/Samoa, US/Samoa">UTC-11:00 Pacific/Samoa, US/Samoa</option>
-                 <option value="UTC-10:00 US/Aleutian, US/Hawaii">UTC-10:00 US/Aleutian, US/Hawaii</option>
-                 <option value="UTC-09:00 US/Alaska">UTC-09:00 US/Alaska</option>
-                 <option value="UTC-08:00 US/Pacific, Canada/Pacific">UTC-08:00 US/Pacific, Canada/Pacific</option>
-                 <option value="UTC-07:00 US/Arizona, Canada/Mountain">UTC-07:00 US/Arizona, Canada/Mountain</option>
-                 <option value="UTC-06:00 US/Central, Canada/Central">UTC-06:00 US/Central, Canada/Central</option>
-                 <option value="UTC-05:00 US/Eastern, Canada/Eastern">UTC-05:00 US/Eastern, Canada/Eastern</option>
-                 <option value="UTC-04:00 Canada/Atlantic, Brazil/West">UTC-04:00 Canada/Atlantic, Brazil/West</option>
-                 <option value="UTC-03:00 Canada/Newfoundland, Brazil/East">UTC-03:00 Canada/Newfoundland, Brazil/East</option>
-                 <option value="UTC-02:00 Brazil/DeNoronha, Atlantic/South Georgia">UTC-02:00 Brazil/DeNoronha, Atlantic/South Georgia</option>
-                 <option value="UTC-01:00 Portugal/Azores, Greenland/Ittoqqortoormiit">UTC-01:00 Portugal/Azores, Greenland/Ittoqqortoormiit</option>
-                 <option value="UTC±00:00 Portugal, Europe/Belfast">UTC±00:00 Portugal, Europe/Belfast</option>
-                 <option value="UTC+01:00 Poland, Europe/Vatican">UTC+01:00 Poland, Europe/Vatican</option>
-                 <option value="UTC+02:00 Egypt, Asia/Istanbul">UTC+02:00 Egypt, Asia/Istanbul</option>
-                 <option value="UTC+03:00 Africa/Asmera, Europe/Moscow">UTC+03:00 Africa/Asmera, Europe/Moscow</option>
-                 <option value="UTC+04:00 Asia/Dubai, Indian/Mahe">UTC+04:00 Asia/Dubai, Indian/Mahe</option>
-                 <option value="UTC+05:00 Asia/Ashkhabad, Indian/Maldives">UTC+05:00 Asia/Ashkhabad, Indian/Maldives</option>
-                 <option value="UTC+06:00 Asia/Thimbu, Asia/Dacca">UTC+06:00 Asia/Thimbu, Asia/Dacca</option>
-                 <option value="UTC+07:00 Asia/Saigon, Indian/Christmas">UTC+07:00 Asia/Saigon, Indian/Christmas</option>
-                 <option value="UTC+08:00 Australia/West, Asia/Macao">UTC+08:00 Australia/West, Asia/Macao</option>
-                 <option value="UTC+09:00 Japan, Australia/South">UTC+09:00 Japan, Australia/South</option>
-                 <option value="UTC+10:00 Australia/North, Pacific/Truk">UTC+10:00 Australia/North, Pacific/Truk</option>
-                 <option value="UTC+11:00 Pacific/Ponape, Asia/Kamchatka">UTC+11:00 Pacific/Ponape, Asia/Kamchatka</option>
-                 <option value="UTC+12:00 Pacific/Wallis, Pacific/Fiji">UTC+12:00 Pacific/Wallis, Pacific/Fiji</option>
-                 <option value="UTC+13:00 Pacific/Enderbury, Pacific/Tongatapu">UTC+13:00 Pacific/Enderbury, Pacific/Tongatapu</option>
                  <option value="UTC+14:00 Pacific/Kiritimati">UTC+14:00 Pacific/Kiritimati</option>
                 </NativeSelect>
               <FormHelperText>Please select the UTC you are located.</FormHelperText>
