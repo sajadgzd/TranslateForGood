@@ -31,6 +31,15 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(15),
         justifyContent: "center"
       },
+    acceptButtonColor: {
+        borderColor: '#4caf50',
+        color: '#4caf50',
+        '&:hover': {
+            color: '#4caf50',
+            borderColor: '#4caf50',
+            boxShadow: 'none',
+          },
+      }
   }));
 
 const colorVocabIcon = {'true': "secondary", 'false': "disabled"};
@@ -69,8 +78,8 @@ function MatchedRequestCard(props) {
             </CardContent>
             
             <CardActions className={classes.root}>
-                <Button variant="outlined" size="small" color="primary" onClick={AcceptMachedTranslationRequest}>Accept</Button>
-                <Button variant="outlined" size="small" color="secondary" onClick={DeclineMachedTranslationRequest}>Decline</Button>
+                <Button variant="outlined" size="small" color="primary" onClick={AcceptMachedTranslationRequest} className={classes.acceptButtonColor}>Accept</Button>
+                <Button variant="outlined" size="small" color="secondary" onClick={DeclineMachedTranslationRequest} >Decline</Button>
             </CardActions>
                     
         </Card> 
