@@ -49,6 +49,7 @@ const colorVocabCustomIcon = {'true': "#dc004e", 'false': "#D3D3D3"};
 function MatchedRequestCard(props) {
   const classes = useStyles();
   const handleAcceptMachedTranslationRequest = () => {
+    // to be implemented later
     //   await axios.post(
     //         // 
     //     ).then(function(response){
@@ -56,6 +57,7 @@ function MatchedRequestCard(props) {
     //     });
   };
   const handleDeclineMachedTranslationRequest = () => {
+    // to be implemented later
     //   await axios.post(
     //     //   
     //     ).then(function(response){
