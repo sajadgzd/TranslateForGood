@@ -26,6 +26,10 @@ const UserSchema = new mongoose.Schema(
       type: [],
       requred: true,
     },
+    proofRead:{
+      type: [],
+      requred: true,
+    },
     femaleTranslator:{
       type: Boolean,
       default: false,
@@ -47,7 +51,33 @@ const UserSchema = new mongoose.Schema(
     matchedRequests: [{
       type: Schema.Types.ObjectId,
       ref: "Request"
-    }]
+    }],
+    translationActivity: {
+      accepted: [{
+        type: Schema.Types.ObjectId, 
+        ref: "Request"
+      }],
+      declined: [{
+        type: Schema.Types.ObjectId, 
+        ref: "Request"
+      }],
+      ignored: [{
+        type: Schema.Types.ObjectId, 
+        ref: "Request"
+      }],
+      acceptanceRate: {
+        type: Number,
+        default: function() {
+          let total = this.translationActivity.accepted.length + this.translationActivity.declined.length + this.translationActivity.ignored.length;
+          if (total == 0) {
+            return 0;
+          } else {
+            return this.translationActivity.accepted.length/total;
+          }
+        },
+      }
+
+    }
   },
   { timestamps: true }
 );
