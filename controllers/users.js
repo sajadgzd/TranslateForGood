@@ -42,6 +42,23 @@ const getTimeActivityScore = (translatorTZ) => {
   }
   
 };
+const isRequestUrgent = (due) => {
+  try {
+    let time = new Date().getTime() + 3600000*5;
+    var date = new Date(time); 
+    //down.innerHTML = date.toString();
+    //var translationDueInMiliseconds = (due.getTime()-due.getMilliseconds())/1000;
+    console.log(due, " ==================================== ", time,"////////////////////////////////")
+    if(due.getTime() < (new Date().getTime() + 3600*5)) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return res.status(400).json({ error: err.message });
+  }
+  
+};
 
 let UserController = { 
 
@@ -91,7 +108,9 @@ let UserController = {
         matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
         res.json(matchedTranslators);
       }
-
+      //figure out if request is urgent - currently less than 5 hours
+      let urgent = isRequestUrgent(req.query.dueDateTime);
+      console.log("Is this request urgent? Answer: ", urgent);
       // finish matching algorithm here
       let potentialTranslators = [];
 
