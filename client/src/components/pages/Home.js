@@ -28,7 +28,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-
 // material-ui styles
 const theme = createMuiTheme();
 theme.typography.h3 = {
@@ -175,17 +174,17 @@ const Home = (props) => {
           // console.log("RESPONSE FROM NEW REQUEST:\t", response.data.requestID)
           newRequestID = response.data.requestID;
         });
-        console.log("NEW REQUEST ID:\t", newRequestID)
+        // console.log("NEW REQUEST ID:\t", newRequestID)
         // when successful, refresh page to home page
         props.history.push("/home");
-        console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
+        // console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
         setData({ ...data, openDialog: true});
 
         //Looking for matching translators for each request
         await axios.get(
           "/api/users/matchedTranslators", { 
             params: {
-              languageFrom, languageTo, femaleTranslatorBool, user, newRequestID
+              languageFrom, languageTo, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
             }
           });
       } catch (err) {
