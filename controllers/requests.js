@@ -84,12 +84,17 @@ let RequestController = {
       // and check if request is in declined/accepted. If yes - nothing. If no - add to 'ignored'
       let newlyUpdatedRequest = await Request.findOne({_id: requestID}).populate('matchedTranslators');
       let targetTranslators = newlyUpdatedRequest.matchedTranslators;
-      
+
       for (let i = 0; i < targetTranslators.length; i++) {
         targetTranslators[i].matchedRequests.pull({_id: requestID });
         if (!targetTranslators[i].translationActivity.declined.includes(requestID) && !targetTranslators[i].translationActivity.accepted.includes(requestID) ){
           targetTranslators[i].translationActivity.ignored.push(requestID);   
         } 
+        // calculate Activity Rate
+        let total = targetTranslators[i].translationActivity.accepted.length + targetTranslators[i].translationActivity.declined.length + targetTranslators[i].translationActivity.ignored.length;
+        console.log('Accepted: ', targetTranslators[i].translationActivity.accepted.length, 'total: ', total);
+        targetTranslators[i].translationActivity.acceptanceRate = total != 0 ? targetTranslators[i].translationActivity.accepted.length/total : 0;
+        console.log('rate is: ', targetTranslators[i].translationActivity.acceptanceRate);
         await targetTranslators[i].save();
       }
 

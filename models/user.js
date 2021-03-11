@@ -66,15 +66,8 @@ const UserSchema = new mongoose.Schema(
         ref: "Request"
       }],
       acceptanceRate: {
-        type: Number,
-        default: function() {
-          let total = this.translationActivity.accepted.length + this.translationActivity.declined.length + this.translationActivity.ignored.length;
-          if (total == 0) {
-            return 0;
-          } else {
-            return this.translationActivity.accepted.length/total;
-          }
-        },
+        type: mongoose.Decimal128,
+        default: 0
       }
 
     }
