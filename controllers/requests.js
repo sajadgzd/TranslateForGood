@@ -82,7 +82,9 @@ let RequestController = {
 
       // for each of the matched translators: remove request from matchedRequests list
       // and check if request is in declined/accepted. If yes - nothing. If no - add to 'ignored'
-      let targetTranslators = updatedRequest.matchedTranslators;
+      let newlyUpdatedRequest = await Request.findOne({_id: requestID}).populate('matchedTranslators');
+      let targetTranslators = newlyUpdatedRequest.matchedTranslators;
+      
       for (let i = 0; i < targetTranslators.length; i++) {
         targetTranslators[i].matchedRequests.pull({_id: requestID });
         if (!targetTranslators[i].translationActivity.declined.includes(requestID) && !targetTranslators[i].translationActivity.accepted.includes(requestID) ){
