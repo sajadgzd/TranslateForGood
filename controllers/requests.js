@@ -92,9 +92,7 @@ let RequestController = {
         } 
         // calculate Activity Rate
         let total = targetTranslators[i].translationActivity.accepted.length + targetTranslators[i].translationActivity.declined.length + targetTranslators[i].translationActivity.ignored.length;
-        console.log('Accepted: ', targetTranslators[i].translationActivity.accepted.length, 'total: ', total);
         targetTranslators[i].translationActivity.acceptanceRate = total != 0 ? targetTranslators[i].translationActivity.accepted.length/total : 0;
-        console.log('rate is: ', targetTranslators[i].translationActivity.acceptanceRate);
         await targetTranslators[i].save();
       }
 

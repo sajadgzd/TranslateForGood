@@ -34,8 +34,8 @@ const getTimeActivityScore = (translatorTZ) => {
     let subH = parseInt(moment.tz(translatorTZ).format('ZZ'))/100; // translator timezone offset
     let [convertedWeekday, convertedHour] = moment().subtract(addH, 'h').add(subH, 'h').format('d,HH').split(',');
     let timeActivityScore = timeActivityTable(parseInt(convertedWeekday), parseInt(convertedHour));
-    console.log("In translator's timezone: weekday is", convertedWeekday, ", hour is ", convertedHour);
-    console.log("S score is ", timeActivityScore);
+    // console.log("In translator's timezone: weekday is", convertedWeekday, ", hour is ", convertedHour);
+    // console.log("S score is ", timeActivityScore);
     return timeActivityScore;
   } catch (error) {
     return res.status(400).json({ error: err.message });
@@ -107,12 +107,9 @@ let UserController = {
         potentialTranslators.sort(function (a, b) {   
           return b.Sscore - a.Sscore || b.UFscore - a.UFscore;
       });
-      console.log('Sorted potential translators are', potentialTranslators); 
+      // console.log('Sorted potential translators are', potentialTranslators); 
       
         
-
-
-      
       // update matchedRequests for every matchedTranslators found.
       for (let i = 0; i < matchedTranslators.length; i++) {
           matchedTranslators[i].matchedRequests.push(request);
