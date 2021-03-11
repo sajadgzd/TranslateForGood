@@ -69,11 +69,34 @@ let RequestController = {
     try {
 
       // update request from active to not active
-      let updatedRequest = await Request.findOne({_id: requestID});
+      // update request: add acceptedTranslator
+      console.log('.....updating req');
+      let updatedRequest = await Request.findOne({_id: requestID}).populate('matchedTranslators');
       updatedRequest.isActive = false;
+      updatedRequest.acceptedTranslator = acceptedUserID;
       await updatedRequest.save();
 
       // update Translator: add accepted request to translation activity
+      console.log('.....updating accepted user');
+      let updatedAcceptedTranslator = await User.findOne({_id: acceptedUserID});
+      console.log('updatedAcceptedTranslator is', updatedAcceptedTranslator);
+      updatedAcceptedTranslator.translationActivity.accepted.push(updatedRequest);
+      await updatedAcceptedTranslator.save();
+
+      // // for each of the matched translators: remove request from matchedRequests list
+      // // and check if request is in declined. If yes - nothing. If no - add to 'ignored'
+      // console.log('.....updating matched users');
+      // matchedTranslators = updatedRequest.matchedTranslators;
+      // console.log('retrieved matched users are: ', matchedTranslators);
+      // for (i = 0; i < matchedTranslators.length(); i++) {
+      //   matchedTranslators[i].matchedRequests.pull({_id: requestID });
+      //   if (!matchedTranslators[i].translationActivity.declined.includes(requestID)){
+      //     matchedTranslators[i].translationActivity.accepted.push(requestID);
+      //     await matchedTranslators[i].save();
+      //   } 
+
+      // }
+
 
       return res.status(201).json({ message: "Request was accepted successfully"});
     } catch (err) {

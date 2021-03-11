@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from "axios";
+
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -31,6 +33,15 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(15),
         justifyContent: "center"
       },
+    acceptButtonColor: {
+        borderColor: '#4caf50',
+        color: '#4caf50',
+        '&:hover': {
+            color: '#4caf50',
+            borderColor: '#4caf50',
+            boxShadow: 'none',
+          },
+      }
   }));
 
 const colorVocabIcon = {'true': "secondary", 'false': "disabled"};
@@ -39,23 +50,37 @@ const colorVocabCustomIcon = {'true': "#dc004e", 'false': "#D3D3D3"};
 
 function MatchedRequestCard(props) {
   const classes = useStyles();
-  const selectRequest = (requestID, acceptedUserID) => {
+  
+  const handleAcceptMachedTranslationRequest = (requestID, acceptedUserID) => async (e) => {
+    e.preventDefault();
     await axios.post(
-        "/api/requests/onAccepted",
-        {requestID, acceptedUserID},
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-    };
+    "/api/requests/onAccepted",
+    {requestID, acceptedUserID},
+    {
+        headers: {
+        "Content-Type": "application/json",
+        },
+    }
+    ).then(function(response){
+        console.log("RESPONSE FROM Accept:\t", response.data)
+    });
+  };
+  const handleDeclineMachedTranslationRequest = async () => {
+    // to be implemented later
+    
+    //   await axios.post(
+    //     //   
+    //     ).then(function(response){
+    //       // console.log("RESPONSE FROM Decline:\t", response.data)
+    //     });
+  };
   const timeOfRequest = moment(props.createdAt).format('LLL');
+  const dueDateTime = moment(props.due).format('LLL');
 
   return (  
         <Card className={classes.root}>
             <CardContent >
-            <Grid container justify="center" alignItems="center"><Avatar alt="Profie Picture" className={classes.large}  src={defaultImage} /></Grid>
+                <Grid container justify="center" alignItems="center"><Avatar alt="Profie Picture" className={classes.large}  src={defaultImage} /></Grid>
                 
                 <Typography gutterBottom component={'span'}>
                     <Typography gutterBottom align='center' component={'span'} variant="h6" component="h1" style={{ fontWeight: 600 }}>
@@ -70,6 +95,10 @@ function MatchedRequestCard(props) {
                         <Box fontWeight="bold" display="inline">User:</Box>          
                         <Box m={1} display="inline">{props.name}</Box>
                     </Box>
+                    <Box display='block'>
+                        <Box fontWeight="bold" display="inline">Due Time:</Box>          
+                        <Box m={1} display="inline">{dueDateTime}</Box>
+                    </Box>
                 </Typography >
                 <Box style={{ marginTop: 20 }}>
                     <Tooltip title="Only Female Translator"><Icon path={mdiFaceWoman} size={1.5} color={colorVocabCustomIcon[props.femaleTranslator]}/></Tooltip>
@@ -78,7 +107,8 @@ function MatchedRequestCard(props) {
             </CardContent>
             
             <CardActions className={classes.root}>
-                <Button variant="contained" size="small" color="primary" onClick={selectRequest(props.requestID, props.acceptedUserID)}>Select</Button>
+                <Button variant="outlined" size="small" color="primary" onClick={handleAcceptMachedTranslationRequest(props.requestID, props.acceptedUserID)} className={classes.acceptButtonColor}>Accept</Button>
+                <Button variant="outlined" size="small" color="secondary" onClick={handleDeclineMachedTranslationRequest} >Decline</Button>
             </CardActions>
                     
         </Card> 
