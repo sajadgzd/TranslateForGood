@@ -101,9 +101,13 @@ let UserController = {
         let UF = getUtilityFunctionScore(matchedTranslators[i].translationActivity.acceptanceRate, matchedTranslators[i].timezone, request.author.timezone);
         let S = getTimeActivityScore(matchedTranslators[i].timezone);
         
-        potentialTranslators.push((matchedTranslators[i], S, UF));
+        potentialTranslators.push({translator: matchedTranslators[i], Sscore: S, UFscore: UF});
       }
-    //   console.log(potentialTranslators); 
+      // sort translators by S. If S is equal sort by UF
+        potentialTranslators.sort(function (a, b) {   
+          return b.Sscore - a.Sscore || b.UFscore - a.UFscore;
+      });
+        console.log('Sorted potential translators are', potentialTranslators); 
       
         
       // update matchedRequests for every matchedTranslators found.
