@@ -39,7 +39,17 @@ const colorVocabCustomIcon = {'true': "#dc004e", 'false': "#D3D3D3"};
 
 function MatchedRequestCard(props) {
   const classes = useStyles();
-  const selectRequest = () => void 0;
+  const selectRequest = (requestID, acceptedUserID) => {
+    await axios.post(
+        "/api/requests/onAccepted",
+        {requestID, acceptedUserID},
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+    };
   const timeOfRequest = moment(props.createdAt).format('LLL');
 
   return (  
@@ -68,7 +78,7 @@ function MatchedRequestCard(props) {
             </CardContent>
             
             <CardActions className={classes.root}>
-                <Button variant="contained" size="small" color="primary" onClick={selectRequest}>Select</Button>
+                <Button variant="contained" size="small" color="primary" onClick={selectRequest(props.requestID, props.acceptedUserID)}>Select</Button>
             </CardActions>
                     
         </Card> 

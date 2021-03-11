@@ -62,6 +62,24 @@ let RequestController = {
       // console.log(err);
       return res.status(400).json({ error: err.message });
     }
+  },
+
+  onAccepted: async(req, res) => {
+    const { requestID, acceptedUserID} = req.body;
+    try {
+
+      // update request from active to not active
+      let updatedRequest = await Request.findOne({_id: requestID});
+      updatedRequest.isActive = false;
+      await updatedRequest.save();
+
+      // update Translator: add accepted request to translation activity
+
+      return res.status(201).json({ message: "Request was accepted successfully"});
+    } catch (err) {
+      // console.log(err);
+      return res.status(400).json({ error: err.message });
+    }
   }
 
 }
