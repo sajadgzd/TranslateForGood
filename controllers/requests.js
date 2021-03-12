@@ -59,7 +59,25 @@ let RequestController = {
 
       return res.status(201).json({ message: "New request created successfully!", requestID: requestID });
     } catch (err) {
-      // console.log(err);
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  onDeclined: async(req, res) => {
+    const {requestID, declinedUserID} = req.body;
+    try {
+      // remove request from this translator's matching requests
+      // add request to translator's declined requests
+      let declinedTranslator = await User.findOne({_id: declinedUserID});
+      declinedTranslator.matchedRequests.pull({_id: requestID });
+      declinedTranslator.translationActivity.declined.push(requestID);   
+
+      // recalculate translator's acceptance rate
+      let total = declinedTranslator.translationActivity.accepted.length + declinedTranslator.translationActivity.declined.length + declinedTranslator.translationActivity.ignored.length;
+      declinedTranslator.translationActivity.acceptanceRate = total != 0 ? declinedTranslator.translationActivity.accepted.length/total : 0;
+      await declinedTranslator.save();
+      return res.status(201).json({ message: "Request was declined successfully"});
+    } catch (err) {
       return res.status(400).json({ error: err.message });
     }
   },

@@ -65,15 +65,23 @@ function MatchedRequestCard(props) {
         console.log("RESPONSE FROM Accept:\t", response.data)
     });
   };
-  const handleDeclineMachedTranslationRequest = async () => {
-    // to be implemented later
-    
-    //   await axios.post(
-    //     //   
-    //     ).then(function(response){
-    //       // console.log("RESPONSE FROM Decline:\t", response.data)
-    //     });
+
+  const handleDeclineMachedTranslationRequest = (requestID, declinedUserID) => async (e) => {
+    e.preventDefault();
+    await axios.post(
+      "/api/requests/onDeclined",
+      {requestID, declinedUserID},
+      {
+        headers: {
+        "Content-Type": "application/json",
+        },
+    }
+    ).then(function(response){
+      console.log("RESPONSE FROM Decline:\t", response.data)
+  });
   };
+
+
   const timeOfRequest = moment(props.createdAt).format('LLL');
   const dueDateTime = moment(props.due).format('LLL');
 
@@ -108,7 +116,7 @@ function MatchedRequestCard(props) {
             
             <CardActions className={classes.root}>
                 <Button variant="outlined" size="small" color="primary" onClick={handleAcceptMachedTranslationRequest(props.requestID, props.acceptedUserID)} className={classes.acceptButtonColor}>Accept</Button>
-                <Button variant="outlined" size="small" color="secondary" onClick={handleDeclineMachedTranslationRequest} >Decline</Button>
+                <Button variant="outlined" size="small" color="secondary" onClick={handleDeclineMachedTranslationRequest(props.requestID, props.acceptedUserID)} >Decline</Button>
             </CardActions>
                     
         </Card> 
