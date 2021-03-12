@@ -35,6 +35,7 @@ app.post("/api/auth/login", AuthControls.login);
 app.get("/api/auth", requireLogin, AuthControls.current);
 
 app.post("/api/requests/new", RequestControls.create);
+app.post("/api/requests/onAccepted", RequestControls.onAccepted);
 app.get("/api/requests/active", RequestControls.getActive);
 app.get("/api/requests/all", RequestControls.getAll);
 app.get("/api/requests/:id", RequestControls.getRequestById);

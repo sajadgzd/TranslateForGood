@@ -136,7 +136,7 @@ const Home = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setData({...data, user: user}); //////////res.data._id
+      setData({...data, user: user}); 
       setData({ ...data, error: null });
       if (data.languageFrom === "") {
         console.log("FROM language Field IS EMPTY")
