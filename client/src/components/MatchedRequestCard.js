@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from "axios";
+
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -48,15 +50,22 @@ const colorVocabCustomIcon = {'true': "#dc004e", 'false': "#D3D3D3"};
 
 function MatchedRequestCard(props) {
   const classes = useStyles();
-  const handleAcceptMachedTranslationRequest = () => {
-    // to be implemented later
-    //   await axios.post(
-    //         // 
-    //     ).then(function(response){
-    //       // console.log("RESPONSE FROM Accept:\t", response.data)
-    //     });
+  
+  const handleAcceptMachedTranslationRequest = (requestID, acceptedUserID) => async (e) => {
+    e.preventDefault();
+    await axios.post(
+    "/api/requests/onAccepted",
+    {requestID, acceptedUserID},
+    {
+        headers: {
+        "Content-Type": "application/json",
+        },
+    }
+    ).then(function(response){
+        console.log("RESPONSE FROM Accept:\t", response.data)
+    });
   };
-  const handleDeclineMachedTranslationRequest = () => {
+  const handleDeclineMachedTranslationRequest = async () => {
     // to be implemented later
     
     //   await axios.post(
@@ -98,7 +107,7 @@ function MatchedRequestCard(props) {
             </CardContent>
             
             <CardActions className={classes.root}>
-                <Button variant="outlined" size="small" color="primary" onClick={handleAcceptMachedTranslationRequest} className={classes.acceptButtonColor}>Accept</Button>
+                <Button variant="outlined" size="small" color="primary" onClick={handleAcceptMachedTranslationRequest(props.requestID, props.acceptedUserID)} className={classes.acceptButtonColor}>Accept</Button>
                 <Button variant="outlined" size="small" color="secondary" onClick={handleDeclineMachedTranslationRequest} >Decline</Button>
             </CardActions>
                     

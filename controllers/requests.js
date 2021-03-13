@@ -62,6 +62,45 @@ let RequestController = {
       // console.log(err);
       return res.status(400).json({ error: err.message });
     }
+  },
+
+  onAccepted: async(req, res) => {
+    const { requestID, acceptedUserID} = req.body;
+    try {
+
+      // update request from active to not active
+      // update request: add acceptedTranslator
+      let updatedRequest = await Request.findOne({_id: requestID}).populate('matchedTranslators');
+      updatedRequest.isActive = false;
+      updatedRequest.acceptedTranslator = acceptedUserID;
+      await updatedRequest.save();
+
+      // update Translator: add accepted request to translation activity
+      let updatedAcceptedTranslator = await User.findOne({_id: acceptedUserID});
+      updatedAcceptedTranslator.translationActivity.accepted.push(updatedRequest);
+      await updatedAcceptedTranslator.save();
+
+      // for each of the matched translators: remove request from matchedRequests list
+      // and check if request is in declined/accepted. If yes - nothing. If no - add to 'ignored'
+      let newlyUpdatedRequest = await Request.findOne({_id: requestID}).populate('matchedTranslators');
+      let targetTranslators = newlyUpdatedRequest.matchedTranslators;
+
+      for (let i = 0; i < targetTranslators.length; i++) {
+        targetTranslators[i].matchedRequests.pull({_id: requestID });
+        if (!targetTranslators[i].translationActivity.declined.includes(requestID) && !targetTranslators[i].translationActivity.accepted.includes(requestID) ){
+          targetTranslators[i].translationActivity.ignored.push(requestID);   
+        } 
+        // calculate Activity Rate
+        let total = targetTranslators[i].translationActivity.accepted.length + targetTranslators[i].translationActivity.declined.length + targetTranslators[i].translationActivity.ignored.length;
+        targetTranslators[i].translationActivity.acceptanceRate = total != 0 ? targetTranslators[i].translationActivity.accepted.length/total : 0;
+        await targetTranslators[i].save();
+      }
+
+      return res.status(201).json({ message: "Request was accepted successfully"});
+    } catch (err) {
+      // console.log(err);
+      return res.status(400).json({ error: err.message });
+    }
   }
 
 }
