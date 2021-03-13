@@ -125,6 +125,7 @@ const Home = (props) => {
              dueDateTime: null,
              femaleTranslatorBool: false,
              documentProofReadingBool: false,
+             isUrgent: false,
              previousTranslatorInfo: "",
              materialDateTimeInputError:false,
              dueDateHelperText:"Please select the due date for your request at least ONE HOUR from now",
@@ -135,7 +136,7 @@ const Home = (props) => {
   // Show 'Request submitted dialog window"
   // Run matching algoritm
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
     try {
       setData({...data, user: user}); 
       setData({ ...data, error: null });
@@ -153,7 +154,7 @@ const Home = (props) => {
         console.log("Due date field is empty");
         setData({ ...data, materialDateTimeInputError: true, dueDateHelperText:"Please provide the due date for your request"});
         return;
-      }
+      } 
       // User tries to submit a due date shorter than an hour
       // 3540000 milliseconds is 59 minutes - that's to make time change
       // easier for the users as they only see current hour not seconds 
@@ -180,19 +181,23 @@ const Home = (props) => {
         props.history.push("/home");
         console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
         setData({ ...data, openDialog: true});
+        //Looking for matching translators for each request
         if (dueDateTime < (new Date().getTime() + 3600000*5)){
           console.log("Request has due date less than 5 hours, which is urgent for us!");
-          data.isUrgent = true;
+          await axios.get(
+            "/api/users/matchedTranslators", { 
+              params: {
+                languageFrom, languageTo, isUrgent: true, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
+              }
+            });
         } else {
-          data.isUrgent = false;
-        }
-        //Looking for matching translators for each request
         await axios.get(
           "/api/users/matchedTranslators", { 
             params: {
-              languageFrom, languageTo, isUrgent, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
+              languageFrom, languageTo, isUrgent: false, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
             }
           });
+        }
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
       }
