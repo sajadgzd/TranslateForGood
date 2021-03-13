@@ -43,15 +43,6 @@ const getTimeActivityScore = (translatorTZ) => {
   
 };
 
-const isStillActive = async (requestID) => {
-  try {
-    let request = await Request.findOne({_id: requestID});
-    return request.isActive;
-  } catch (error) {
-    return res.status(400).json({ error: err.message });
-  }
-  
-}
 
 const isPassedDue = (dueTimeString) => {
   console.log('isPassedDue returns ', moment(dueTimeString, moment.HTML5_FMT.DATETIME_LOCAL_MS) < moment());
@@ -79,6 +70,7 @@ let UserController = {
       return res.status(400).json({ error: err.message });
     }
   },
+  
   getMatchedTranslators: async (req, res) => {
       
       let requestID = req.query.newRequestID;
@@ -93,8 +85,15 @@ let UserController = {
         return res.status(400).json({ error: err.message });
       }
       
-      
-      while (isStillActive(requestID) && !isPassedDue(req.query.dueDateTime)) {
+      let active = true;
+
+      while (!isPassedDue(req.query.dueDateTime)) {
+        let request_ = await Request.findOne({_id: requestID});
+        active = request_.isActive;
+        console.log('here', active);
+        if (!active) {
+          break;
+        }
         pointerToNotNotified = 0;
 
         try {
@@ -115,7 +114,6 @@ let UserController = {
           } else {
             console.log("no female, no profread - requested");
             matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
-            console.log('ERR_HTTP_HEADERS_SENT appears on line 119');
             // res.json(matchedTranslators);
           }
         } catch (err) {
@@ -136,6 +134,13 @@ let UserController = {
         });
         // notify batches of translators 
         while (pointerToNotNotified < potentialTranslators.length) {
+          let request_ = await Request.findOne({_id: requestID})
+          active = request_.isActive;
+          if (!active) {
+            console.log('someone accepted request');
+            break;
+          }
+
           let diff = pointerToNotNotified + N > potentialTranslators.length ? potentialTranslators.length - pointerToNotNotified : N;
 
           for (let k = pointerToNotNotified; k < pointerToNotNotified + diff; k++){
@@ -159,10 +164,6 @@ let UserController = {
           console.log('waiting 5 sec before notifying next batch.');
           await new Promise(resolve => setTimeout(resolve, 5000)); 
   
-          if (!isStillActive(requestID)) {
-            console.log("Request accepted by someone");
-            break;
-          } 
           pointerToNotNotified += diff;
         }
 
@@ -171,7 +172,7 @@ let UserController = {
         await new Promise(resolve => setTimeout(resolve, 10000));
       }
       
-      if (!isStillActive(requestID)) {
+      if (!active) {
         console.log('Yay, someone accepted this request!');
       } else {
         console.log('Currently we are not able to find a matching translator. Would you like to resubmit or cancel?');
