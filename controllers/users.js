@@ -9,7 +9,6 @@ const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
     let acceptanceScore = 1 - activityScore;
     let timeZoneDiff = (2600 - Math.abs(parseInt(moment().tz(requesterTZ).format('ZZ')) - parseInt(moment().tz(translatorTZ).format('ZZ'))))/2600;
     let UF = weigths.timezoneW*timeZoneDiff + weigths.activityW*acceptanceScore;
-    console.log("UF score is ", UF);
     return UF;
   } catch (error) {
     return res.status(400).json({ error: err.message });

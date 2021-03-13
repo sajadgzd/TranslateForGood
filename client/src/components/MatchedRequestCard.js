@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from "axios";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,6 +19,11 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import moment from 'moment';
 import defaultImage from './default_photo.png';
 import Avatar from '@material-ui/core/Avatar';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -65,53 +70,89 @@ function MatchedRequestCard(props) {
         console.log("RESPONSE FROM Accept:\t", response.data)
     });
   };
-  const handleDeclineMachedTranslationRequest = async () => {
-    // to be implemented later
-    
-    //   await axios.post(
-    //     //   
-    //     ).then(function(response){
-    //       // console.log("RESPONSE FROM Decline:\t", response.data)
-    //     });
+
+  const handleDeclineMachedTranslationRequest = (requestID, declinedUserID) => async (e) => {
+    e.preventDefault();
+    await axios.post(
+      "/api/requests/onDeclined",
+      {requestID, declinedUserID},
+      {
+        headers: {
+        "Content-Type": "application/json",
+        },
+      }
+      ).then(function(response){
+        console.log("RESPONSE FROM Decline:\t", response.data)
+    });
+    setDialog(true);
   };
+
+
   const timeOfRequest = moment(props.createdAt).format('LLL');
   const dueDateTime = moment(props.due).format('LLL');
 
-  return (  
-        <Card className={classes.root}>
-            <CardContent >
-                <Grid container justify="center" alignItems="center"><Avatar alt="Profie Picture" className={classes.large}  src={defaultImage} /></Grid>
-                
-                <Typography gutterBottom component={'span'}>
-                    <Typography gutterBottom align='center' component={'span'} variant="h6" component="h1" style={{ fontWeight: 600 }}>
-                        {props.from} to {props.to}
+  const [openDialog, setDialog] = useState(false);
+  const handleCloseDialog = () => {
+    setDialog(false);
+    window.location.reload(false);
+  };
 
-                    </Typography >
-                    <Box display='block'>
-                        <Box fontWeight="bold" display="inline">Posted:</Box>
-                        <Box m={1} display="inline"> {timeOfRequest}</Box>
-                    </Box>
-                    <Box display='block'>
-                        <Box fontWeight="bold" display="inline">User:</Box>          
-                        <Box m={1} display="inline">{props.name}</Box>
-                    </Box>
-                    <Box display='block'>
-                        <Box fontWeight="bold" display="inline">Due Time:</Box>          
-                        <Box m={1} display="inline">{dueDateTime}</Box>
-                    </Box>
-                </Typography >
-                <Box style={{ marginTop: 20 }}>
-                    <Tooltip title="Only Female Translator"><Icon path={mdiFaceWoman} size={1.5} color={colorVocabCustomIcon[props.femaleTranslator]}/></Tooltip>
-                    <Tooltip title="Document Proofreading"><DescriptionIcon color={colorVocabIcon[props.documentProofreading]} fontSize="large"/></Tooltip>
-                </Box>
-            </CardContent>
-            
-            <CardActions className={classes.root}>
-                <Button variant="outlined" size="small" color="primary" onClick={handleAcceptMachedTranslationRequest(props.requestID, props.acceptedUserID)} className={classes.acceptButtonColor}>Accept</Button>
-                <Button variant="outlined" size="small" color="secondary" onClick={handleDeclineMachedTranslationRequest} >Decline</Button>
-            </CardActions>
-                    
-        </Card> 
+
+  return (  
+    <div>
+      <Card className={classes.root}>
+          <CardContent >
+              <Grid container justify="center" alignItems="center"><Avatar alt="Profie Picture" className={classes.large}  src={defaultImage} /></Grid>
+              
+              <Typography gutterBottom component={'span'}>
+                  <Typography gutterBottom align='center' component={'span'} variant="h6" component="h1" style={{ fontWeight: 600 }}>
+                      {props.from} to {props.to}
+
+                  </Typography >
+                  <Box display='block'>
+                      <Box fontWeight="bold" display="inline">Posted:</Box>
+                      <Box m={1} display="inline"> {timeOfRequest}</Box>
+                  </Box>
+                  <Box display='block'>
+                      <Box fontWeight="bold" display="inline">User:</Box>          
+                      <Box m={1} display="inline">{props.name}</Box>
+                  </Box>
+                  <Box display='block'>
+                      <Box fontWeight="bold" display="inline">Due Time:</Box>          
+                      <Box m={1} display="inline">{dueDateTime}</Box>
+                  </Box>
+              </Typography >
+              <Box style={{ marginTop: 20 }}>
+                  <Tooltip title="Only Female Translator"><Icon path={mdiFaceWoman} size={1.5} color={colorVocabCustomIcon[props.femaleTranslator]}/></Tooltip>
+                  <Tooltip title="Document Proofreading"><DescriptionIcon color={colorVocabIcon[props.documentProofreading]} fontSize="large"/></Tooltip>
+              </Box>
+          </CardContent>
+          
+          <CardActions className={classes.root}>
+              <Button variant="outlined" size="small" color="primary" onClick={handleAcceptMachedTranslationRequest(props.requestID, props.acceptedUserID)} className={classes.acceptButtonColor}>Accept</Button>
+              <Button variant="outlined" size="small" color="secondary" onClick={handleDeclineMachedTranslationRequest(props.requestID, props.acceptedUserID)} >Decline</Button>
+          </CardActions>     
+      </Card> 
+
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Request is Declined!"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Request was successfully declined. Thank you for your time.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary" autoFocus>
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog> 
+    </div>
   );
 }
 
