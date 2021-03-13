@@ -3,7 +3,8 @@ const Request = require("../models/request");
 const bcrypt = require("bcryptjs");
 const moment = require('moment-timezone');
 const weigths = {timezoneW: 0.7, activityW: 0.3};
-const N = 1;
+const nUrgent = 2;
+const nNotUrgent = 1;
 
 const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
   try{
@@ -78,9 +79,10 @@ let UserController = {
     let matchedTranslators;
     let request;
 
+    
+
     try {
       request = await Request.findOne({_id: requestID}).populate("author");
-    
       let active = true;
 
       // run loop until due time passes or request is accepted by someone
@@ -123,6 +125,11 @@ let UserController = {
         });
 
         // notify batches of translators 
+        //figure out if request is urgent - currently less than 5 hours
+        let isUrgentRequest = req.query.isUrgent;
+        console.log("Is this request urgent? Answer: ", typeof isUrgentRequest, isUrgentRequest);
+        let N = isUrgentRequest === 'true' ? nUrgent : nNotUrgent;
+
         while (pointerToNotNotified < potentialTranslators.length) {
           //before notifying make sure request is still active and date is not past due
           let request_ = await Request.findOne({_id: requestID})
@@ -159,9 +166,14 @@ let UserController = {
           pointerToNotNotified += diff;
         }
 
+        //before waiting for the next cycle starts check again if request is active
+        request_ = await Request.findOne({_id: requestID})
+        active = request_.isActive;
+        if (!active || isPastDue(req.query.dueDateTime)) {
+          console.log('Someone accepted the request or the time is past due!');
+          break;
+        }
 
-
-        
         // wait for a 10 sec before repeating the cycle (in case someone new registers)
         console.log('Waiting 10sec before starting a new cycle.');
         await new Promise(resolve => setTimeout(resolve, 10000));

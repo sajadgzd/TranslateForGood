@@ -245,7 +245,7 @@ const Register = (props) => {
                   onChange={handleCountryChange}
                   inputProps={{
                     name: 'country',
-                    id: 'age-native-helper',
+                    id: 'age-native-helper-country',
                   }}
                 >
                  <option aria-label="None" value="" />
@@ -263,7 +263,7 @@ const Register = (props) => {
                   onChange={handleChange}
                   inputProps={{
                     name: 'timezone',
-                    id: 'age-native-helper',
+                    id: 'age-native-helper-timeZone',
                   }}
                 >
                  <option aria-label="None" value="" />

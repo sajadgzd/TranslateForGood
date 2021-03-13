@@ -68,6 +68,7 @@ const Home = (props) => {
     languageTo: "",
     error: null,
     dueDateTime:null,
+    isUrgent: false,
     femaleTranslatorBool: false,
     documentProofReadingBool: false,
     previousTranslatorInfo: "",
@@ -113,7 +114,7 @@ const Home = (props) => {
     setData({...data, materialDateTimeInputError:false, dueDateTime:date});
   };
 
-  const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, dueDateTime,
+  const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, dueDateTime, isUrgent,
           previousTranslatorInfo, materialFromInputError, materialToInputError, materialDateTimeInputError, 
           dueDateHelperText, isActive, openDialog, materialRadioInputError } = data;
 
@@ -124,6 +125,7 @@ const Home = (props) => {
              dueDateTime: null,
              femaleTranslatorBool: false,
              documentProofReadingBool: false,
+             isUrgent: false,
              previousTranslatorInfo: "",
              materialDateTimeInputError:false,
              dueDateHelperText:"Please select the due date for your request at least ONE HOUR from now",
@@ -134,7 +136,7 @@ const Home = (props) => {
   // Show 'Request submitted dialog window"
   // Run matching algoritm
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
     try {
       setData({...data, user: user}); 
       setData({ ...data, error: null });
@@ -156,7 +158,7 @@ const Home = (props) => {
       // User tries to submit a due date shorter than an hour
       // 3540000 milliseconds is 59 minutes - that's to make time change
       // easier for the users as they only see current hour not seconds 
-      else if(dueDateTime < (new Date().getTime() + 120000)) { //3540000
+      else if(dueDateTime < (new Date().getTime() + 3540000)) { //3540000
         console.log("Due date is shorter than an hour")
         setData({ ...data, materialDateTimeInputError: true, dueDateHelperText:"Your due date is too soon. We need at least an hour to work on your request"});
         return;
@@ -177,16 +179,25 @@ const Home = (props) => {
         // console.log("NEW REQUEST ID:\t", newRequestID)
         // when successful, refresh page to home page
         props.history.push("/home");
-        // console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
+        console.log("HERE IS THE DATA POSTED for SUBMIT REUQUEST FORM button:\t",data)
         setData({ ...data, openDialog: true});
-
         //Looking for matching translators for each request
+        if (dueDateTime < (new Date().getTime() + 3600000*5)){
+          console.log("Request has due date less than 5 hours, which is urgent for us!");
+          await axios.get(
+            "/api/users/matchedTranslators", { 
+              params: {
+                languageFrom, languageTo, isUrgent: true, dueDateTime, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
+              }
+            });
+        } else {
         await axios.get(
           "/api/users/matchedTranslators", { 
             params: {
-              languageFrom, languageTo, femaleTranslatorBool, documentProofReadingBool, user, newRequestID, dueDateTime
+              languageFrom, languageTo, isUrgent: false, dueDateTime, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
             }
           });
+        }
       } catch (err) {
         setData({ ...data, error: err.response.data.error });
       }
