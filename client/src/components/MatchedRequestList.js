@@ -16,12 +16,12 @@ export default function MatchedRequestList(props) {
 
   const [requests, setRequest] = useState("");
   let [, setState] = useState();
+  let userID = props.user._id;
 
   let list = requests;
   if (typeof list === 'string'){
     list = [];
   } 
-
   let result = list.map(request => 
     <Grid item xs={3} key = {request._id}>
         <MatchedRequestCard 
@@ -30,7 +30,10 @@ export default function MatchedRequestList(props) {
           name ={request.author ? request.author.name : request.author} 
           createdAt= {request.createdAt} 
           from = {request.languageFrom} 
-          to={request.languageTo}>
+          to={request.languageTo}
+          requestID={request._id}
+          acceptedUserID = {userID}>
+          due={request.dueDateTime}>
         
         </MatchedRequestCard>
     </Grid>
@@ -44,12 +47,11 @@ export default function MatchedRequestList(props) {
     }
     result = list.map(request => 
       <Grid item xs={3} item key = {request._id}>
-          <MatchedRequestCard name ={request.author ? request.author.name : request.author} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo}></MatchedRequestCard>
+          <MatchedRequestCard name ={request.author ? request.author.name : request.author} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo} due={request.dueDateTime}></MatchedRequestCard>
       </Grid>
       )
     setState({});
   }
-  let userID = props.user._id;
   const getRequests = async () => {
     const reqs = await axios.get("/api/users/translatorsMatchedRequests", { 
         params: {

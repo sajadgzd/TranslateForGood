@@ -37,6 +37,10 @@ const RequestSchema = new mongoose.Schema(
     isActive:{
       type: Boolean,
       default: true,
+    },
+    acceptedTranslator:{
+      type: Schema.Types.ObjectId, 
+      ref: 'User'
     }
   },
   { timestamps: true }
