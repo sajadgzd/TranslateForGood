@@ -90,7 +90,9 @@ let UserController = {
         matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
         res.json(matchedTranslators);
       }
-
+      //figure out if request is urgent - currently less than 5 hours
+      let isUrgentRequest = req.query.isUrgent;
+      console.log("Is this request urgent? Answer: ", isUrgentRequest);
       // finish matching algorithm here
       let potentialTranslators = [];
 
