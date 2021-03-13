@@ -3,7 +3,7 @@ const Request = require("../models/request");
 const bcrypt = require("bcryptjs");
 const moment = require('moment-timezone');
 const weigths = {timezoneW: 0.7, activityW: 0.3};
-const N = 2;
+const N = 1;
 
 const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
   try{
@@ -44,9 +44,13 @@ const getTimeActivityScore = (translatorTZ) => {
 };
 
 const isStillActive = async (requestID) => {
-  let request = await Request.findOne({_id: requestID});
-  console.log('type of request.isActive', typeof request.isActive);
-  return request.isActive;
+  try {
+    let request = await Request.findOne({_id: requestID});
+    return request.isActive;
+  } catch (error) {
+    return res.status(400).json({ error: err.message });
+  }
+  
 }
 
 const isPassedDue = (dueTimeString) => {
@@ -76,70 +80,84 @@ let UserController = {
     }
   },
   getMatchedTranslators: async (req, res) => {
-    try {
-      
       
       let requestID = req.query.newRequestID;
-      let request = await Request.findOne({_id: requestID}).populate("author");
+      let pointerToNotNotified;
+      let matchedTranslators;
+      let request;
+
+      try {
+        request = await Request.findOne({_id: requestID}).populate("author");
+      } catch (err) {
+        console.log(err);
+        return res.status(400).json({ error: err.message });
+      }
       
-
+      
       while (isStillActive(requestID) && !isPassedDue(req.query.dueDateTime)) {
-        let pointerToNotNotified = 0;
-        let matchedTranslators;
+        pointerToNotNotified = 0;
 
-        // Filter by basic parameters
-        if(req.query.femaleTranslatorBool == "true" && req.query.documentProofReadingBool == "false"){
-          console.log("female translation requested");
-          matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool});
-          res.json(matchedTranslators);
-          // console.log("The matchedTranslators for particular request: ", matchedTranslators);
-        }else if(req.query.femaleTranslatorBool == "true" && req.query.documentProofReadingBool == "true"){
-          console.log("female translation requested and document profreading requested");
-          matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool, proofRead: req.query.languageFrom});
-          res.json(matchedTranslators);
-        }else if(req.query.femaleTranslatorBool == "false" && req.query.documentProofReadingBool == "true"){
-          console.log("document profreading requested");
-          matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, proofRead: req.query.languageFrom});
-          res.json(matchedTranslators);
-        } else {
-          console.log("no female, no profread - requested");
-          matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
-          res.json(matchedTranslators);
+        try {
+          // Filter by basic parameters
+          if(req.query.femaleTranslatorBool == "true" && req.query.documentProofReadingBool == "false"){
+            console.log("female translation requested");
+            matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool});
+            // res.json(matchedTranslators);
+            // console.log("The matchedTranslators for particular request: ", matchedTranslators);
+          }else if(req.query.femaleTranslatorBool == "true" && req.query.documentProofReadingBool == "true"){
+            console.log("female translation requested and document profreading requested");
+            matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, femaleTranslator: req.query.femaleTranslatorBool, proofRead: req.query.languageFrom});
+            // res.json(matchedTranslators);
+          }else if(req.query.femaleTranslatorBool == "false" && req.query.documentProofReadingBool == "true"){
+            console.log("document profreading requested");
+            matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo, proofRead: req.query.languageFrom});
+            // res.json(matchedTranslators);
+          } else {
+            console.log("no female, no profread - requested");
+            matchedTranslators = await User.find({languageFrom: req.query.languageFrom, languageTo: req.query.languageTo})
+            console.log('ERR_HTTP_HEADERS_SENT appears on line 119');
+            // res.json(matchedTranslators);
+          }
+        } catch (err) {
+          console.log(err);
+          return res.status(400).json({ error: err.message });
         }
-  
+        
         let potentialTranslators = [];
-  
         // calculate UF, S for each translator
         for (let i = 0; i < matchedTranslators.length; i++) {
           let UF = getUtilityFunctionScore(matchedTranslators[i].translationActivity.acceptanceRate, matchedTranslators[i].timezone, request.author.timezone);
           let S = getTimeActivityScore(matchedTranslators[i].timezone);
           potentialTranslators.push({translator: matchedTranslators[i], Sscore: S, UFscore: UF});
         }
-  
         // sort translators by S. If S is equal sort by UF
           potentialTranslators.sort(function (a, b) {   
             return b.Sscore - a.Sscore || b.UFscore - a.UFscore;
         });
-        
         // notify batches of translators 
         while (pointerToNotNotified < potentialTranslators.length) {
           let diff = pointerToNotNotified + N > potentialTranslators.length ? potentialTranslators.length - pointerToNotNotified : N;
 
           for (let k = pointerToNotNotified; k < pointerToNotNotified + diff; k++){
-            // check if translator already declined this request
-            if (!potentialTranslators[k].translator.translationActivity.declined.includes(requestID)){
-              console.log('Notifying the following translator: ', potentialTranslators[k].translator._id);
-              // update matchedRequests for every matchedTranslators found.
-              potentialTranslators[k].translator.matchedRequests.push(request);
-              await potentialTranslators[k].translator.save();
-    
-              // update matchedTranslators for the new matchedRequest found.
-              request.matchedTranslators.push(potentialTranslators[k].translator._id);
-              await request.save();
-            }
+            try {
+              // check if translator already declined this request or was already notified
+              if (!potentialTranslators[k].translator.translationActivity.declined.includes(requestID) && !potentialTranslators[k].translator.matchedRequests.includes(requestID)){
+                console.log('Notifying the following translator: ', potentialTranslators[k].translator._id);
+                // update matchedRequests for every matchedTranslators found.
+                potentialTranslators[k].translator.matchedRequests.push(request);
+                await potentialTranslators[k].translator.save();
+                // update matchedTranslators for the new matchedRequest found.
+                request.matchedTranslators.push(potentialTranslators[k].translator._id);
+                await request.save();
+              }
+            } catch (err) {
+              console.log(err);
+              return res.status(400).json({ error: err.message });
+            }     
           }
-          // wait for 10 seconds
-          await new Promise(resolve => setTimeout(resolve, 10000)); 
+          // wait for 5 seconds
+          console.log('waiting 5 sec before notifying next batch.');
+          await new Promise(resolve => setTimeout(resolve, 5000)); 
   
           if (!isStillActive(requestID)) {
             console.log("Request accepted by someone");
@@ -148,8 +166,9 @@ let UserController = {
           pointerToNotNotified += diff;
         }
 
-        // wait for a minute before repeating the cycle
-        await new Promise(resolve => setTimeout(resolve, 60000));
+        // wait for a 10 sec before repeating the cycle
+        console.log('waiting 10sec before starting a new cycle.');
+        await new Promise(resolve => setTimeout(resolve, 10000));
       }
       
       if (!isStillActive(requestID)) {
@@ -158,14 +177,8 @@ let UserController = {
         console.log('Currently we are not able to find a matching translator. Would you like to resubmit or cancel?');
       }
 
-
     //   console.log("The matchedTranslators for particular request: ", matchedTranslators);
     //   console.log("The matchedRequest for all matchedTranslators: ", request);
-
-    } catch (err) {
-      console.log(err);
-      return res.status(400).json({ error: err.message });
-    }
   },
 
   // given user's id get all the requests they created
