@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const moment = require('moment-timezone');
 const weigths = {timezoneW: 0.7, activityW: 0.3};
 
+let allPotentialTranslators = [];
+
 const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
   try{
     let acceptanceScore = 1 - activityScore;
@@ -114,7 +116,7 @@ let UserController = {
       });
       // console.log('Sorted potential translators are', potentialTranslators); 
       
-        
+      allPotentialTranslators = potentialTranslators;
       // update matchedRequests for every matchedTranslators found.
       for (let i = 0; i < matchedTranslators.length; i++) {
           matchedTranslators[i].matchedRequests.push(request);
@@ -129,20 +131,6 @@ let UserController = {
     //   console.log("The matchedTranslators for particular request: ", matchedTranslators);
     //   console.log("The matchedRequest for all matchedTranslators: ", request);
 
-    let requestDueDate = req.query.dueDateTime;    ;
-    console.log(requestDueDate);
-    let expired = parseDueDate(requestDueDate);
-      if(1<2){
-        //time out - handle expired request
-        await Request.updateOne( {_id: requestID}, {$set: {"isActive": false}});
-        //everyone who not accept request, request goes to ignored
-        let translatorWhoAcceptedRequest = await Request.findOne({_id: requestID}).populate("acceptedTranslator");
-        // add request to translationActivity: ignored
-        console.log(matchedTranslators, "//////////////////////", translatorWhoAcceptedRequest);
-        for (let i = 0; i < matchedTranslators.length; i++) {
-          console.log(matchedTranslators, "//////////////////////", translatorWhoAcceptedRequest);
-        }
-      }
     } catch (err) {
       console.log(err);
       return res.status(400).json({ error: err.message });
@@ -196,8 +184,28 @@ let UserController = {
   },
   handleExpiredRequest: async (req, res) => {
     try {
-      let requestID = req.query.newRequestID;
+      //let requestDueDate = req.query.dueDateTime;    ;
+      //console.log(requestDueDate);
+      //let expired = parseDueDate(requestDueDate);
+      let requestID = req.query.requestID;
+
+      //time out - handle expired request
       await Request.updateOne( {_id: requestID}, {$set: {"isActive": false}});
+   
+      //everyone who not accept request, request goes to ignored
+      let translatorWhoAcceptedRequest = await Request.findOne({_id: requestID}).populate("acceptedTranslator");
+        // add request to translationActivity: ignored
+      console.log("The only person, who accepted request: ", translatorWhoAcceptedRequest.acceptedTranslator._id);
+      console.log("All potential translators: ", allPotentialTranslators);
+        // for (let i = 0; i < allPotentialTranslators.length; i++) {
+        //   let translator_id = allPotentialTranslators[i].translator._id;
+        //   console.log(translator_id);
+        //   await User.updateOne( {_id: translator_id}, {$set: {"ignored": [requestID]}});
+        // }
+        //requestID = '604d9e6e50c9dc33146c0083';
+        translator_id = '604d66da19725e00151f7669';
+        await User.findOneAndUpdate( {_id: translator_id}, {$push: {"translationActivity.ignored": [requestID]}});
+      
       return res.status(201).json({ message: "Request deactivated succesfully!" });
     } catch (error) {
       return res.status(400).json({ error: err.message });
