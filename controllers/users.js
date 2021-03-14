@@ -199,13 +199,15 @@ let UserController = {
   getUserRequests: async (req, res) => {
     try {
       let requests = await User.findOne({_id: req.params.id}).populate("requests"); 
-      res.json(requests);
+      res.json(requests.requests);
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
   },
 
   getTranslatorsMatchedRequests: async(req, res) => {
+    console.log("INSIDE GET TRANSLATORS MATCHED REQUESTS");
+
     try {
       //get matchedRequests that are active to the particular translators
       let matchedRequests = await User.findOne({_id: req.query.userID})
