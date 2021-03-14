@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import axios from "axios";
 
@@ -90,25 +90,48 @@ const EditProfileCard = (props) => {
         password: (user && user.password),
         languageFrom: (user && user.languageFrom),
         languageTo: (user && user.languageTo),
+        proofRead: [],
         femaleTranslator: (user && user.femaleTranslator),
         timezone: (user && user.timezone),
         error: null,
         country: "",
+        requiredPasswordError: false
     });
     
     const [showTranslator, setShowTranslator] = useState(false)
 
     const onClickEditLanguages = () => setShowTranslator(true)
-    const onClickBecomeTranslator = () => setShowTranslator(true)
+    const onClickBecomeTranslator = () => setShowTranslator(!showTranslator)
     const onClickStopBeingTranslator = () => { 
         setShowTranslator(false);
-        setData({ ...data, languageFrom: [], languageTo: [], femaleTranslator:false});
+        setData({ ...data, languageFrom: [], languageTo: [], proofRead: [], femaleTranslator:false});
     }
 
-    const { name, email, password, languageFrom, languageTo, femaleTranslator, timezone, error, country } = data;
+    const { name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone, error, country, requiredPasswordError } = data;
+    const [languagesSelected, setlanguegesSelected] = React.useState([]);
+    const [languagesSelectedTo, setlanguegesSelectedTo] = React.useState([]);
+    const [languagesSelectedFrom, setlanguegesSelectedFrom] = React.useState([]);
+   
+    const handleArray = (e) => {
+        if(e.target.name == "languageFrom"){
+          setlanguegesSelectedFrom(e.target.value);
+        }
+        if(e.target.name == "languageTo"){
+          setlanguegesSelectedTo(e.target.value);
+        }
+    };
+    const handleMerge = (e) => {
+        var result = languagesSelectedFrom.concat(languagesSelectedTo);
+        let uniqueArray = [...new Set(result)];
+        setlanguegesSelected(uniqueArray);
+    };
 
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
+    };
+
+    const handlePasswordChange = (e) => {
+        setData({ ...data, requiredPasswordError:false, [e.target.name]: e.target.value });
     };
 
     const handleChangeRadioButton = (event) => {
@@ -134,9 +157,14 @@ const EditProfileCard = (props) => {
         e.preventDefault();
         try {
             setData({ ...data, error: null });
+            if (password == "" || password == null) {
+                console.log("Password field is empty");
+                setData({ ...data, requiredPasswordError: true});
+                return;
+            }
             await axios.put(
                 "/api/users/edit",
-                { user, name, email, password, languageFrom, languageTo, femaleTranslator, timezone },
+                { user, name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone },
                 {
                 headers: {
                     "Content-Type": "application/json",
@@ -162,7 +190,7 @@ const EditProfileCard = (props) => {
                                                 multiple
                                                 displayEmpty={true}
                                                 value={languageFrom}
-                                                onChange={handleChange}
+                                                onChange={e => { handleChange(e); handleArray(e)}}
                                                 input={<Input />}
                                                 >
                                                 {Languages.map((option) => (
@@ -170,30 +198,49 @@ const EditProfileCard = (props) => {
                                                         {option}
                                                     </MenuItem>
                                                 ))}
-                                                </Select>
-                                                </FormControl>
-                                                </div>
-                                                <div id="ArrayTwo" style={{ marginTop: '2rem', marginLeft: '1rem', marginBottom: '2rem'}}>
-                                                <FormControl>
-                                                <FormLabel component="legend">Languages you can translate to:</FormLabel>
-                                                <Select
-                                                    name="languageTo"
-                                                    multiple
-                                                    displayEmpty={true}
-                                                    value={languageTo}
-                                                    onChange={handleChange}
-                                                    input={<Input />}
-                                                >
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div id="ArrayTwo" style={{ marginTop: '2rem', marginLeft: '1rem', marginBottom: '2rem'}}>
+                                        <FormControl>
+                                            <FormLabel component="legend">Languages you can translate to:</FormLabel>
+                                            <Select
+                                                name="languageTo"
+                                                multiple
+                                                displayEmpty={true}
+                                                value={languageTo}
+                                                onClick={handleMerge}
+                                                onChange={e => {handleChange(e); handleArray(e)}}
+                                                input={<Input />}
+                                            >
                                                 {Languages.map((option) => (
                                                     <MenuItem key={option} value={option}>
                                                         {option}
                                                     </MenuItem>
                                                 ))}
-                                                </Select>
-                                                </FormControl>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div id="ArrayTwo" style={{ marginTop: '2rem', marginLeft: '1rem', marginBottom: '2rem'}}>
+                                        <FormControl>
+                                            <FormLabel component="legend">Languages for which you proofread documents:</FormLabel>
+                                            <Select
+                                                name="proofRead"
+                                                multiple
+                                                value={proofRead}
+                                                onChange={e => { handleChange(e)}}
+                                                input={<Input />}
+                                            >
+                                            {languagesSelected.map((l) => (
+                                                <MenuItem key={l} value={l} >
+                                                    {l}
+                                                </MenuItem>
+                                            ))}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                </div>
+                            </div>
     
     const showFemaleTranslatorCheck = <div>
                                     <div id="Female">
@@ -253,13 +300,13 @@ const EditProfileCard = (props) => {
                                             > </TextField>
                                         </div>
                                         <div>
-                                            <FormControl style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                            <FormControl required={true} error={requiredPasswordError} style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
                                                 <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-                                                <Input
+                                                <Input 
                                                     id="password"
                                                     name="password"
                                                     type={values.showPassword ? 'text' : 'password'}
-                                                    onChange={handleChange}
+                                                    onChange={handlePasswordChange}
                                                     endAdornment={
                                                     <InputAdornment position="end">
                                                         <IconButton

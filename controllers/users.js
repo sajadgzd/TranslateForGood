@@ -165,11 +165,11 @@ let UserController = {
   updateUserInfo: async (req, res) => {
     try {
       const { user, name, email, password, languageFrom, 
-            languageTo, femaleTranslator, timezone } = req.body;
+            languageTo, proofRead, femaleTranslator, timezone } = req.body;
       
       const hashed_password = await bcrypt.hash(password, 10);
       
-      await User.updateOne( {_id: user._id}, {$set: {"name": name, "email": email, "password": hashed_password, "languageFrom": languageFrom, "languageTo": languageTo, "femaleTranslator": femaleTranslator, "timezone": timezone}});
+      await User.updateOne( {_id: user._id}, {$set: {"name": name, "email": email, "password": hashed_password, "languageFrom": languageFrom, "languageTo": languageTo, "proofRead": proofRead, "femaleTranslator": femaleTranslator, "timezone": timezone}});
       return res.status(201).json({ message: "User updated succesfully!" });
     } catch (error) {
       return res.status(400).json({ error: err.message });
