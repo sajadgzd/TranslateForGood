@@ -26,6 +26,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import GTranslateIcon from '@material-ui/icons/GTranslate';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 import EditProfileCard from './EditProfileCard';
 
@@ -167,6 +168,25 @@ const ProfileCard = (props) => {
                                             )
                                     }/>
                             </ListItem>
+                            <Divider variant="inset" component="li" />
+                            { user && user.proofRead != "" &&
+                            <ListItem component="div">
+                                <ListItemAvatar >
+                                <Avatar>
+                                    <DescriptionIcon />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="PROOFREADING" secondary={
+                                        user && user.proofRead.map(
+                                                (language) => 
+                                                    <li key={language}>
+                                                        {language}
+                                                    </li>
+                                            )
+                                    }/>
+                            </ListItem>
+                            }
                             <Divider variant="inset" component="li" />
                         </Box>
                         }
