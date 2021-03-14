@@ -187,14 +187,14 @@ const Home = (props) => {
           await axios.get(
             "/api/users/matchedTranslators", { 
               params: {
-                languageFrom, languageTo, isUrgent: true, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
+                languageFrom, languageTo, dueDateTime, isUrgent: true, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
               }
             });
         } else {
         await axios.get(
           "/api/users/matchedTranslators", { 
             params: {
-              languageFrom, languageTo, isUrgent: false, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
+              languageFrom, languageTo, dueDateTime, isUrgent: false, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
             }
           });
         }

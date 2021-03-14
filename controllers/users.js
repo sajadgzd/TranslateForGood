@@ -27,6 +27,10 @@ const timeActivityTable = (day, hour) => {
   }
 };
 
+const parseDueDate = (requestDueDate) => {
+  var today = moment(new Date()).format('YYYY-MM-DD[T00:00:00.000Z]');
+  console.log(today);
+};
 const getTimeActivityScore = (translatorTZ) => {
   try {
     let addH = parseInt(moment.tz(moment.tz.guess()).format('ZZ'))/100; // current timezone offset
@@ -125,10 +129,25 @@ let UserController = {
     //   console.log("The matchedTranslators for particular request: ", matchedTranslators);
     //   console.log("The matchedRequest for all matchedTranslators: ", request);
 
+    let requestDueDate = req.query.dueDateTime;    ;
+    console.log(requestDueDate);
+    let expired = parseDueDate(requestDueDate);
+      if(1<2){
+        //time out - handle expired request
+        await Request.updateOne( {_id: requestID}, {$set: {"isActive": false}});
+        //everyone who not accept request, request goes to ignored
+        let translatorWhoAcceptedRequest = await Request.findOne({_id: requestID}).populate("acceptedTranslator");
+        // add request to translationActivity: ignored
+        console.log(matchedTranslators, "//////////////////////", translatorWhoAcceptedRequest);
+        for (let i = 0; i < matchedTranslators.length; i++) {
+          console.log(matchedTranslators, "//////////////////////", translatorWhoAcceptedRequest);
+        }
+      }
     } catch (err) {
       console.log(err);
       return res.status(400).json({ error: err.message });
     }
+    
   },
 
   // given user's id get all the requests they created
@@ -171,6 +190,15 @@ let UserController = {
       
       await User.updateOne( {_id: user._id}, {$set: {"name": name, "email": email, "password": hashed_password, "languageFrom": languageFrom, "languageTo": languageTo, "femaleTranslator": femaleTranslator, "timezone": timezone}});
       return res.status(201).json({ message: "User updated succesfully!" });
+    } catch (error) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+  handleExpiredRequest: async (req, res) => {
+    try {
+      let requestID = req.query.newRequestID;
+      await Request.updateOne( {_id: requestID}, {$set: {"isActive": false}});
+      return res.status(201).json({ message: "Request deactivated succesfully!" });
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
