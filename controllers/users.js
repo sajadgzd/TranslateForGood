@@ -200,11 +200,14 @@ let UserController = {
         // for (let i = 0; i < allPotentialTranslators.length; i++) {
         //   let translator_id = allPotentialTranslators[i].translator._id;
         //   console.log(translator_id);
-        //   await User.updateOne( {_id: translator_id}, {$set: {"ignored": [requestID]}});
+        //   await User.findOneAndUpdate( {_id: translator_id}, {$push: {"translationActivity.ignored": [requestID]}});
         // }
         //requestID = '604d9e6e50c9dc33146c0083';
         translator_id = '604d66da19725e00151f7669';
         await User.findOneAndUpdate( {_id: translator_id}, {$push: {"translationActivity.ignored": [requestID]}});
+        //let acceptanceRate = total != 0 ? targetTranslators[i].translationActivity.accepted.length/total : 0;
+       // console.log(acceptanceRate);
+        //await User.findOneAndUpdate( {_id: translator_id}, {$set: {"translationActivity.acceptanceRate": acceptanceRate}});
       
       return res.status(201).json({ message: "Request deactivated succesfully!" });
     } catch (error) {
