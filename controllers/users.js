@@ -200,6 +200,14 @@ let UserController = {
     try {
       let requests = await User.findOne({_id: req.params.id}).populate("requests"); 
       res.json(requests.requests);
+      for (let i = 0; i < requests.requests.length; i++) {
+        if(isPastDue(requests.requests[i].dueDateTime)) {
+          let requestID = requests.requests[i]._id; 
+          expiredRequest_ = await Request.findOne({_id: requestID})
+          expiredRequest_.isActive = false;
+          await expiredRequest_.save();
+        }
+      }
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }

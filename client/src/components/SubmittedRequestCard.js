@@ -6,10 +6,14 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
+
 import CloseIcon from '@material-ui/icons/Close';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import CheckIcon from '@material-ui/icons/Check';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
 import Card from '@material-ui/core/Card';
@@ -85,23 +89,28 @@ function SubmittedRequestCard(props) {
                                     <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem', 
                                          display: 'flex', alignItems: 'center'}}>
                                         <div>  
-                                            <HourglassEmptyIcon fontSize="large" style={{fill: "green"}}/> 
+                                            <Tooltip title="We will notify you once someone accepts your request">
+                                                <HourglassEmptyIcon fontSize="large" style={{fill: "green"}}/> 
+                                            </Tooltip> 
                                         </div>
                                         <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem', 
                                                         display: 'flex', alignItems: 'center', flexWrap: 'wrap'}}>
                                             <Typography gutterBottom align='center' component={'span'} style={{ fontWeight: 300 }}>
-                                                This request is active and is waiting for a translator.
+                                                This request is active and is waiting to be accepted by a translator.
                                             </Typography >
                                         </div>
                                     </div>
                                     :
-                                    <div>
-                                        <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
-                                            <CloseIcon fontSize="large" style={{fill: "red"}}/>
+                                    <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem', 
+                                         display: 'flex', alignItems: 'center'}}>
+                                        <div>
+                                            <Tooltip title="Your request expired before we could find a translator">
+                                                <CloseIcon fontSize="large" style={{fill: "red"}}/>
+                                            </Tooltip> 
                                         </div>
                                         <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}} >
                                             <Typography gutterBottom align='center' component={'span'}  style={{ fontWeight: 300 }}>
-                                                Your request is expired. Unfortunatelly we didn't find a translator. You can remove this requests and submit a new one. 
+                                                This request expired. You can remove it and submit a new one. 
                                             </Typography >
                                         </div>
                                     </div>
@@ -114,12 +123,26 @@ function SubmittedRequestCard(props) {
                                     </Typography >
                                 </Box>
                                 <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
-                                    <Box fontWeight="bold" display="inline">Posted:</Box>
-                                    <Box m={1} display="inline"> {timeOfRequest}</Box>
+                                    <Box fontWeight="bold" display="inline"> 
+                                        <Tooltip title="Request submission time"><AddCircleOutlineIcon/></Tooltip>
+                                    </Box>
+                                    <Box m={1} display="inline">{timeOfRequest}</Box>
                                 </Box>
                                 <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
-                                    <Box fontWeight="bold" display="inline">Due Time:</Box>
-                                    <Box m={1} display="inline">{dueDateTime}</Box>
+                                    <Box fontWeight="bold" display="inline">
+                                        <Tooltip title="Due date of your request">
+                                            { props.isActive ? 
+                                                <ScheduleIcon/> 
+                                                : 
+                                                <ScheduleIcon style={{fill: "red"}}/> 
+                                            }
+                                        </Tooltip>
+                                    </Box>
+                                    { props.isActive ? 
+                                        <Box m={1} display="inline">{dueDateTime}</Box>
+                                        :
+                                        <Box m={1} color="red" display="inline">{dueDateTime}</Box>
+                                    }
                                 </Box>
                                 {props.femaleTranslator == true ? 
                                         <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
@@ -142,7 +165,11 @@ function SubmittedRequestCard(props) {
                             </Typography >
                         </CardContent>
                         <CardActions className={classes.root}>
-                            <Button variant="outlined" size="small"/*onClick={}*/ >Edit Request</Button>
+                            {props.isActive ?
+                                <Button variant="outlined" size="small"/*onClick={}*/ >Edit Request</Button> 
+                                :
+                                <></>
+                            }
                             <Button variant="outlined" size="small" className={classes.outlinedPurple, classes.textPurple} /*onClick={}*/ >Remove Request</Button>
                         </CardActions>     
                     </Card> 
