@@ -95,12 +95,12 @@ function a11yProps(index) {
   };
 }
 
-const useStylesTabs = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    width: 500,
-  },
-}));
+// const useStylesTabs = makeStyles((theme) => ({
+//   root: {
+//     backgroundColor: theme.palette.background.paper,
+//     width: 500,
+//   },
+// }));
 
 // Home component func definition
 const Home = (props) => {

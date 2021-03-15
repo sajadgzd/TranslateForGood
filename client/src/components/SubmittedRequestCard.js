@@ -6,25 +6,16 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
-import Icon from '@mdi/react';
 import CloseIcon from '@material-ui/icons/Close';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import CheckIcon from '@material-ui/icons/Check';
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import { fade } from "@material-ui/core/styles/colorManipulator";
 
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import { mdiFaceWoman } from '@mdi/js';
-import AlarmIcon from '@material-ui/icons/Alarm';
-import DescriptionIcon from '@material-ui/icons/Description';
 import moment from 'moment';
-import defaultImage from './default_photo.png';
-import Avatar from '@material-ui/core/Avatar';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,12 +38,24 @@ const useStyles = makeStyles((theme) => ({
             borderColor: '#4caf50',
             boxShadow: 'none',
           },
-      }
+      },
+      textPurple: {
+        color: "#d50000",
+        "&:hover": {
+          backgroundColor: fade("#d50000", theme.palette.action.hoverOpacity),
+          // Reset on touch devices, it doesn't add specificity
+          "@media (hover: none)": {
+            backgroundColor: "transparent"
+          }
+        }
+      },
+      outlinedPurple: {
+        border: `1px solid ${fade("#d50000", 0.5)}`,
+        "&:hover": {
+          border: `1px solid ${"#d50000"}`
+        },
+      },
   }));
-
-const colorVocabIcon = {'true': "secondary", 'false': "disabled"};
-const colorVocabCustomIcon = {'true': "#dc004e", 'false': "#D3D3D3"};
-
 
 function SubmittedRequestCard(props) {
   const classes = useStyles();
@@ -60,87 +63,91 @@ function SubmittedRequestCard(props) {
   const timeOfRequest = moment(props.createdAt).format('LLL');
   const dueDateTime = moment(props.due).format('LLL');
 
-  const [openDialog, setDialog] = useState(false);
-  const handleCloseDialog = () => {
-    setDialog(false);
-    window.location.reload(false);
-  };
-
   return (  
     <div>
-      <Card className={classes.root}>
-          <CardContent >
-              <Grid container justify="center" alignItems="center" style={{ marginBottom: '3rem'}}>
-                {props.isActive == true ? 
-                    <div>
-                        <div> 
-                            <HourglassEmptyIcon fontSize="large"/> 
-                        </div>
-                        <div>
-                            <Typography gutterBottom align='center' component={'span'} style={{ fontWeight: 300 }}>
-                                This request is active and waiting for a translator.
+        <Grid container spacing={10} direction="column" alignItems="center" justify="center">
+                <Grid item xs={10} style={{
+                    display: "center",
+                    marginTop:10,
+                    marginBottom:10,
+                    marginLeft:10, 
+                    marginRight:10
+                }}>
+                    <Card 
+                        style={{
+                            width: 350,
+                            hight: 350,
+                        }}
+                    >
+                        <CardContent >
+                            <Grid container justify="center" alignItems="center" style={{ marginBottom: '1rem'}}>
+                                {props.isActive == true ? 
+                                    <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem', 
+                                         display: 'flex', alignItems: 'center'}}>
+                                        <div>  
+                                            <HourglassEmptyIcon fontSize="large" style={{fill: "green"}}/> 
+                                        </div>
+                                        <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem', 
+                                                        display: 'flex', alignItems: 'center', flexWrap: 'wrap'}}>
+                                            <Typography gutterBottom align='center' component={'span'} style={{ fontWeight: 300 }}>
+                                                This request is active and is waiting for a translator.
+                                            </Typography >
+                                        </div>
+                                    </div>
+                                    :
+                                    <div>
+                                        <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                            <CloseIcon fontSize="large" style={{fill: "red"}}/>
+                                        </div>
+                                        <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}} >
+                                            <Typography gutterBottom align='center' component={'span'}  style={{ fontWeight: 300 }}>
+                                                Your request is expired. Unfortunatelly we didn't find a translator. You can remove this requests and submit a new one. 
+                                            </Typography >
+                                        </div>
+                                    </div>
+                                }
+                            </Grid>
+                            <Typography gutterBottom component={'span'}>
+                                <Box border={1} borderColor="grey.300" borderRadius={16} style={{ marginTop: '1rem', marginBottom:'0.5rem'}}>
+                                    <Typography gutterBottom align='center' component={'span'} style={{ fontWeight: 600, fontSize:18, marginLeft:'1rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                                        {props.from} to {props.to}
+                                    </Typography >
+                                </Box>
+                                <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                    <Box fontWeight="bold" display="inline">Posted:</Box>
+                                    <Box m={1} display="inline"> {timeOfRequest}</Box>
+                                </Box>
+                                <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                    <Box fontWeight="bold" display="inline">Due Time:</Box>
+                                    <Box m={1} display="inline">{dueDateTime}</Box>
+                                </Box>
+                                {props.femaleTranslator == true ? 
+                                        <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                            <Box display="inline"><CheckIcon/> Requested a female translator</Box>
+                                        </Box> 
+                                        : 
+                                        <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                            <Box display="inline"><NotInterestedIcon/> Didn't request a female translator</Box>
+                                        </Box>
+                                    } 
+                                    {props.documentProofreading == true ?
+                                        <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                            <Box display="inline"><CheckIcon/> Requested document proofreading</Box>
+                                        </Box>
+                                        :
+                                        <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                            <Box display="inline"><NotInterestedIcon/> Didn't request document proofreading</Box>
+                                        </Box>
+                                    }
                             </Typography >
-                        </div>
-                    </div>
-                    :
-                    <div>
-                        <div>
-                            <CloseIcon fontSize="large"/>
-                        </div>
-                        <div>
-                            <Typography gutterBottom align='center' component={'span'}  style={{ fontWeight: 300 }}>
-                                Your request is expired. Unfortunatelly we didn't find a translator. You can remive this requests and submit a new one. 
-                            </Typography >
-                        </div>
-                    </div>
-                }
-              </Grid>
-              <Typography gutterBottom component={'span'}>
-                  <Typography gutterBottom align='center' component={'span'} style={{ fontWeight: 600 }}>
-                      {props.from} to {props.to}
-                  </Typography >
-                  <Box display='block'>
-                      <Box fontWeight="bold" display="inline">Posted:</Box>
-                      <Box m={1} display="inline"> {timeOfRequest}</Box>
-                  </Box>
-                  {/* <Box display='block'>
-                      <Box fontWeight="bold" display="inline">User:</Box>          
-                      <Box m={1} display="inline">{props.name}</Box>
-                  </Box> */}
-                  <Box display='block'>
-                      <Box fontWeight="bold" display="inline">Due Time:</Box>
-                      <Box m={1} display="inline">{dueDateTime}</Box>
-                  </Box>
-              </Typography >
-              <Box style={{ marginTop: 20 }}>
-                  <Tooltip title="Only Female Translator"><Icon path={mdiFaceWoman} size={1.5} color={colorVocabCustomIcon[props.femaleTranslator]}/></Tooltip>
-                  <Tooltip title="Document Proofreading"><DescriptionIcon color={colorVocabIcon[props.documentProofreading]} fontSize="large"/></Tooltip>
-              </Box>
-          </CardContent>
-          
-          <CardActions className={classes.root}>
-              <Button variant="outlined" size="small" color="secondary" /*onClick={}*/ >Remove Request</Button>
-          </CardActions>     
-      </Card> 
-{/* 
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Request is Declined!"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Request was successfully declined. Thank you for your time.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary" autoFocus>
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>  */}
+                        </CardContent>
+                        <CardActions className={classes.root}>
+                            <Button variant="outlined" size="small"/*onClick={}*/ >Edit Request</Button>
+                            <Button variant="outlined" size="small" className={classes.outlinedPurple, classes.textPurple} /*onClick={}*/ >Remove Request</Button>
+                        </CardActions>     
+                    </Card> 
+                </Grid>
+        </Grid>
     </div>
   );
 }

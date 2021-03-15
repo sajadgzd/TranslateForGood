@@ -84,9 +84,9 @@ function SubmittedRequestList(props) {
                 marginTop:50,
                 marginBottom:50,
                 }}>
-              <Typography align="center" variant="h4" gutterBottom>
-                You don't have any active requests yet. If you'd like to submit a new request click here.
-              </Typography>
+                <Typography align="center" variant="h4" gutterBottom>
+                    You don't have any submitted requests. If you'd like to submit a new request click here.
+                </Typography>
               </Grid> 
               <Grid item xs={1}>
                 <IconButton  color="primary" aria-label="Refresh matched requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
@@ -97,7 +97,7 @@ function SubmittedRequestList(props) {
             <Grid container alignItems="center" spacing={3} >
               <Grid  item xs={11}>
               <Typography align="center" variant="h4" gutterBottom>
-                You have following active requests 
+                You submitted following requests 
               </Typography>
               </Grid> 
               <Grid item xs={1}>
