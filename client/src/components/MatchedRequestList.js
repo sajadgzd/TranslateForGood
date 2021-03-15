@@ -32,7 +32,7 @@ export default function MatchedRequestList(props) {
           from = {request.languageFrom} 
           to={request.languageTo}
           requestID={request._id}
-          acceptedUserID = {userID}>
+          acceptedUserID = {userID}
           due={request.dueDateTime}>
         
         </MatchedRequestCard>

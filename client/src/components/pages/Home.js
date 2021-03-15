@@ -158,7 +158,7 @@ const Home = (props) => {
       // User tries to submit a due date shorter than an hour
       // 3540000 milliseconds is 59 minutes - that's to make time change
       // easier for the users as they only see current hour not seconds 
-      else if(dueDateTime < (new Date().getTime() + 3540000)) {
+      else if(dueDateTime < (new Date().getTime() + 3540000)) { //3540000
         console.log("Due date is shorter than an hour")
         setData({ ...data, materialDateTimeInputError: true, dueDateHelperText:"Your due date is too soon. We need at least an hour to work on your request"});
         return;
@@ -187,14 +187,14 @@ const Home = (props) => {
           await axios.get(
             "/api/users/matchedTranslators", { 
               params: {
-                languageFrom, languageTo, dueDateTime, isUrgent: true, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
+                languageFrom, languageTo, isUrgent: true, dueDateTime, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
               }
             });
         } else {
         await axios.get(
           "/api/users/matchedTranslators", { 
             params: {
-              languageFrom, languageTo, dueDateTime, isUrgent: false, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
+              languageFrom, languageTo, isUrgent: false, dueDateTime, femaleTranslatorBool, documentProofReadingBool, user, newRequestID
             }
           });
         }
