@@ -17,7 +17,6 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import MatchedRequestList from '../MatchedRequestList';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -27,6 +26,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import RequestsTabs from '../RequestsTabs';
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -52,12 +52,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     color: "#1a237e",
     fontSize: '1.2rem',
+    marginBottom: 30
   },
   formControl: {
     margin: theme.spacing(3),
   }
 }));
-
 
 // Home component func definition
 const Home = (props) => {
@@ -242,19 +242,18 @@ const handleSubmitPreviousTranslator = async (e) => {
   // use defined styles above
   const classes = useStyles();
   return (
-
-    <div className={classes.root} style={{ marginTop: 40 }}>
+    <div className={classes.root} style={{ marginTop: 30 }}>
     <Grid container spacing={8}>
       <Grid item xs={12} sm={12} >
         <ThemeProvider theme={theme}>
-          <Typography variant="h5" style={{ marginLeft: 30 }} >Welcome {user && user.name}</Typography>
+          <Typography component={'span'} variant="h5" style={{ marginLeft: 50}} >Welcome {user && user.name}</Typography>
         </ThemeProvider>
       </Grid>
 
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={6} >
         <Paper className={classes.paper}>
           <ThemeProvider theme={theme}>
-            <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} >Request a Translator</Typography>
+            <Typography component={'span'} variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} >Request a Translator</Typography>
           </ThemeProvider>
 
           <form className={classes.root} noValidate autoComplete="off">
@@ -389,13 +388,8 @@ const handleSubmitPreviousTranslator = async (e) => {
           </div>
         </Paper>
       </Grid>
-
     </Grid>
-    
-    {// Only translators can see the list of active requests
-      user.languageFrom === undefined || user.languageFrom.length == 0 ?
-      <></>: <MatchedRequestList user={user}/>
-    }
+    <RequestsTabs user={user}/>
   </div>
 
   );
