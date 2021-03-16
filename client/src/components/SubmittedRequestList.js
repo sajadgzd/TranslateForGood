@@ -61,7 +61,6 @@ function SubmittedRequestList(props) {
 
   const getSubmittedRequests = async () => {
     console.log("TRYING TO GET REQUESTS!!!!!");
-
     const reqs = await axios.get("/api/users/requests", { 
         params: {
           userID

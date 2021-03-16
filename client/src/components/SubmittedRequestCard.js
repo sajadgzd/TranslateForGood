@@ -151,7 +151,7 @@ function SubmittedRequestCard(props) {
                                             </div>
                                             <div className={classes.placing}>
                                                 <Typography  gutterBottom align='center' component={'span'}  style={{ fontWeight: 300, fontWeight:"bold", color:"#4caf50" }}>
-                                                    Your request was accepted by a translator. We will connect you soon.
+                                                    This request was accepted by a translator. We will connect you soon.
                                                 </Typography >
                                             </div>
                                         </div> 
