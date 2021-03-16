@@ -42,7 +42,6 @@ app.get("/api/requests/all", RequestControls.getAll);
 app.get("/api/requests/:id", RequestControls.getRequestById);
 
 app.put("/api/users/edit", UserControls.updateUserInfo);
-app.put("/api/users/handleExpiredRequest", UserControls.handleExpiredRequest);
 app.get("/api/users/:id/requests", UserControls.getUserRequests);
 app.get("/api/users/:id/user", UserControls.getById);
 app.get("/api/users/matchedTranslators", UserControls.getMatchedTranslators);
