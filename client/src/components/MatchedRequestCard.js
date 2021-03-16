@@ -56,8 +56,11 @@ const colorVocabCustomIcon = {'true': "#dc004e", 'false': "#D3D3D3"};
 function MatchedRequestCard(props) {
   const classes = useStyles();
   
-  const handleAcceptMachedTranslationRequest = (requestID, acceptedUserID) => async (e) => {
+  const handleAcceptMatchedTranslationRequest = (requestID, acceptedUserID) => async (e) => {
     e.preventDefault();
+    setDialogAccept(false);
+    window.location.reload(false);
+    
     await axios.post(
     "/api/requests/onAccepted",
     {requestID, acceptedUserID},
@@ -71,7 +74,7 @@ function MatchedRequestCard(props) {
     });
   };
 
-  const handleDeclineMachedTranslationRequest = (requestID, declinedUserID) => async (e) => {
+  const handleDeclineMatchedTranslationRequest = (requestID, declinedUserID) => async (e) => {
     e.preventDefault();
     await axios.post(
       "/api/requests/onDeclined",
@@ -95,6 +98,15 @@ function MatchedRequestCard(props) {
   const handleCloseDialog = () => {
     setDialog(false);
     window.location.reload(false);
+  };
+
+  const[openDialogAccept, setDialogAccept] = useState(false);
+  const handleCloseDialogAccept = () => {
+    setDialogAccept(false);
+  };
+
+  const showAcceptDialog = () => {
+    setDialogAccept(true);
   };
 
 
@@ -129,8 +141,8 @@ function MatchedRequestCard(props) {
           </CardContent>
           
           <CardActions className={classes.root}>
-              <Button variant="outlined" size="small" color="primary" onClick={handleAcceptMachedTranslationRequest(props.requestID, props.acceptedUserID)} className={classes.acceptButtonColor}>Accept</Button>
-              <Button variant="outlined" size="small" color="secondary" onClick={handleDeclineMachedTranslationRequest(props.requestID, props.acceptedUserID)} >Decline</Button>
+              <Button variant="outlined" size="small" color="primary" onClick={showAcceptDialog} className={classes.acceptButtonColor}>Accept</Button>
+              <Button variant="outlined" size="small" color="secondary" onClick={handleDeclineMatchedTranslationRequest(props.requestID, props.acceptedUserID)} >Decline</Button>
           </CardActions>     
       </Card> 
 
@@ -149,6 +161,28 @@ function MatchedRequestCard(props) {
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary" autoFocus>
             Ok
+          </Button>
+        </DialogActions>
+      </Dialog> 
+
+      <Dialog
+        open={openDialogAccept}
+        onClose={handleCloseDialogAccept}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirmation needed!"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Please confirm that you are ready to accept this request.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAcceptMatchedTranslationRequest(props.requestID, props.acceptedUserID)} className={classes.acceptButtonColor} autoFocus>
+            Confirm
+          </Button>
+          <Button onClick={handleCloseDialogAccept} color="secondary" autoFocus>
+            Cancel
           </Button>
         </DialogActions>
       </Dialog> 
