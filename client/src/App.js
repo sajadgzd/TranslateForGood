@@ -8,11 +8,13 @@ import Home from "./components/pages/Home";
 import About from "./components/pages/About";
 import Profile from "./components/pages/Profile";
 import Navbar from './components/Navbar';
+import { Notifications } from 'react-push-notification';
 
 function App() {
 
     return (
       <BrowserRouter>
+      <Notifications />
         <Navbar />
         <Switch>
           <Route exact path='/home' component={Home} />

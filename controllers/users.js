@@ -85,8 +85,6 @@ let UserController = {
     let matchedTranslators;
     let request;
 
-    
-
     try {
       request = await Request.findOne({_id: requestID}).populate("author");
       let active = true;
