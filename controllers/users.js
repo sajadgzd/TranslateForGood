@@ -198,9 +198,16 @@ let UserController = {
   // to get requests just do .request on the result of this query
   getUserRequests: async (req, res) => {
     try {
-      let requests = await User.findOne({_id: req.params.id}).populate("requests"); 
+      console.log("------- UserID: ", req.query.userID);
+      let requests = await User.findOne({_id: req.query.userID}).populate("requests");
+      if(requests == undefined) {
+        console.log("OBJECT IS UNDEFINED. ID: ");
+      }
       res.json(requests.requests);
       for (let i = 0; i < requests.requests.length; i++) {
+        if(requests.requests[i] == undefined) {
+          console.log("REQUEST IS");
+        }
         if(isPastDue(requests.requests[i].dueDateTime)) {
           let requestID = requests.requests[i]._id; 
           expiredRequest_ = await Request.findOne({_id: requestID})
@@ -214,8 +221,6 @@ let UserController = {
   },
 
   getTranslatorsMatchedRequests: async(req, res) => {
-    console.log("INSIDE GET TRANSLATORS MATCHED REQUESTS");
-
     try {
       //get matchedRequests that are active to the particular translators
       let matchedRequests = await User.findOne({_id: req.query.userID})

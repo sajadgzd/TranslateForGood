@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import MatchedRequestCard from './MatchedRequestCard';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -36,6 +35,7 @@ function SubmittedRequestList(props) {
           requestID={request._id}
           due={request.dueDateTime}
           isActive={request.isActive}
+          acceptedTranslator={request.acceptedTranslator}
         >
         </SubmittedRequestCard>
     </Grid>
@@ -50,7 +50,7 @@ function SubmittedRequestList(props) {
     result = list.map(request => 
       <Grid item xs={3} item key = {request._id}>
         <SubmittedRequestCard 
-            createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo} due={request.dueDateTime}
+            femaleTranslator = {request.femaleTranslator} documentProofreading = {request.documentProofreading} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo} due={request.dueDateTime} acceptedTranslator={request.acceptedTranslator}
         ></SubmittedRequestCard>
       </Grid>
       )
@@ -60,7 +60,9 @@ function SubmittedRequestList(props) {
   let userID = props.user._id;
 
   const getSubmittedRequests = async () => {
-    const reqs = await axios.get("/api/users/" + userID + "/requests", { 
+    console.log("TRYING TO GET REQUESTS!!!!!");
+
+    const reqs = await axios.get("/api/users/requests", { 
         params: {
           userID
         }

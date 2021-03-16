@@ -17,7 +17,6 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import MatchedRequestList from '../MatchedRequestList';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -25,18 +24,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
-import { useTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Box from '@material-ui/core/Box';
-
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import SubmittedRequestCard from '../SubmittedRequestCard';
-import SubmittedRequestList from '../SubmittedRequestList';
+import RequestsTabs from '../RequestsTabs';
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -67,39 +57,6 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(3),
   }
-}));
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography component={'span'}>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
-
-const useStylesTabs = makeStyles((theme) => ({
-  root: {
-    backgroundColor: "#e8eaf6"
-  },
 }));
 
 // Home component func definition
@@ -155,18 +112,6 @@ const Home = (props) => {
 
   const handleDateChange = (date) => {
     setData({...data, materialDateTimeInputError:false, dueDateTime:date});
-  };
-
-  const classesTabs = useStylesTabs();
-  const theme = useTheme();
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleChangeIndex = (index) => {
-    setValue(index);
   };
 
   const { user, languageFrom, languageTo, error, femaleTranslatorBool, documentProofReadingBool, dueDateTime, isUrgent,
@@ -297,7 +242,6 @@ const handleSubmitPreviousTranslator = async (e) => {
   // use defined styles above
   const classes = useStyles();
   return (
-
     <div className={classes.root} style={{ marginTop: 30 }}>
     <Grid container spacing={8}>
       <Grid item xs={12} sm={12} >
@@ -444,64 +388,8 @@ const handleSubmitPreviousTranslator = async (e) => {
           </div>
         </Paper>
       </Grid>
-
     </Grid>
-    <div>
-      <AppBar position="static" color="default">
-          {
-            user.languageFrom === undefined || user.languageFrom.length == 0 ?
-              <Tabs
-                className={classesTabs.root}
-                value={value}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="fullWidth"
-                aria-label="full width tabs example"
-              >
-                <Tab label="Your Submitted Requests" {...a11yProps(0)} /> 
-              </Tabs>
-            :
-              <Tabs
-                  className={classesTabs.root}
-                  value={value}
-                  onChange={handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="fullWidth"
-                  aria-label="full width tabs example"
-                >
-                  <Tab label="Matched Requests" {...a11yProps(0)} />
-                  <Tab label="Submitted Requests" {...a11yProps(1)} />   
-              </Tabs>        
-          }
-      </AppBar>
-        {
-          user.languageFrom === undefined || user.languageFrom.length == 0 ?
-          <SwipeableViews
-            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-            index={value}
-            onChangeIndex={handleChangeIndex}
-          >
-            <TabPanel value={value} index={0} dir={theme.direction}>
-                <SubmittedRequestList user={user}/>
-            </TabPanel>
-          </SwipeableViews>
-          :
-          <SwipeableViews
-            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-            index={value}
-            onChangeIndex={handleChangeIndex}
-          >
-            <TabPanel value={value} index={0} dir={theme.direction}>
-              <MatchedRequestList user={user}/>
-            </TabPanel>
-            <TabPanel value={value} index={1} dir={theme.direction}>
-              <SubmittedRequestList user={user}/>
-            </TabPanel>
-          </SwipeableViews>
-        }
-    </div>
+    <RequestsTabs user={user}/>
   </div>
 
   );

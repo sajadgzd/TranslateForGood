@@ -15,6 +15,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import { fade } from "@material-ui/core/styles/colorManipulator";
 
 import CloseIcon from '@material-ui/icons/Close';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
@@ -22,7 +23,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import { fade } from "@material-ui/core/styles/colorManipulator";
+import PersonIcon from '@material-ui/icons/Person';
 
 import moment from 'moment';
 
@@ -30,6 +31,13 @@ const useStyles = makeStyles((theme) => ({
     root: {
       justifyContent: "center",
       marginBottom: 10
+    },
+    placing: {
+        marginTop: '1rem',
+        marginLeft: '0.5rem', 
+        marginBottom:'0.5rem', 
+        display: 'flex', 
+        alignItems: 'center'
     },
     media: {
       height: 140
@@ -102,7 +110,6 @@ function SubmittedRequestCard(props) {
     setOpen(false);
   };
 
-
   return (  
     <div>
         <Grid container spacing={10} direction="column" alignItems="center" justify="center">
@@ -122,33 +129,46 @@ function SubmittedRequestCard(props) {
                         <CardContent >
                             <Grid container justify="center" alignItems="center" style={{ marginBottom: '1rem'}}>
                                 {props.isActive == true ? 
-                                    <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem', 
-                                         display: 'flex', alignItems: 'center'}}>
+                                    <div className={classes.placing} style={{ display: 'flex'}}>
                                         <div>  
                                             <Tooltip title="We will notify you once someone accepts your request">
                                                 <HourglassEmptyIcon fontSize="large" style={{fill: "green"}}/> 
                                             </Tooltip> 
                                         </div>
-                                        <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem', 
-                                                        display: 'flex', alignItems: 'center', flexWrap: 'wrap'}}>
+                                        <div className={classes.placing}>
                                             <Typography gutterBottom align='center' component={'span'} style={{ fontWeight: 300 }}>
                                                 This request is active and is waiting to be accepted by a translator.
                                             </Typography >
                                         </div>
                                     </div>
-                                    :
-                                    <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem', 
-                                         display: 'flex', alignItems: 'center'}}>
-                                        <div>
-                                            <Tooltip title="Your request expired before we could find a translator">
-                                                <CloseIcon fontSize="large" style={{fill: "red"}}/>
-                                            </Tooltip> 
-                                        </div>
-                                        <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}} >
-                                            <Typography gutterBottom align='center' component={'span'}  style={{ fontWeight: 300 }}>
-                                                This request expired. You can remove it and submit a new one. 
-                                            </Typography >
-                                        </div>
+                                    : 
+                                    <div> { props.acceptedTranslator ?
+                                        <div className={classes.placing} style={{ display: 'flex'}}>
+                                            <div>
+                                                <Tooltip title="Your request expired before we could find a translator">
+                                                    <PersonIcon fontSize="large" style={{fill: "green"}}/>
+                                                </Tooltip> 
+                                            </div>
+                                            <div className={classes.placing}>
+                                                <Typography  gutterBottom align='center' component={'span'}  style={{ fontWeight: 300, fontWeight:"bold", color:"#4caf50" }}>
+                                                    Your request was accepted by a translator. We will connect you soon.
+                                                </Typography >
+                                            </div>
+                                        </div> 
+                                        :
+                                        <div className={classes.placing} style={{ display: 'flex'}}>
+                                            <div>
+                                                <Tooltip title="Your request expired before we could find a translator">
+                                                    <CloseIcon fontSize="large" style={{fill: "red"}}/>
+                                                </Tooltip> 
+                                            </div>
+                                            <div style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}} >
+                                                <Typography gutterBottom align='center' component={'span'}  style={{ fontWeight: 300 }}>
+                                                    This request expired. You can remove it and submit a new one. 
+                                                </Typography >
+                                            </div>
+                                        </div> 
+                                    }
                                     </div>
                                 }
                             </Grid>
@@ -167,48 +187,54 @@ function SubmittedRequestCard(props) {
                                 <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
                                     <Box fontWeight="bold" display="inline">
                                         <Tooltip title="Due date of your request">
-                                            { props.isActive ? 
+                                            { props.isActive || props.acceptedTranslator ? 
                                                 <ScheduleIcon/> 
                                                 : 
                                                 <ScheduleIcon style={{fill: "red"}}/> 
                                             }
                                         </Tooltip>
                                     </Box>
-                                    { props.isActive ? 
+                                    { props.isActive || props.acceptedTranslator ? 
                                         <Box m={1} display="inline">{dueDateTime}</Box>
                                         :
                                         <Box m={1} color="red" display="inline">{dueDateTime}</Box>
                                     }
                                 </Box>
                                 {props.femaleTranslator == true ? 
-                                        <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                        <Box display='block' className={classes.placing}>
                                             <Box display="inline"><CheckIcon/> Requested a female translator</Box>
                                         </Box> 
                                         : 
-                                        <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                        <Box display='block' className={classes.placing}>
                                             <Box display="inline"><NotInterestedIcon/> Didn't request a female translator</Box>
                                         </Box>
                                     } 
                                     {props.documentProofreading == true ?
-                                        <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                        <Box display='block' className={classes.placing}>
                                             <Box display="inline"><CheckIcon/> Requested document proofreading</Box>
                                         </Box>
                                         :
-                                        <Box display='block' style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                        <Box display='block' className={classes.placing}>
                                             <Box display="inline"><NotInterestedIcon/> Didn't request document proofreading</Box>
                                         </Box>
                                     }
                             </Typography >
                         </CardContent>
                         <CardActions className={classes.root}>
-                            {props.isActive ?
-                                <Tooltip title="If you close the request it will be deactivated and no translators will access to it">
-                                    <Button variant="outlined" size="small" onClick={handleClickCloseRequest} className={classes.outlinedRed, classes.textRed} > Close Request </Button> 
-                                </Tooltip>
+                            { props.acceptedTranslator ? 
+                                <div> </div>
                                 :
-                                <Tooltip title="Remove expired request from the list">
-                                    <Button variant="outlined" size="small" /*onClick={}*/className={classes.outlinedRed, classes.textRed} > Remove </Button>
-                                </Tooltip>
+                                <div>
+                                    {props.isActive ?
+                                        <Tooltip title="If you close the request it will be deactivated and no translators will access to it">
+                                            <Button variant="outlined" size="small" onClick={handleClickCloseRequest} className={classes.outlinedRed, classes.textRed} > Close Request </Button> 
+                                        </Tooltip>
+                                        :
+                                        <Tooltip title="Remove expired request from the list">
+                                            <Button variant="outlined" size="small" /*onClick={}*/className={classes.outlinedRed, classes.textRed} > Remove </Button>
+                                        </Tooltip>
+                                    }
+                                </div>
                             }
                         </CardActions>     
                     </Card>
