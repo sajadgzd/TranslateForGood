@@ -208,6 +208,7 @@ let UserController = {
               console.log("Acceptance rate: ", acceptanceRate);
               //add new acceptanceRate to translationActivity
               await User.findOneAndUpdate( {_id: translator_id}, {$set: {"translationActivity.acceptanceRate": acceptanceRate}});
+              await User.updateOne( {_id: translator_id}, {$pull: {"matchedRequests": requestID}});
               console.log("DEACTIVATION OF REQUEST COMPLETE!")
             }
           return res.status(201).json({ message: "Request deactivated succesfully!" });
