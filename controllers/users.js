@@ -231,10 +231,20 @@ let UserController = {
   // to get requests just do .request on the result of this query
   getUserRequests: async (req, res) => {
     try {
-      let requests = await User.findOne({_id: req.params.id}).populate("requests"); 
-      res.json(requests);
+      console.log("------- UserID: ", req.query.userID);
+      let requests = await User.findOne({_id: req.query.userID}).populate("requests");
+      res.json(requests.requests);
+      for (let i = 0; i < requests.requests.length; i++) {
+        if(isPastDue(requests.requests[i].dueDateTime)) {
+          let requestID = requests.requests[i]._id; 
+          expiredRequest_ = await Request.findOne({_id: requestID})
+          expiredRequest_.isActive = false;
+          await expiredRequest_.save();
+        }
+      }
     } catch (error) {
-      return res.status(400).json({ error: err.message });
+      console.log("Error getting the requests");
+      // return res.status(400).json({ error: err.message });
     }
   },
 
