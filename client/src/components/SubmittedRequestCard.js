@@ -145,7 +145,7 @@ function SubmittedRequestCard(props) {
                                     <div> { props.acceptedTranslator ?
                                         <div className={classes.placing} style={{ display: 'flex'}}>
                                             <div>
-                                                <Tooltip title="Your request expired before we could find a translator">
+                                                <Tooltip title="Request accepted by a translator">
                                                     <PersonIcon fontSize="large" style={{fill: "green"}}/>
                                                 </Tooltip> 
                                             </div>

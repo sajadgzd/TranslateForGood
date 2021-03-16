@@ -60,14 +60,12 @@ function SubmittedRequestList(props) {
   let userID = props.user._id;
 
   const getSubmittedRequests = async () => {
-    console.log("TRYING TO GET REQUESTS!!!!!");
     const reqs = await axios.get("/api/users/requests", { 
         params: {
           userID
         }
       });
     setRequest(reqs.data);
-    console.log("RETURNED REQUESTS: ", reqs.data);
   };
  
   useEffect(() => {

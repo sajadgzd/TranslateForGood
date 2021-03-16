@@ -200,14 +200,8 @@ let UserController = {
     try {
       console.log("------- UserID: ", req.query.userID);
       let requests = await User.findOne({_id: req.query.userID}).populate("requests");
-      if(requests == undefined) {
-        console.log("OBJECT IS UNDEFINED. ID: ");
-      }
       res.json(requests.requests);
       for (let i = 0; i < requests.requests.length; i++) {
-        if(requests.requests[i] == undefined) {
-          console.log("REQUEST IS");
-        }
         if(isPastDue(requests.requests[i].dueDateTime)) {
           let requestID = requests.requests[i]._id; 
           expiredRequest_ = await Request.findOne({_id: requestID})
@@ -216,7 +210,8 @@ let UserController = {
         }
       }
     } catch (error) {
-      return res.status(400).json({ error: err.message });
+      console.log("Error getting the requests");
+      // return res.status(400).json({ error: err.message });
     }
   },
 
