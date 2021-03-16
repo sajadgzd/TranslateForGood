@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import SubmittedRequestCard from "./SubmittedRequestCard";
 
+
 function SubmittedRequestList(props) {
 
   const useStyles = makeStyles(theme => ({
@@ -75,17 +76,13 @@ function SubmittedRequestList(props) {
 
     const classes = useStyles(); 
     return (
-        <div style={{ marginTop: 100 }}>
+        <div style={{ marginTop: 50, marginBottom: 100 }}>
           {// Only show if there is any result
             result === undefined || result.length == 0 ?
             <Grid container spacing={10} direction="column" alignItems="center" justify="center" >
-              <Grid  item xs={10} style={{
-                display: "center",
-                marginTop:50,
-                marginBottom:50,
-                }}>
-                <Typography align="center" variant="h4" gutterBottom>
-                    You don't have any submitted requests. If you'd like to submit a new request click here.
+              <Grid  item xs={10} >
+                <Typography align="center" variant="h4">
+                    You don't have any submitted requests at the moment.
                 </Typography>
               </Grid> 
               <Grid item xs={1}>
@@ -96,8 +93,8 @@ function SubmittedRequestList(props) {
             : 
             <Grid container alignItems="center" spacing={3} >
               <Grid  item xs={11}>
-              <Typography align="center" variant="h4" gutterBottom>
-                You submitted following requests 
+              <Typography align="center" variant="h4" >
+                You submitted the following requests 
               </Typography>
               </Grid> 
               <Grid item xs={1}>

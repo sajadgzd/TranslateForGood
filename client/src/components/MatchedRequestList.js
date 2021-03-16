@@ -69,10 +69,10 @@ export default function MatchedRequestList(props) {
 
     const classes = useStyles(); 
     return (
-        <div style={{ marginTop: 100 }}>
+        <div style={{ marginTop: 50, marginBottom: 100 }}>
           {// Only show if there is any result
             result === undefined || result.length == 0 ?
-            <Grid container alignItems="center" spacing={3} >
+            <Grid container alignItems="center" spacing={10} direction="column" alignItems="center" justify="center">
               <Grid  item xs={11}>
               <Typography align="center" variant="h4" gutterBottom>
                 You are not matched with any requests at the moment.

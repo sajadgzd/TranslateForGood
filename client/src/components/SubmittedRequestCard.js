@@ -7,6 +7,14 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 import CloseIcon from '@material-ui/icons/Close';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
@@ -16,9 +24,6 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
             boxShadow: 'none',
           },
       },
-      textPurple: {
+      textRed: {
         color: "#d50000",
         "&:hover": {
           backgroundColor: fade("#d50000", theme.palette.action.hoverOpacity),
@@ -53,10 +58,26 @@ const useStyles = makeStyles((theme) => ({
           }
         }
       },
-      outlinedPurple: {
+      outlinedRed: {
         border: `1px solid ${fade("#d50000", 0.5)}`,
         "&:hover": {
           border: `1px solid ${"#d50000"}`
+        },
+      },
+      textGreen: {
+        color: "#4caf50",
+        "&:hover": {
+          backgroundColor: fade("#4caf50", theme.palette.action.hoverOpacity),
+          // Reset on touch devices, it doesn't add specificity
+          "@media (hover: none)": {
+            backgroundColor: "transparent"
+          }
+        }
+      },
+      outlinedGreen: {
+        border: `1px solid ${fade("#4caf50", 0.5)}`,
+        "&:hover": {
+          border: `1px solid ${"#4caf50"}`
         },
       },
   }));
@@ -66,6 +87,21 @@ function SubmittedRequestCard(props) {
 
   const timeOfRequest = moment(props.createdAt).format('LLL');
   const dueDateTime = moment(props.due).format('LLL');
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickCloseRequest = () => {
+      handleClickOpen();
+  }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   return (  
     <div>
@@ -166,15 +202,39 @@ function SubmittedRequestCard(props) {
                         </CardContent>
                         <CardActions className={classes.root}>
                             {props.isActive ?
-                                <Button variant="outlined" size="small"/*onClick={}*/ >Edit Request</Button> 
+                                <Tooltip title="If you close the request it will be deactivated and no translators will access to it">
+                                    <Button variant="outlined" size="small" onClick={handleClickCloseRequest} className={classes.outlinedRed, classes.textRed} > Close Request </Button> 
+                                </Tooltip>
                                 :
-                                <></>
+                                <Tooltip title="Remove expired request from the list">
+                                    <Button variant="outlined" size="small" /*onClick={}*/className={classes.outlinedRed, classes.textRed} > Remove </Button>
+                                </Tooltip>
                             }
-                            <Button variant="outlined" size="small" className={classes.outlinedPurple, classes.textPurple} /*onClick={}*/ >Remove Request</Button>
                         </CardActions>     
-                    </Card> 
+                    </Card>
                 </Grid>
         </Grid>
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">{"Are you sure you want to close your request?"}</DialogTitle>
+            <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+                When you close your request we will remove it and it will no longer be shown to any translators. If you choose to leave the request open we will continue searching for a translator for you.
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleClose} className={classes.outlinedRed, classes.textRed}>
+                I want to close my request
+            </Button>
+            <Button onClick={handleClose} className={classes.outlinedGreen, classes.textGreen} autoFocus>
+                I want to leave my request open
+            </Button>
+            </DialogActions>
+        </Dialog>
     </div>
   );
 }
