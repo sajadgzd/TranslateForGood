@@ -6,6 +6,8 @@ const weigths = {timezoneW: 0.7, activityW: 0.3};
 const nUrgent = 2;
 const nNotUrgent = 1;
 
+let allPotentialTranslators = [];
+
 const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
   try{
     let acceptanceScore = 1 - activityScore;
@@ -29,6 +31,10 @@ const timeActivityTable = (day, hour) => {
   }
 };
 
+const parseDueDate = (requestDueDate) => {
+  var today = moment(new Date()).format('YYYY-MM-DD[T00:00:00.000Z]');
+  console.log(today);
+};
 const getTimeActivityScore = (translatorTZ) => {
   try {
     let addH = parseInt(moment.tz(moment.tz.guess()).format('ZZ'))/100; // current timezone offset
@@ -123,6 +129,7 @@ let UserController = {
           potentialTranslators.sort(function (a, b) {   
             return b.Sscore - a.Sscore || b.UFscore - a.UFscore;
         });
+        allPotentialTranslators = matchedTranslators;
 
         // notify batches of translators 
         //figure out if request is urgent - currently less than 5 hours
@@ -181,8 +188,33 @@ let UserController = {
       
       if (!active) { 
         console.log('Yay, someone accepted this request!');
+        //let translatorWhoAcceptedRequest = await Request.findOne({_id: requestID}).populate("acceptedTranslator");
       } else {
         console.log('We were not able to find a matching translator before request due date. Would you like to resubmit or cancel?');
+        //TO_DO: add function here
+        try {
+          //time out - handle expired request
+          console.log("REQUEST TO DEACTIVATE:", requestID);
+          await Request.updateOne( {_id: requestID}, {$set: {"isActive": false}});
+          console.log("TOTAL TRANSLATORS: ", allPotentialTranslators.length);
+            for (let i = 0; i < allPotentialTranslators.length; i++) {
+              let translator_id = allPotentialTranslators[i]._id;
+              console.log("Translator_id of all potential translators: ", translator_id);
+              //add requestID to ignored field og translationActivity
+              await User.findOneAndUpdate( {_id: translator_id}, {$push: {"translationActivity.ignored": [requestID]}});
+              //calculate new acceptanceRate
+              let total = 1 + allPotentialTranslators[i].translationActivity.accepted.length + allPotentialTranslators[i].translationActivity.declined.length + allPotentialTranslators[i].translationActivity.ignored.length;
+              let acceptanceRate = total != 0 ? allPotentialTranslators[i].translationActivity.accepted.length/total : 0;
+              console.log("Acceptance rate: ", acceptanceRate);
+              //add new acceptanceRate to translationActivity
+              await User.findOneAndUpdate( {_id: translator_id}, {$set: {"translationActivity.acceptanceRate": acceptanceRate}});
+              await User.updateOne( {_id: translator_id}, {$pull: {"matchedRequests": requestID}});
+              console.log("DEACTIVATION OF REQUEST COMPLETE!")
+            }
+          return res.status(201).json({ message: "Request deactivated succesfully!" });
+        } catch (error) {
+          return res.status(400).json({ error: err.message });
+        }
       } 
       return res.status(201).json({ message: "Done running matching algorithm! Request was accepted/resubmitted/terminated " });
       //   console.log("The matchedTranslators for particular request: ", matchedTranslators);
@@ -191,6 +223,7 @@ let UserController = {
       console.log(err);
       return res.status(400).json({ error: err.message });
     }
+    
   },
 
   // given user's id get all the requests they created
@@ -237,7 +270,6 @@ let UserController = {
       return res.status(400).json({ error: err.message });
     }
   }
-
 }
 
 module.exports = UserController;
