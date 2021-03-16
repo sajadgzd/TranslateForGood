@@ -188,42 +188,28 @@ let UserController = {
       
       if (!active) { 
         console.log('Yay, someone accepted this request!');
+        //let translatorWhoAcceptedRequest = await Request.findOne({_id: requestID}).populate("acceptedTranslator");
       } else {
         console.log('We were not able to find a matching translator before request due date. Would you like to resubmit or cancel?');
         //TO_DO: add function here
         try {
-          //let requestDueDate = req.query.dueDateTime;    ;
-          //console.log(requestDueDate);
-          //let expired = parseDueDate(requestDueDate);
-         // let requestID = req.query.requestID;
-    
           //time out - handle expired request
+          console.log("REQUEST TO DEACTIVATE:", requestID);
           await Request.updateOne( {_id: requestID}, {$set: {"isActive": false}});
-       
-          //everyone who not accept request, request goes to ignored
-          let translatorWhoAcceptedRequest = await Request.findOne({_id: requestID}).populate("acceptedTranslator");
-            // add request to translationActivity: ignored
-          console.log("The only person, who accepted request: ", translatorWhoAcceptedRequest.acceptedTranslator._id);
-          console.log("All potential translators: ", allPotentialTranslators[0].translator._id, allPotentialTranslators.length);
+          console.log("TOTAL TRANSLATORS: ", allPotentialTranslators.length);
             for (let i = 0; i < allPotentialTranslators.length; i++) {
-              let translator_id = allPotentialTranslators[i].translator._id;
+              let translator_id = allPotentialTranslators[i]._id;
               console.log("Translator_id of all potential translators: ", translator_id);
               //add requestID to ignored field og translationActivity
               await User.findOneAndUpdate( {_id: translator_id}, {$push: {"translationActivity.ignored": [requestID]}});
               //calculate new acceptanceRate
-              let total = allPotentialTranslators[i].translationActivity.accepted.length + allPotentialTranslators[i].translationActivity.declined.length + allPotentialTranslators[i].translationActivity.ignored.length;
+              let total = 1 + allPotentialTranslators[i].translationActivity.accepted.length + allPotentialTranslators[i].translationActivity.declined.length + allPotentialTranslators[i].translationActivity.ignored.length;
               let acceptanceRate = total != 0 ? allPotentialTranslators[i].translationActivity.accepted.length/total : 0;
               console.log("Acceptance rate: ", acceptanceRate);
               //add new acceptanceRate to translationActivity
               await User.findOneAndUpdate( {_id: translator_id}, {$set: {"translationActivity.acceptanceRate": acceptanceRate}});
+              console.log("DEACTIVATION OF REQUEST COMPLETE!")
             }
-            //requestID = '604d9e6e50c9dc33146c0083';
-            //translator_id = '604d66da19725e00151f7669';
-            //await User.findOneAndUpdate( {_id: translator_id}, {$push: {"translationActivity.ignored": [requestID]}});
-            //let acceptanceRate = total != 0 ? targetTranslators[i].translationActivity.accepted.length/total : 0;
-           // console.log(acceptanceRate);
-            //await User.findOneAndUpdate( {_id: translator_id}, {$set: {"translationActivity.acceptanceRate": acceptanceRate}});
-          
           return res.status(201).json({ message: "Request deactivated succesfully!" });
         } catch (error) {
           return res.status(400).json({ error: err.message });
@@ -314,12 +300,6 @@ let UserController = {
           //add new acceptanceRate to translationActivity
           await User.findOneAndUpdate( {_id: translator_id}, {$set: {"translationActivity.acceptanceRate": acceptanceRate}});
         }
-        //requestID = '604d9e6e50c9dc33146c0083';
-        //translator_id = '604d66da19725e00151f7669';
-        //await User.findOneAndUpdate( {_id: translator_id}, {$push: {"translationActivity.ignored": [requestID]}});
-        //let acceptanceRate = total != 0 ? targetTranslators[i].translationActivity.accepted.length/total : 0;
-       // console.log(acceptanceRate);
-        //await User.findOneAndUpdate( {_id: translator_id}, {$set: {"translationActivity.acceptanceRate": acceptanceRate}});
       
       return res.status(201).json({ message: "Request deactivated succesfully!" });
     } catch (error) {
