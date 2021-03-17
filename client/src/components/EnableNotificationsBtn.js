@@ -99,8 +99,7 @@ const EnableNotificationsBtn = (props) => {
                 <Button variant="contained" color="secondary" onClick={handleRequestNotificationPermission}>
                     Enable Notifications
                 </Button>
-            :
-            <div> </div>}
+            : null}
             
         </div>
     );

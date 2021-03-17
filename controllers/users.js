@@ -172,7 +172,7 @@ let UserController = {
                 request.matchedTranslators.push(potentialTranslators[k].translator._id);
                 await request.save();
 
-                //send push notification
+                //send push notification only to people with push not. subscription
                 let userID = potentialTranslators[k].translator._id;
                 let subscription = await Subscription.findOne({user: userID});
                 if (subscription) {
