@@ -1,5 +1,15 @@
 const Request = require("../models/request");
 const User = require("../models/user");
+const webPush = require("web-push");
+
+// Secure push notifications
+const publicVapidKey = "BLeogzDBodY_tQFm-HGNxdttRxLIsW-NMLW6AUhFWpj7EYcGWodIQDjFwh4MIFkI3sPTafdgfflRV0DVZBjOb9E";
+const privateVapidKey = "uvwXQFqV6DQbNs-4G7qX8dJY8n3-Hs7HbkFHp6RW9QA";
+webPush.setVapidDetails(
+  'mailto:someemail@gmail.com',
+  publicVapidKey,
+  privateVapidKey 
+);
 
 
 let RequestController = {
@@ -89,6 +99,7 @@ let RequestController = {
       // update request from active to not active
       // update request: add acceptedTranslator
       let updatedRequest = await Request.findOne({_id: requestID}).populate('matchedTranslators');
+      let authorID = updatedRequest.author;
       updatedRequest.isActive = false;
       updatedRequest.acceptedTranslator = acceptedUserID;
       await updatedRequest.save();
@@ -113,6 +124,19 @@ let RequestController = {
         targetTranslators[i].translationActivity.acceptanceRate = total != 0 ? targetTranslators[i].translationActivity.accepted.length/total : 0;
         await targetTranslators[i].save();
       }
+
+      // // send push notification to request's author
+      // let subscription = await Subscription.findOne({user: authorID});
+      // console.log('I AM HERE, ',subscription);
+      // if (subscription) {
+
+      //     webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'Your request was accepted! Plick click to check it out'}))
+      //   .then(function() {
+      //     console.log('Push Application Server - Notification sent to ' + userID);
+      //   }).catch(function() {
+      //     console.log('ERROR in sending Notification to ' + userID);
+      //   }); 
+      // }
 
       return res.status(201).json({ message: "Request was accepted successfully"});
     } catch (err) {

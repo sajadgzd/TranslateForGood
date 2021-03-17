@@ -176,7 +176,7 @@ let UserController = {
                 let userID = potentialTranslators[k].translator._id;
                 let subscription = await Subscription.findOne({user: userID});
                 if (subscription) {
-                    webPush.sendNotification(subscription.subscription)
+                    webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'You have a new matched request. Please click this notification to check it out.'}))
                   .then(function() {
                     console.log('Push Application Server - Notification sent to ' + userID);
                   }).catch(function() {
