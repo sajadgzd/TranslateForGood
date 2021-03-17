@@ -119,6 +119,20 @@ const Register = (props) => {
   const handleChangeRadioButton = (event) => {
     setData({ ...data, [event.target.name]: event.target.checked });
   };
+
+
+  // if user grants notifications make all the btns invisible
+  const handleRequestNotificationPermission = () => {
+    Notification.requestPermission(function(result){
+      if(result !== 'granted') {
+        console.log('No notification permission granted');
+      } else {
+        console.log('Notification permission was granted');
+        let enableNotificationBtn = document.querySelector('#notifications');
+          enableNotificationBtn.style.display = 'none';
+      }
+    });
+  }
   
   return (
     <div className="row">
@@ -274,10 +288,16 @@ const Register = (props) => {
             </FormControl>
             {error ? <p className="text-danger">{error}</p> : null}
             <div className="text-center">
+              <button className="btn btn-success" id='notifications' style={{ marginBottom: '2rem'}} onClick={handleRequestNotificationPermission}>
+                Enable Notifications
+              </button>
+            </div>
+            <div className="text-center">
               <button className="btn btn-primary" onClick={handleSubmit}>
                 Register
               </button>
             </div>
+
             <p className="mt-3 text-center">
               Already a user?
               <Link to="/login">
