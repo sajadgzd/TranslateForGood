@@ -46,7 +46,7 @@ function AcceptedRequestList(props) {
     if (typeof list === 'string'){
       list = [];
     }
-    result = list.map(acceptedRequest => 
+    result = list.sort((a, b) => (a.updatetAt > b.updatedAt) ? 1 : -1).map(acceptedRequest => 
       <Grid item xs={3} item key = {acceptedRequest._id}>
         <AcceptedRequestCard 
             name ={acceptedRequest.author ? acceptedRequest.author.name : acceptedRequest.author}
@@ -98,7 +98,7 @@ function AcceptedRequestList(props) {
               </Grid>   
             </Grid>
             : 
-            <Grid container align="center" spacing={3} >
+            <Grid container spacing={3} >
               <Grid  item xs={11}>
               <Typography component={"span"} variant="h4" >
                 You accepted the following requests. Click on a request to chat with its author.
@@ -107,7 +107,7 @@ function AcceptedRequestList(props) {
               <Grid item xs={1}>
                 <IconButton  color="primary" aria-label="Refresh matched requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
               </Grid>        
-              <Grid item xs={12} component={"div"}>
+              <Grid item xs={12}>
                  <List>
                     {result}
                 </List> 
