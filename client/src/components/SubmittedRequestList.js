@@ -47,7 +47,7 @@ function SubmittedRequestList(props) {
     if (typeof list === 'string'){
       list = [];
     }
-    result = list.map(request => 
+    result = list.sort((a, b) => (a.updatetAt > b.updatedAt) ? 1 : -1).map(request => 
       <Grid item xs={3} item key = {request._id}>
         <SubmittedRequestCard 
             femaleTranslator = {request.femaleTranslator} documentProofreading = {request.documentProofreading} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo} due={request.dueDateTime} acceptedTranslator={request.acceptedTranslator}

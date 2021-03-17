@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "center",
       marginBottom: 10
     },
-    listItemStyle: {
+    placing: {
         marginTop: '1rem',
         marginLeft: '0.5rem', 
         marginBottom:'0.5rem', 
@@ -145,13 +145,13 @@ function SubmittedRequestCard(props) {
                                     <div> { props.acceptedTranslator ?
                                         <div className={classes.placing} style={{ display: 'flex'}}>
                                             <div>
-                                                <Tooltip title="Request accepted by a translator">
+                                                <Tooltip title="Request accepted by a translator. You can open chat to talk to them">
                                                     <PersonIcon fontSize="large" style={{fill: "green"}}/>
                                                 </Tooltip> 
                                             </div>
                                             <div className={classes.placing}>
                                                 <Typography  gutterBottom align='center' component={'span'}  style={{ fontWeight: 300, fontWeight:"bold", color:"#4caf50" }}>
-                                                    This request was accepted by a translator! Open Chat to talk to them.
+                                                    This request was accepted by a translator!
                                                 </Typography >
                                             </div>
                                         </div> 

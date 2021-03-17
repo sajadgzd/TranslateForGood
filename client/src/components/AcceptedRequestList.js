@@ -24,7 +24,7 @@ function AcceptedRequestList(props) {
   if (typeof list === 'string'){
     list = [];
   } 
-  let result = list.map(acceptedRequest => 
+  let result = list.sort((a, b) => (a.updatetAt > b.updatedAt) ? 1 : -1).map(acceptedRequest => 
     <Grid item xs={3} key = {acceptedRequest._id}>
         <AcceptedRequestCard 
           femaleTranslator = {acceptedRequest.femaleTranslator} 
