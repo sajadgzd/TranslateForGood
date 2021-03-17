@@ -41,12 +41,16 @@ app.get("/api/requests/active", RequestControls.getActive);
 app.get("/api/requests/all", RequestControls.getAll);
 app.get("/api/requests/:id", RequestControls.getRequestById);
 
+app.post('/api/users/subscribe', UserControls.subscribe); 
+// app.post('/api/users/push', UserControls.push);
 app.get("/api/users/requests", UserControls.getUserRequests);
 app.put("/api/users/edit", UserControls.updateUserInfo);
 app.get("/api/users/:id/user", UserControls.getById);
 app.get("/api/users/matchedTranslators", UserControls.getMatchedTranslators);
 app.get("/api/users/translatorsMatchedRequests", UserControls.getTranslatorsMatchedRequests)
 app.get("/api/users/all", UserControls.getAll);
+
+
 
 
 // Serve static assets (build folder) if in production

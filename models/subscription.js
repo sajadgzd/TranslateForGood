@@ -9,7 +9,7 @@ const SubscriptionSchema = new mongoose.Schema(
             ref: 'User'
         },
 
-        token: {
+        endpoint: {
             type: String,
             required: true
         }

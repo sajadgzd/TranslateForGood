@@ -2,6 +2,7 @@ const User = require("../models/user");
 const Request = require("../models/request");
 const bcrypt = require("bcryptjs");
 const moment = require('moment-timezone');
+const webpush = require("web-push");
 const weigths = {timezoneW: 0.7, activityW: 0.3};
 const nUrgent = 2;
 const nNotUrgent = 1;
@@ -279,7 +280,18 @@ let UserController = {
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
-  }
+  },
+
+  subscribe: async (req, res) => {
+    try {
+      const subscription = req.body.subscription;
+      console.log(subscription, subscription.endpoint);
+      // await User.updateOne( {_id: user._id}, {$set: {"name":name}});
+      return res.status(201).json({ message: "Push Notifications subscription added succesfully!" });
+    } catch (error) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
 }
 
 module.exports = UserController;
