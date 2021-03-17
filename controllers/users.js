@@ -52,7 +52,7 @@ const getTimeActivityScore = (translatorTZ) => {
 
 
 const isPastDue = (dueTimeString) => {
-  console.log(moment(dueTimeString, moment.ISO_8601), 'compare to ', moment());
+  // console.log(moment(dueTimeString, moment.ISO_8601), 'compare to ', moment());
   return moment(dueTimeString, moment.ISO_8601) < moment();
 }
 

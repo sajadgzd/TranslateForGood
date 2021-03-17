@@ -7,7 +7,8 @@
     "start": "node index.js",
     "server": "nodemon index.js",
     "dev": "concurrently \"npm run server\" \"npm start --prefix client\" ",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+    "web-push": "web-push"
   },
   "repository": {
     "type": "git",
@@ -37,7 +38,8 @@
     "multer": "^1.4.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "web-push": "^3.4.4"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",

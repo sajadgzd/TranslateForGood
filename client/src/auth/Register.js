@@ -14,6 +14,20 @@ import Switch from '@material-ui/core/Switch';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
 
+function urlBase64ToUint8Array(base64String) {
+  var padding = '='.repeat((4 - base64String.length % 4) % 4);
+  var base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  var rawData = window.atob(base64);
+  var outputArray = new Uint8Array(rawData.length);
+
+  for (var i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+};
 
 const Register = (props) => {
   const [data, setData] = useState({
@@ -121,6 +135,43 @@ const Register = (props) => {
   };
 
 
+  const configurePushSub = () => {
+    if (!('serviceWorker' in navigator)) {
+      return;
+    } 
+    let reg;
+    navigator.serviceWorker.ready
+      .then(function(swreg) {
+        reg = swreg;
+        swreg.pushManager.getSubscription();
+      }).then(function (sub){
+        if (sub === null) {
+          //Create new subscription
+          let vapidPublicKey = 'BLeogzDBodY_tQFm-HGNxdttRxLIsW-NMLW6AUhFWpj7EYcGWodIQDjFwh4MIFkI3sPTafdgfflRV0DVZBjOb9E';
+          let convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey);
+          reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: convertedVapidPublicKey
+          });
+        } else {
+          // we already have a subscription
+        }
+      })
+      .then(function(newSub) {
+        return fetch('', { /////////////////////////  how to use mongodb to store subscr.
+          method: 'POST',
+          headers:{
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(newSub)
+        })
+      }).then(function(res){
+        console.log('Push notification subscription successfully configured!');
+      });
+  };
+
+
   // if user grants notifications make all the btns invisible
   const handleRequestNotificationPermission = () => {
     Notification.requestPermission(function(result){
@@ -128,8 +179,12 @@ const Register = (props) => {
         console.log('No notification permission granted');
       } else {
         console.log('Notification permission was granted');
+        // make the btn invisible
         let enableNotificationBtn = document.querySelector('#notifications');
-          enableNotificationBtn.style.display = 'none';
+        enableNotificationBtn.style.display = 'none';
+        // subscribe to push-notifications
+        configurePushSub();
+        
       }
     });
   }
