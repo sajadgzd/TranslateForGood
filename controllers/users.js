@@ -3,14 +3,21 @@ const Request = require("../models/request");
 const Subscription = require("../models/subscription");
 const bcrypt = require("bcryptjs");
 const moment = require('moment-timezone');
-const webpush = require("web-push");
+const webPush = require("web-push");
 const weigths = {timezoneW: 0.7, activityW: 0.3};
 const nUrgent = 2;
 const nNotUrgent = 1;
 
 let allPotentialTranslators = [];
-const publicVapidKey = "BLeogzDBodY_tQFm-HGNxdttRxLIsW-NMLW6AUhFWpj7EYcGWodIQDjFwh4MIFkI3sPTafdgfflRV0DVZBjOb9E";
 
+// Secure push notifications
+const publicVapidKey = "BLeogzDBodY_tQFm-HGNxdttRxLIsW-NMLW6AUhFWpj7EYcGWodIQDjFwh4MIFkI3sPTafdgfflRV0DVZBjOb9E";
+const privateVapidKey = "uvwXQFqV6DQbNs-4G7qX8dJY8n3-Hs7HbkFHp6RW9QA";
+webPush.setVapidDetails(
+  'mailto:someemail@gmail.com',
+  publicVapidKey,
+  privateVapidKey 
+);
 
 const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
   try{
@@ -164,6 +171,20 @@ let UserController = {
                 // update matchedTranslators for the new matchedRequest found.
                 request.matchedTranslators.push(potentialTranslators[k].translator._id);
                 await request.save();
+
+                //send push notification
+                let userID = potentialTranslators[k].translator._id;
+                let subscription = await Subscription.findOne({user: userID});
+                if (subscription) {
+                    webPush.sendNotification(subscription.subscription)
+                  .then(function() {
+                    console.log('Push Application Server - Notification sent to ' + userID);
+                  }).catch(function() {
+                    console.log('ERROR in sending Notification to ' + userID);
+                  }); 
+                }
+                               
+                
               }
             } catch (err) {
               console.log(err);
@@ -291,8 +312,7 @@ let UserController = {
     try {
       let newSubscription = new Subscription({
         user: userId,
-        endpoint: subscription.endpoint,
-        keys: {auth: subscription.keys.auth, p256dh: subscription.keys.p256dh}  
+        subscription: subscription
       });
       await newSubscription.save();
       return res.status(201).json({ message: "Push Notifications subscription added succesfully!" });
@@ -300,6 +320,7 @@ let UserController = {
       return res.status(400).json({ error: error.message });
     }
   },
+
 }
 
 module.exports = UserController;

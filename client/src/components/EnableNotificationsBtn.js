@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 
-const webpush = require("web-push");
 const publicVapidKey = "BLeogzDBodY_tQFm-HGNxdttRxLIsW-NMLW6AUhFWpj7EYcGWodIQDjFwh4MIFkI3sPTafdgfflRV0DVZBjOb9E";
-const privateVapidKey = "uvwXQFqV6DQbNs-4G7qX8dJY8n3-Hs7HbkFHp6RW9QA";
 
 
 // converts public key string to a required format

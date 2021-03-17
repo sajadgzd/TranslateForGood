@@ -42,7 +42,6 @@ app.get("/api/requests/all", RequestControls.getAll);
 app.get("/api/requests/:id", RequestControls.getRequestById);
 
 app.post('/api/users/subscribe', UserControls.subscribe); 
-// app.post('/api/users/push', UserControls.push);
 app.get("/api/users/requests", UserControls.getUserRequests);
 app.put("/api/users/edit", UserControls.updateUserInfo);
 app.get("/api/users/:id/user", UserControls.getById);

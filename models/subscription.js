@@ -9,16 +9,7 @@ const SubscriptionSchema = new mongoose.Schema(
             ref: 'User'
         },
 
-        endpoint: {
-            type: String,
-            unique: true,
-            required: true
-        },
-
-        keys: {
-            auth: String,
-            p256dh: String,
-          }
+        subscription: Schema.Types.Mixed
     }, 
     { timestamps: true }
 );
