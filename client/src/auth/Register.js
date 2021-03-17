@@ -13,7 +13,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Switch from '@material-ui/core/Switch';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
-import EnableNotificationsBtn from '../components/EnableNotificationsBtn';
 
 
 const Register = (props) => {
@@ -276,7 +275,7 @@ const Register = (props) => {
               <FormHelperText>Please select the UTC you are located.</FormHelperText>
             </FormControl>
             {error ? <p className="text-danger">{error}</p> : null}
-            <EnableNotificationsBtn />
+            
             <div className="text-center">
               <button className="btn btn-primary" onClick={handleSubmit}>
                 Register

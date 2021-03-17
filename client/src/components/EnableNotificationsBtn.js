@@ -6,6 +6,7 @@ const webpush = require("web-push");
 const publicVapidKey = "BLeogzDBodY_tQFm-HGNxdttRxLIsW-NMLW6AUhFWpj7EYcGWodIQDjFwh4MIFkI3sPTafdgfflRV0DVZBjOb9E";
 const privateVapidKey = "uvwXQFqV6DQbNs-4G7qX8dJY8n3-Hs7HbkFHp6RW9QA";
 
+
 // converts public key string to a required format
 function urlBase64ToUint8Array(base64String) {
     var padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -25,14 +26,24 @@ function urlBase64ToUint8Array(base64String) {
 const convertedVapidPublicKey = urlBase64ToUint8Array(publicVapidKey);
 
 const EnableNotificationsBtn = (props) => {
+    let userId = props.user;
+    const [visible, setVisibility] = useState(false);
 
-    const [visible, setVisibility] = useState(("serviceWorker" in navigator) && ("Notification" in window));
+    // button visibility - show only if no subscription
+    navigator.serviceWorker.ready
+        .then(function(registration) {
+            return registration.pushManager.getSubscription();})
+        .then(function(subscription) {
+            if (subscription) {
+                console.log('Already subscribed', subscription.endpoint);
+                setVisibility(false);
+            }else {
+                setVisibility(true);
+            }
+        });
+
 
     const configurePushSub = () => {
-        if (!('serviceWorker' in navigator)) {
-            console.log('No service worker.');
-            return;
-        } 
 
         let reg;
         navigator.serviceWorker.ready
@@ -52,17 +63,17 @@ const EnableNotificationsBtn = (props) => {
                         });
             }
             })
-            .then(function(subscription) {
+            .then(async function(subscription) {
                 console.log('Subscribed', subscription.endpoint);
-                return fetch('/api/users/subscribe', {
-                  method: 'post',
-                  headers: {
-                    'Content-type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    subscription: subscription
-                  })
-                });
+                await axios.post(
+                    "/api/users/subscribe",
+                    { subscription, userId },
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                    }
+                  );
               }).catch(function(err){
                 console.log(err);
             });
@@ -87,7 +98,7 @@ const EnableNotificationsBtn = (props) => {
     return (
         <div >
             {visible ? 
-                <Button variant="outlined" color="secondary" onClick={handleRequestNotificationPermission}>
+                <Button variant="contained" color="secondary" onClick={handleRequestNotificationPermission}>
                     Enable Notifications
                 </Button>
             :

@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const Request = require("../models/request");
+const Subscription = require("../models/subscription");
 const bcrypt = require("bcryptjs");
 const moment = require('moment-timezone');
 const webpush = require("web-push");
@@ -8,6 +9,8 @@ const nUrgent = 2;
 const nNotUrgent = 1;
 
 let allPotentialTranslators = [];
+const publicVapidKey = "BLeogzDBodY_tQFm-HGNxdttRxLIsW-NMLW6AUhFWpj7EYcGWodIQDjFwh4MIFkI3sPTafdgfflRV0DVZBjOb9E";
+
 
 const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
   try{
@@ -283,13 +286,18 @@ let UserController = {
   },
 
   subscribe: async (req, res) => {
+    const { subscription, userId } = req.body;
+    // console.log(subscription, userId);
     try {
-      const subscription = req.body.subscription;
-      console.log(subscription, subscription.endpoint);
-      // await User.updateOne( {_id: user._id}, {$set: {"name":name}});
+      let newSubscription = new Subscription({
+        user: userId,
+        endpoint: subscription.endpoint,
+        keys: {auth: subscription.keys.auth, p256dh: subscription.keys.p256dh}  
+      });
+      await newSubscription.save();
       return res.status(201).json({ message: "Push Notifications subscription added succesfully!" });
     } catch (error) {
-      return res.status(400).json({ error: err.message });
+      return res.status(400).json({ error: error.message });
     }
   },
 }

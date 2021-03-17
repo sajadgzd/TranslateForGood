@@ -11,8 +11,14 @@ const SubscriptionSchema = new mongoose.Schema(
 
         endpoint: {
             type: String,
+            unique: true,
             required: true
-        }
+        },
+
+        keys: {
+            auth: String,
+            p256dh: String,
+          }
     }, 
     { timestamps: true }
 );
