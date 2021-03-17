@@ -60,11 +60,13 @@ function SubmittedRequestList(props) {
   let userID = props.user._id;
 
   const getSubmittedRequests = async () => {
+    console.log("In getSubmittedRequests()");
     const reqs = await axios.get("/api/users/requests", { 
         params: {
           userID
         }
       });
+    console.log("Submitted requests: ", reqs.data);
     setRequest(reqs.data);
   };
  
@@ -87,7 +89,6 @@ function SubmittedRequestList(props) {
               <Grid item xs={1}>
                 <IconButton  color="primary" aria-label="Refresh matched requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
               </Grid>            
-                {result}
             </Grid>
             : 
             <Grid container alignItems="center" spacing={3} >

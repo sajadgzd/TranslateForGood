@@ -12,6 +12,7 @@ import SwipeableViews from 'react-swipeable-views'
 
 import SubmittedRequestList from './SubmittedRequestList';
 import MatchedRequestList from './MatchedRequestList';
+import AcceptedRequestList from "./AcceptedRequestList";
  
 function TabPanel(props) {
 
@@ -76,7 +77,7 @@ function TabPanel(props) {
                   variant="fullWidth"
                   aria-label="full width tabs example"
               >
-                <Tab label="Your Submitted Requests" {...a11yProps(0)} /> 
+                <Tab label="Submitted Requests" {...a11yProps(0)} /> 
               </Tabs>
               :
               <Tabs
@@ -89,7 +90,8 @@ function TabPanel(props) {
                   aria-label="full width tabs example"
                   >
                   <Tab label="Matched Requests" {...a11yProps(0)} />
-                  <Tab label="Submitted Requests" {...a11yProps(1)} />   
+                  <Tab label="Accepted Requests" {...a11yProps(1)} />  
+                  <Tab label="Submitted Requests" {...a11yProps(2)} />   
               </Tabs>        
           }
         </AppBar>
@@ -111,10 +113,13 @@ function TabPanel(props) {
               onChangeIndex={handleChangeIndex}
             >
               <TabPanel value={value} index={0} dir={theme.direction}>
-              <MatchedRequestList user={user}/>
+                <MatchedRequestList user={user}/>
               </TabPanel>
               <TabPanel value={value} index={1} dir={theme.direction}>
-              <SubmittedRequestList user={user}/>
+                <AcceptedRequestList user={user}/>
+              </TabPanel>
+              <TabPanel value={value} index={2} dir={theme.direction}>
+                <SubmittedRequestList user={user}/>
               </TabPanel>
             </SwipeableViews>
           }
