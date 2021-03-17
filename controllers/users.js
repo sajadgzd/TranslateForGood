@@ -52,11 +52,11 @@ const getTimeActivityScore = (translatorTZ) => {
 
 
 const isPastDue = (dueTimeString) => {
-  //console.log(moment(dueTimeString, moment.ISO_8601), 'compare to ', moment());
+  console.log(moment(dueTimeString, moment.ISO_8601), 'compare to ', moment());
   return moment(dueTimeString, moment.ISO_8601) < moment();
 }
 
-let UserController = {   
+let UserController = {  
 
   // get user by id
   getById: async (req, res) => {
@@ -84,6 +84,8 @@ let UserController = {
     let pointerToNotNotified;
     let matchedTranslators;
     let request;
+
+    
 
     try {
       request = await Request.findOne({_id: requestID}).populate("author");
@@ -152,9 +154,6 @@ let UserController = {
               // check if translator already declined this request or was already notified
               if (!potentialTranslators[k].translator.translationActivity.declined.includes(requestID) && !potentialTranslators[k].translator.matchedRequests.includes(requestID)){
                 console.log('.....Notifying the following translator: ', potentialTranslators[k].translator._id);
-
-
-
                 // update matchedRequests for every matchedTranslators found.
                 potentialTranslators[k].translator.matchedRequests.push(request);
                 await potentialTranslators[k].translator.save();

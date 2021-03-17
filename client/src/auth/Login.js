@@ -1,8 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import App from "../App";
-// let deferredPrompt;
 
 const Login = (props) => {
   const [data, setData] = useState({
@@ -32,18 +30,7 @@ const Login = (props) => {
       );
       localStorage.setItem("token", res.data.token);
       // when successful, redirect to home page
-      // show installation banner on login
-      if (App.deferredPrompt) {
-        App.deferredPrompt.propmt();
-        App.deferredPrompt.userChoice.then(function(choiceResult){
-          if (choiceResult.outcome === 'dismissed') {
-            console.log('User cancelled installation');
-          } else {
-            console.log('User added to home screen');
-          }
-        });
-        App.deferredPrompt = null;
-      }
+      // props.history.push("/about");
       window.location.href="/home"; //refresh page so 'login' and 'logout' btn change correctly
     } catch (err) {
       setData({ ...data, error: err.response.data.error });
