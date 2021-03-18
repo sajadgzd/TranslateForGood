@@ -2,24 +2,10 @@ import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Avatar from '@material-ui/core/Avatar';
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
@@ -94,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
       },
   }));
 
-function AcceptedRequestCard(props) {
+function TranslatorAcceptedRequestCard(props) {
   const classes = useStyles();
 
   const timeOfRequest = moment(props.createdAt).format('LLL');
@@ -172,4 +158,4 @@ function AcceptedRequestCard(props) {
   );
 }
 
-export default AcceptedRequestCard;
+export default TranslatorAcceptedRequestCard;

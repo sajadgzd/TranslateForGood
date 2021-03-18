@@ -249,7 +249,7 @@ let UserController = {
     }
   },
 
-  getUserAcceptedRequests: async (req, res) => {
+  getTranslatorAcceptedRequests: async (req, res) => {
     try {
       // console.log("------- UserID: ", req.query.userID);
       let accepted = await User.findOne({_id: req.query.userID}).populate([{
@@ -265,6 +265,26 @@ let UserController = {
     } catch (error) {
       console.log("Error getting the accepted requests");
       return res.status(400).json({ error: err.message });
+    }
+  },
+
+  getUserAcceptedRequests: async (req, res) => {
+    try {
+      console.log("------- UserID: ", req.query.userID);
+      let requests = await User.findOne({_id: req.query.userID}).populate("requests");
+      console.log("User Accepted Requests", requests.requests);
+      for (let i = 0; i < requests.requests.length; i++) {
+        if(isPastDue(requests.requests[i].dueDateTime)) {
+          let requestID = requests.requests[i]._id; 
+          expiredRequest_ = await Request.findOne({_id: requestID})
+          expiredRequest_.isActive = false;
+          await expiredRequest_.save();
+        }
+      }
+      res.json(requests.requests);
+    } catch (error) {
+      console.log("Error getting user accepted requests");
+      // return res.status(400).json({ error: err.message });
     }
   },
 

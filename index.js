@@ -44,7 +44,8 @@ app.get("/api/requests/:id", RequestControls.getRequestById);
 app.put("/api/users/edit", UserControls.updateUserInfo);
 app.get("/api/users/:id/user", UserControls.getById);
 app.get("/api/users/requests", UserControls.getUserRequests);
-app.get("/api/users/accepted_requests", UserControls.getUserAcceptedRequests);
+app.get("/api/users/translator_accepted_requests", UserControls.getTranslatorAcceptedRequests);
+app.get("/api/users/user_accepted_requests", UserControls.getUserAcceptedRequests);
 app.get("/api/users/matchedTranslators", UserControls.getMatchedTranslators);
 app.get("/api/users/translatorsMatchedRequests", UserControls.getTranslatorsMatchedRequests)
 app.get("/api/users/all", UserControls.getAll);

@@ -5,10 +5,10 @@ import Grid from '@material-ui/core/Grid';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import AcceptedRequestCard from "./AcceptedRequestCard";
+import TranslatorAcceptedRequestCard from "./TranslatorAcceptedRequestCard";
 import List from '@material-ui/core/List';
 
-function AcceptedRequestList(props) {
+function TranslatorAcceptedRequestList(props) {
 
   const useStyles = makeStyles(theme => ({
     root: {
@@ -26,7 +26,7 @@ function AcceptedRequestList(props) {
   } 
   let result = list.sort((a, b) => (a.updatetAt > b.updatedAt) ? 1 : -1).map(acceptedRequest => 
     <Grid item xs={3} key = {acceptedRequest._id}>
-        <AcceptedRequestCard 
+        <TranslatorAcceptedRequestCard 
           femaleTranslator = {acceptedRequest.femaleTranslator} 
           documentProofreading = {acceptedRequest.documentProofreading} 
           name ={acceptedRequest.author ? acceptedRequest.author.name : acceptedRequest.author}
@@ -36,7 +36,7 @@ function AcceptedRequestList(props) {
           due={acceptedRequest.dueDateTime}
           image={acceptedRequest.author ? acceptedRequest.author.image : acceptedRequest.author}
         >
-        </AcceptedRequestCard>
+        </TranslatorAcceptedRequestCard>
     </Grid>
     )
 
@@ -48,7 +48,7 @@ function AcceptedRequestList(props) {
     }
     result = list.sort((a, b) => (a.updatetAt > b.updatedAt) ? 1 : -1).map(acceptedRequest => 
       <Grid item xs={3} item key = {acceptedRequest._id}>
-        <AcceptedRequestCard 
+        <TranslatorAcceptedRequestCard 
             name ={acceptedRequest.author ? acceptedRequest.author.name : acceptedRequest.author}
             femaleTranslator = {acceptedRequest.femaleTranslator} 
             documentProofreading = {acceptedRequest.documentProofreading} 
@@ -57,7 +57,7 @@ function AcceptedRequestList(props) {
             to={acceptedRequest.languageTo} 
             due={acceptedRequest.dueDateTime} 
             acceptedTranslator={acceptedRequest.acceptedTranslator}
-        ></AcceptedRequestCard>
+        ></TranslatorAcceptedRequestCard>
       </Grid>
       )
     setState({});
@@ -67,7 +67,7 @@ function AcceptedRequestList(props) {
 
   const getAcceptedRequests = async () => {
     console.log("In getAcceptedRequests()");
-    const reqs = await axios.get("/api/users/accepted_requests", { 
+    const reqs = await axios.get("/api/users/translator_accepted_requests", { 
         params: {
           userID
         }
@@ -119,4 +119,4 @@ function AcceptedRequestList(props) {
     );
   }
 
-export default AcceptedRequestList;
+export default TranslatorAcceptedRequestList;

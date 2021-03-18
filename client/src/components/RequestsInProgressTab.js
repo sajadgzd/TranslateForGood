@@ -10,9 +10,9 @@ import { useTheme } from '@material-ui/core/styles';
 
 import SwipeableViews from 'react-swipeable-views'
 
-import SubmittedRequestList from './SubmittedRequestList';
-import MatchedRequestList from './MatchedRequestList';
-import RequestsInProgressTab from "./RequestsInProgressTab";
+import TranslatorAcceptedRequestList from "./TranslatorAcceptedRequestList";
+import ProfileCard from "./ProfileCard";
+import UserAcceptedRequestList from "./UserAcceptedRequestList";
  
 function TabPanel(props) {
 
@@ -44,11 +44,11 @@ function TabPanel(props) {
 
   const useStylesTabs = makeStyles((theme) => ({
     root: {
-      backgroundColor: "#e8eaf6"
+      backgroundColor: "#ede7f6"
     },
   }));
 
-  const RequestsTabs = (props) => {
+  const RequestsInProgressTab = (props) => {
     const user = props.user;
 
     const classesTabs = useStylesTabs();
@@ -77,8 +77,7 @@ function TabPanel(props) {
                   variant="fullWidth"
                   aria-label="full width tabs example"
               >
-                <Tab label="Submitted Requests" {...a11yProps(0)} /> 
-                <Tab label="Requests In Progress" {...a11yProps(1)} />  
+                <Tab label="Requests Submitted by you" {...a11yProps(0)} /> 
               </Tabs>
               :
               <Tabs
@@ -90,9 +89,8 @@ function TabPanel(props) {
                   variant="fullWidth"
                   aria-label="full width tabs example"
                   >
-                  <Tab label="Matched Requests" {...a11yProps(0)} />
-                  <Tab label="Submitted Requests" {...a11yProps(1)} />                  
-                  <Tab label="Requests in Progress" {...a11yProps(2)} />  
+                <Tab label="Requests accepted by you" {...a11yProps(0)} /> 
+                <Tab label="Requests submitted by you" {...a11yProps(1)} />  
               </Tabs>        
           }
         </AppBar>
@@ -104,10 +102,7 @@ function TabPanel(props) {
                 onChangeIndex={handleChangeIndex}
             >
               <TabPanel value={value} index={0} dir={theme.direction}>
-                <SubmittedRequestList user={user}/>
-              </TabPanel>
-              <TabPanel value={value} index={1} dir={theme.direction}>
-                <RequestsInProgressTab user={user}/>
+                <ProfileCard user={user}/>
               </TabPanel>
             </SwipeableViews>
             :
@@ -117,13 +112,10 @@ function TabPanel(props) {
               onChangeIndex={handleChangeIndex}
             >
               <TabPanel value={value} index={0} dir={theme.direction}>
-                <MatchedRequestList user={user}/>
+                <TranslatorAcceptedRequestList user={user}/>
               </TabPanel>
               <TabPanel value={value} index={1} dir={theme.direction}>
-                <SubmittedRequestList user={user}/>
-              </TabPanel>
-              <TabPanel value={value} index={2} dir={theme.direction}>
-                <RequestsInProgressTab user={user}/>
+                <UserAcceptedRequestList user={user}/>
               </TabPanel>
             </SwipeableViews>
           }
@@ -131,4 +123,4 @@ function TabPanel(props) {
     )
 }
 
-export default RequestsTabs;
+export default RequestsInProgressTab;
