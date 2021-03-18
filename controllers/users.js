@@ -1,12 +1,23 @@
 const User = require("../models/user");
 const Request = require("../models/request");
+const Subscription = require("../models/subscription");
 const bcrypt = require("bcryptjs");
 const moment = require('moment-timezone');
+const webPush = require("web-push");
 const weigths = {timezoneW: 0.7, activityW: 0.3};
 const nUrgent = 2;
 const nNotUrgent = 1;
 
 let allPotentialTranslators = [];
+
+// Secure push notifications
+const publicVapidKey = "BLeogzDBodY_tQFm-HGNxdttRxLIsW-NMLW6AUhFWpj7EYcGWodIQDjFwh4MIFkI3sPTafdgfflRV0DVZBjOb9E";
+const privateVapidKey = "uvwXQFqV6DQbNs-4G7qX8dJY8n3-Hs7HbkFHp6RW9QA";
+webPush.setVapidDetails(
+  'mailto:someemail@gmail.com',
+  publicVapidKey,
+  privateVapidKey 
+);
 
 const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
   try{
@@ -52,7 +63,7 @@ const getTimeActivityScore = (translatorTZ) => {
 
 
 const isPastDue = (dueTimeString) => {
-  console.log(moment(dueTimeString, moment.ISO_8601), 'compare to ', moment());
+  // console.log(moment(dueTimeString, moment.ISO_8601), 'compare to ', moment());
   return moment(dueTimeString, moment.ISO_8601) < moment();
 }
 
@@ -160,6 +171,20 @@ let UserController = {
                 // update matchedTranslators for the new matchedRequest found.
                 request.matchedTranslators.push(potentialTranslators[k].translator._id);
                 await request.save();
+
+                //send push notification only to people with push not. subscription
+                let userID = potentialTranslators[k].translator._id;
+                let subscription = await Subscription.findOne({user: userID});
+                if (subscription) {
+                    webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'You have a new matched request. Please click this notification to check it out.'}))
+                  .then(function() {
+                    console.log('Push Application Server - Notification sent to translator', userID);
+                  }).catch(function() {
+                    console.log('ERROR in sending Notification to translator', userID);
+                  }); 
+                }
+                               
+                
               }
             } catch (err) {
               console.log(err);
@@ -279,7 +304,23 @@ let UserController = {
     } catch (error) {
       return res.status(400).json({ error: err.message });
     }
-  }
+  },
+
+  subscribe: async (req, res) => {
+    const { subscription, userId } = req.body;
+    // console.log(subscription, userId);
+    try {
+      let newSubscription = new Subscription({
+        user: userId,
+        subscription: subscription
+      });
+      await newSubscription.save();
+      return res.status(201).json({ message: "Push Notifications subscription added succesfully!" });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  },
+
 }
 
 module.exports = UserController;

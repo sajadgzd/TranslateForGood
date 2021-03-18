@@ -6,6 +6,7 @@ import './Navbar.css';
 
 
 
+
 function Navbar(props) {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
@@ -61,11 +62,13 @@ function Navbar(props) {
           </div>
             {/* Hide the menu if something was selected on it*/}
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+
             <li className='nav-item'>
               <Link to='/about' className='nav-links' onClick={closeMobileMenu}>
                 About
               </Link>
             </li>
+            
             {localStorage.getItem("token") ? 
               <li className='nav-item'>
                 <Link to='/home' className='nav-links' onClick={closeMobileMenu}>

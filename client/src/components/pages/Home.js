@@ -27,6 +27,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import RequestsTabs from '../RequestsTabs';
+import EnableNotificationsBtn from '../EnableNotificationsBtn';
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -244,10 +245,13 @@ const handleSubmitPreviousTranslator = async (e) => {
   return (
     <div className={classes.root} style={{ marginTop: 30 }}>
     <Grid container spacing={8}>
-      <Grid item xs={12} sm={12} >
+      <Grid item xs={12} sm={10} >
         <ThemeProvider theme={theme}>
           <Typography component={'span'} variant="h5" style={{ marginLeft: 50}} >Welcome {user && user.name}</Typography>
         </ThemeProvider>
+      </Grid>
+      <Grid item xs={12} sm={2} >
+        <EnableNotificationsBtn user={user._id}/>
       </Grid>
 
       <Grid item xs={12} sm={6} >
