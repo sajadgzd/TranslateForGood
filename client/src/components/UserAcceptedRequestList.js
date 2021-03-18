@@ -5,8 +5,10 @@ import Grid from '@material-ui/core/Grid';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import TranslatorAcceptedRequestCard from "./TranslatorAcceptedRequestCard";
+import UserAcceptedRequestCard from "./UserAcceptedRequestCard";
+
 import List from '@material-ui/core/List';
+import Chat from "./Chat";
 
 function UserAcceptedRequestList(props) {
 
@@ -26,17 +28,17 @@ function UserAcceptedRequestList(props) {
   } 
   let result = list.sort((a, b) => (a.updatetAt > b.updatedAt) ? 1 : -1).map(acceptedRequest => 
     <Grid item xs={3} key = {acceptedRequest._id}>
-        <TranslatorAcceptedRequestCard 
+        <UserAcceptedRequestCard 
           femaleTranslator = {acceptedRequest.femaleTranslator} 
           documentProofreading = {acceptedRequest.documentProofreading} 
-          name ={acceptedRequest.author ? acceptedRequest.author.name : acceptedRequest.author}
+          name ={acceptedRequest.acceptedTranslator ? acceptedRequest.acceptedTranslator.name : acceptedRequest.acceptedTranslator}
           from = {acceptedRequest.languageFrom} 
           to={acceptedRequest.languageTo}
           requestID={acceptedRequest._id}
           due={acceptedRequest.dueDateTime}
           image={acceptedRequest.author ? acceptedRequest.author.image : acceptedRequest.author}
         >
-        </TranslatorAcceptedRequestCard>
+        </UserAcceptedRequestCard>
     </Grid>
     )
 
@@ -48,8 +50,8 @@ function UserAcceptedRequestList(props) {
     }
     result = list.sort((a, b) => (a.updatetAt > b.updatedAt) ? 1 : -1).map(acceptedRequest => 
       <Grid item xs={3} item key = {acceptedRequest._id}>
-        <TranslatorAcceptedRequestCard 
-            name ={acceptedRequest.author ? acceptedRequest.author.name : acceptedRequest.author}
+        <UserAcceptedRequestCard 
+            name ={acceptedRequest.acceptedTranslator ? acceptedRequest.acceptedTranslator.name : acceptedRequest.acceptedTranslator}
             femaleTranslator = {acceptedRequest.femaleTranslator} 
             documentProofreading = {acceptedRequest.documentProofreading} 
             createdAt= {acceptedRequest.createdAt} 
@@ -57,7 +59,7 @@ function UserAcceptedRequestList(props) {
             to={acceptedRequest.languageTo} 
             due={acceptedRequest.dueDateTime} 
             acceptedTranslator={acceptedRequest.acceptedTranslator}
-        ></TranslatorAcceptedRequestCard>
+        ></UserAcceptedRequestCard>
       </Grid>
       )
     setState({});
@@ -72,7 +74,7 @@ function UserAcceptedRequestList(props) {
           userID
         }
       });
-    console.log("Accepted request author: ", reqs.data.author);
+    console.log("Accepted request author: ", reqs.data.acceptedTranslator);
     setAcceptedRequests(reqs.data);
   };
  
@@ -101,21 +103,20 @@ function UserAcceptedRequestList(props) {
             <Grid container spacing={3} >
               <Grid  item xs={11}>
               <Typography component={"span"} variant="h4" >
-                You accepted the following requests. Click on a request to chat with its author.
+                Your following requests were accepted and are in progress. Click on a request to chat with the translator.
               </Typography>
               </Grid> 
               <Grid item xs={1}>
                 <IconButton  color="primary" aria-label="Refresh matched requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
               </Grid>        
               <Grid item xs={12}>
-                 <List>
+                 <List >
                     {result}
                 </List> 
               </Grid>    
             </Grid>
           }
         </div>  
-
     );
   }
 

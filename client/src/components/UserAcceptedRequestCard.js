@@ -15,6 +15,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import TranslateIcon from '@material-ui/icons/Translate';
 
 import moment from 'moment';
+import Chat from './Chat';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -83,7 +84,6 @@ const useStyles = makeStyles((theme) => ({
 function UserAcceptedRequestCard(props) {
   const classes = useStyles();
 
-  const timeOfRequest = moment(props.createdAt).format('LLL');
   const dueDateTime = moment(props.due).format('LLL');
 
   const [open, setOpen] = React.useState(false);
