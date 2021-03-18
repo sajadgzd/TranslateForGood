@@ -102,7 +102,7 @@ function TabPanel(props) {
                 onChangeIndex={handleChangeIndex}
             >
               <TabPanel value={value} index={0} dir={theme.direction}>
-                <ProfileCard user={user}/>
+                <UserAcceptedRequestList user={user}/>
               </TabPanel>
             </SwipeableViews>
             :

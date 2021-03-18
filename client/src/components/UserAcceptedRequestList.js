@@ -97,7 +97,7 @@ function UserAcceptedRequestList(props) {
               </Grid> 
               <Grid item xs={1}>
                 <IconButton  color="primary" aria-label="Refresh matched requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
-              </Grid>   
+              </Grid>
             </Grid>
             : 
             <Grid container spacing={3} >
@@ -113,10 +113,10 @@ function UserAcceptedRequestList(props) {
                  <List >
                     {result}
                 </List> 
-              </Grid>    
+              </Grid>
             </Grid>
           }
-        </div>  
+        </div>
     );
   }
 
