@@ -24,7 +24,7 @@ function SubmittedRequestList(props) {
   if (typeof list === 'string'){
     list = [];
   } 
-  let result = list.map(request => 
+  let result = list.sort((a, b) => (a.updatetAt > b.updatedAt) ? 1 : -1).map(request => 
     <Grid item xs={3} key = {request._id}>
         <SubmittedRequestCard 
           femaleTranslator = {request.femaleTranslator} 
@@ -47,7 +47,7 @@ function SubmittedRequestList(props) {
     if (typeof list === 'string'){
       list = [];
     }
-    result = list.map(request => 
+    result = list.sort((a, b) => (a.updatetAt > b.updatedAt) ? 1 : -1).map(request => 
       <Grid item xs={3} item key = {request._id}>
         <SubmittedRequestCard 
             femaleTranslator = {request.femaleTranslator} documentProofreading = {request.documentProofreading} createdAt= {request.createdAt} from = {request.languageFrom} to={request.languageTo} due={request.dueDateTime} acceptedTranslator={request.acceptedTranslator}
@@ -60,11 +60,13 @@ function SubmittedRequestList(props) {
   let userID = props.user._id;
 
   const getSubmittedRequests = async () => {
+    console.log("In getSubmittedRequests()");
     const reqs = await axios.get("/api/users/requests", { 
         params: {
           userID
         }
       });
+    console.log("Submitted requests: ", reqs.data);
     setRequest(reqs.data);
   };
  
@@ -87,7 +89,6 @@ function SubmittedRequestList(props) {
               <Grid item xs={1}>
                 <IconButton  color="primary" aria-label="Refresh matched requests list" onClick={handleRefresh}><RefreshIcon className={classes.root} /></IconButton>
               </Grid>            
-                {result}
             </Grid>
             : 
             <Grid container alignItems="center" spacing={3} >

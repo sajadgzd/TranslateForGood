@@ -145,13 +145,13 @@ function SubmittedRequestCard(props) {
                                     <div> { props.acceptedTranslator ?
                                         <div className={classes.placing} style={{ display: 'flex'}}>
                                             <div>
-                                                <Tooltip title="Request accepted by a translator">
+                                                <Tooltip title="Request accepted by a translator. You can open chat to talk to them">
                                                     <PersonIcon fontSize="large" style={{fill: "green"}}/>
                                                 </Tooltip> 
                                             </div>
                                             <div className={classes.placing}>
                                                 <Typography  gutterBottom align='center' component={'span'}  style={{ fontWeight: 300, fontWeight:"bold", color:"#4caf50" }}>
-                                                    This request was accepted by a translator. We will connect you soon.
+                                                    This request was accepted by a translator!
                                                 </Typography >
                                             </div>
                                         </div> 
@@ -222,7 +222,11 @@ function SubmittedRequestCard(props) {
                         </CardContent>
                         <CardActions className={classes.root}>
                             { props.acceptedTranslator ? 
-                                <div> </div>
+                                <div> 
+                                    <Tooltip title="Open chat to talk to your translator">
+                                        <Button variant="outlined" size="small" /*onClick={handleClickCloseRequest}*/ className={classes.outlinedGreen, classes.textGreen} > Open Chat </Button> 
+                                    </Tooltip>
+                                </div>
                                 :
                                 <div>
                                     {props.isActive ?

@@ -258,7 +258,7 @@ let UserController = {
     try {
       console.log("------- UserID: ", req.query.userID);
       let requests = await User.findOne({_id: req.query.userID}).populate("requests");
-      res.json(requests.requests);
+      console.log("Submitted Requests", requests.requests);
       for (let i = 0; i < requests.requests.length; i++) {
         if(isPastDue(requests.requests[i].dueDateTime)) {
           let requestID = requests.requests[i]._id; 
@@ -267,9 +267,46 @@ let UserController = {
           await expiredRequest_.save();
         }
       }
+      res.json(requests.requests);
     } catch (error) {
-      console.log("Error getting the requests");
+      console.log("Error getting the submitted requests");
       // return res.status(400).json({ error: err.message });
+    }
+  },
+
+  getTranslatorAcceptedRequests: async (req, res) => {
+    try {
+      // console.log("------- UserID: ", req.query.userID);
+      let accepted = await User.findOne({_id: req.query.userID}).populate([{
+        path: 'translationActivity.accepted',
+        model: 'Request',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      }]);
+      // console.log("Accepted Requests", accepted.translationActivity.accepted);
+      res.json(accepted.translationActivity.accepted);
+    } catch (error) {
+      console.log("Error getting the accepted requests");
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  getUserAcceptedRequests: async (req, res) => {
+    try {
+      let userRequests = await User.findOne({_id: req.query.userID})
+      .populate({
+        path : 'requests',
+        match : {'acceptedTranslator' : {$ne: null}}
+        , populate : {
+          path: 'acceptedTranslator',
+          model: 'User'
+        }
+      });
+      res.json(userRequests.requests);
+    } catch (error) {
+      return res.status(400).json({ error: err.message });
     }
   },
 
