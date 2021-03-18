@@ -1,5 +1,6 @@
 const Request = require("../models/request");
 const User = require("../models/user");
+const Subscription = require("../models/subscription");
 const webPush = require("web-push");
 
 // Secure push notifications
@@ -125,18 +126,17 @@ let RequestController = {
         await targetTranslators[i].save();
       }
 
-      // // send push notification to request's author
-      // let subscription = await Subscription.findOne({user: authorID});
-      // console.log('I AM HERE, ',subscription);
-      // if (subscription) {
+      // send push notification to request's author
+      let subscription = await Subscription.findOne({user: authorID});
+      if (subscription) {
 
-      //     webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'Your request was accepted! Plick click to check it out'}))
-      //   .then(function() {
-      //     console.log('Push Application Server - Notification sent to ' + userID);
-      //   }).catch(function() {
-      //     console.log('ERROR in sending Notification to ' + userID);
-      //   }); 
-      // }
+          webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'Your request was accepted! Plick click to check it out'}))
+        .then(function() {
+          console.log('Push Application Server - Notification sent to user', userID);
+        }).catch(function() {
+          console.log('ERROR in sending Notification to user', userID);
+        }); 
+      }
 
       return res.status(201).json({ message: "Request was accepted successfully"});
     } catch (err) {

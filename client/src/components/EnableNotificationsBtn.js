@@ -33,7 +33,7 @@ const EnableNotificationsBtn = (props) => {
             return registration.pushManager.getSubscription();})
         .then(function(subscription) {
             if (subscription) {
-                console.log('Already subscribed', subscription.endpoint);
+                // console.log('Already subscribed', subscription.endpoint);
                 setVisibility(false);
             }else {
                 setVisibility(true);

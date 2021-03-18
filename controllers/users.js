@@ -178,9 +178,9 @@ let UserController = {
                 if (subscription) {
                     webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'You have a new matched request. Please click this notification to check it out.'}))
                   .then(function() {
-                    console.log('Push Application Server - Notification sent to ' + userID);
+                    console.log('Push Application Server - Notification sent to translator', userID);
                   }).catch(function() {
-                    console.log('ERROR in sending Notification to ' + userID);
+                    console.log('ERROR in sending Notification to translator', userID);
                   }); 
                 }
                                
