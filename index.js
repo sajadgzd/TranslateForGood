@@ -42,9 +42,9 @@ app.get("/api/requests/all", RequestControls.getAll);
 app.get("/api/requests/:id", RequestControls.getRequestById);
 
 app.post('/api/users/subscribe', UserControls.subscribe); 
+app.get("/api/users/requests", UserControls.getUserRequests);
 app.put("/api/users/edit", UserControls.updateUserInfo);
 app.get("/api/users/:id/user", UserControls.getById);
-app.get("/api/users/requests", UserControls.getUserRequests);
 app.get("/api/users/translator_accepted_requests", UserControls.getTranslatorAcceptedRequests);
 app.get("/api/users/user_accepted_requests", UserControls.getUserAcceptedRequests);
 app.get("/api/users/matchedTranslators", UserControls.getMatchedTranslators);
