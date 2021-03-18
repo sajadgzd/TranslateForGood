@@ -130,7 +130,7 @@ let RequestController = {
       let subscription = await Subscription.findOne({user: authorID});
       if (subscription) {
 
-          webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'Your request was accepted! Plick click to check it out'}))
+          webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'Your request was accepted! Click click to check it out'}))
         .then(function() {
           console.log('Push Application Server - Notification sent to user', userID);
         }).catch(function() {
