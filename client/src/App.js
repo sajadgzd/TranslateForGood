@@ -10,6 +10,14 @@ import Profile from "./components/pages/Profile";
 import Navbar from './components/Navbar';
 
 function App() {
+  // register serviceWorker
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then(function(){
+        console.log('SW registered.');
+      });
+  };
 
     return (
       <BrowserRouter>

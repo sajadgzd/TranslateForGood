@@ -119,6 +119,8 @@ const Register = (props) => {
   const handleChangeRadioButton = (event) => {
     setData({ ...data, [event.target.name]: event.target.checked });
   };
+
+
   
   return (
     <div className="row">
@@ -273,11 +275,13 @@ const Register = (props) => {
               <FormHelperText>Please select the UTC you are located.</FormHelperText>
             </FormControl>
             {error ? <p className="text-danger">{error}</p> : null}
+            
             <div className="text-center">
               <button className="btn btn-primary" onClick={handleSubmit}>
                 Register
               </button>
             </div>
+
             <p className="mt-3 text-center">
               Already a user?
               <Link to="/login">
