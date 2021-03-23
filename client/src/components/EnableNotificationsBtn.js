@@ -32,7 +32,7 @@ const EnableNotificationsBtn = (props) => {
         .then(function(registration) {
             return registration.pushManager.getSubscription();})
         .then(function(subscription) {
-            if (subscription) {
+            if (subscription) { // ADD CODE Show button even if device subscribed but user not subscribed
                 // console.log('Already subscribed', subscription.endpoint);
                 setVisibility(false);
             }else {
@@ -49,7 +49,7 @@ const EnableNotificationsBtn = (props) => {
             reg = swreg;
             return swreg.pushManager.getSubscription();
             }).then(function (sub){
-            if (sub) {
+            if (sub) { // ADD CODE subscribe the user regardless???
                 // we already have a subscription
                 console.log('already subscribed');
             } else {
