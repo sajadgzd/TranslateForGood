@@ -130,7 +130,7 @@ let RequestController = {
       let subscription = await Subscription.findOne({user: authorID});
       if (subscription) {
 
-          webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'Your request was accepted! Click click to check it out'}))
+          webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'Your request was accepted! Please click this notification to check it out.'}))
         .then(function() {
           console.log('Push Application Server - Notification sent to user', userID);
         }).catch(function() {
@@ -141,6 +141,16 @@ let RequestController = {
       return res.status(201).json({ message: "Request was accepted successfully"});
     } catch (err) {
       // console.log(err);
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  deleteExpired: async(req, res) => {
+    const { requestID } = req.body;
+    try {
+      await Request.deleteOne({_id: requestID});
+      return res.status(201).json({ message: "Request deleted sucsessfully!"});
+    } catch (err) {
       return res.status(400).json({ error: err.message });
     }
   }

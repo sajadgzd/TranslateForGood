@@ -71,7 +71,11 @@ const EnableNotificationsBtn = (props) => {
                         "Content-Type": "application/json",
                       },
                     }
-                  );
+                  ).then(function(response){
+                    window.location.href="/home"; //refresh page so button disappears on click
+                    console.log("Subscribed successfully and page refreshed")
+                });
+                
               }).catch(function(err){
                 console.log(err);
             });
@@ -84,6 +88,7 @@ const EnableNotificationsBtn = (props) => {
         Notification.requestPermission(function(result){
         if(result !== 'granted') {
             console.log('No notification permission granted');
+            window.location.href="/home"; //refresh page so button disappears on click
         } else {
             console.log('Notification permission was granted');
             // subscribe to push-notifications
