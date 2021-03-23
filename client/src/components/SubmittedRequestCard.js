@@ -282,7 +282,7 @@ function SubmittedRequestCard(props) {
             </DialogContentText>
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleClose} className={classes.outlinedRed, classes.textRed}>
+            <Button onClick={handleRemoveRequest} className={classes.outlinedRed, classes.textRed}>
                 I want to close my request
             </Button>
             <Button onClick={handleClose} className={classes.outlinedGreen, classes.textGreen} autoFocus>
