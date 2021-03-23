@@ -129,7 +129,7 @@ const EditProfileCard = (props) => {
               setImagePrev(null);
               window.alert("This is not an Image file");
             } else {
-                setImage('images/' + file.name);
+                //setImage('images/' + file.name);
                 setImagePrev(URL.createObjectURL(file));
                 setData({ ...data, image: 'images/' + file.name});
             }
