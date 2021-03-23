@@ -1,8 +1,3 @@
-// self.addEventListener('push', function(event) {
-//     event.waitUntil(self.registration.showNotification('TranslateForGood', {
-//       body: 'You have a new matching request.'
-//     }));
-//   });
 
 self.addEventListener('push', function(event) {
   event.waitUntil(
@@ -28,7 +23,11 @@ self.addEventListener('notificationclick', function(event) {
       if (clientList.length > 0) {
         return clientList[0].focus();
       }
-      return self.clients.openWindow('http://localhost:3000/home'); // change this for deployed version
+      if (process.env.NODE_ENV === 'production') {
+        return self.clients.openWindow('https://translateforgood.herokuapp.com/home'); // change this for deployed version
+      } else {
+        return self.clients.openWindow('http://localhost:3000/home');
+      }
     })
   );
 });
