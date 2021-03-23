@@ -143,6 +143,16 @@ let RequestController = {
       // console.log(err);
       return res.status(400).json({ error: err.message });
     }
+  },
+
+  deleteExpired: async(req, res) => {
+    const { requestID } = req.body;
+    try {
+      await Request.deleteOne({_id: requestID});
+      return res.status(201).json({ message: "Request deleted sucsessfully!"});
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
   }
 
 }
