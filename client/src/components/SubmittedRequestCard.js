@@ -98,6 +98,8 @@ function SubmittedRequestCard(props) {
 
   const [open, setOpen] = React.useState(false);
 
+  const [showCard, setShowCard] = React.useState(true)
+
   const handleClickCloseRequest = () => {
       handleClickOpen();
   }
@@ -109,8 +111,31 @@ function SubmittedRequestCard(props) {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleRemoveRequest = async (e) => {
+    setShowCard(false);
+    console.log(props.requestID);
+     try{
+        let requestID = props.requestID;
+        await axios.post(
+            "/api/requests/deleteExpired",
+            {  requestID },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          ).then(function(response){
+            console.log(response.status);
+          });
+          }
+         catch (e) {
+        console.log(e);
+    }
+  };
 
   return (  
+      <div>
+    {showCard ? 
     <div>
         <Grid container spacing={10} direction="column" alignItems="center" justify="center">
                 <Grid item xs={10} style={{
@@ -235,7 +260,7 @@ function SubmittedRequestCard(props) {
                                         </Tooltip>
                                         :
                                         <Tooltip title="Remove expired request from the list">
-                                            <Button variant="outlined" size="small" /*onClick={}*/className={classes.outlinedRed, classes.textRed} > Remove </Button>
+                                            <Button variant="outlined" size="small" onClick={handleRemoveRequest} className={classes.outlinedRed, classes.textRed} > Remove </Button>
                                         </Tooltip>
                                     }
                                 </div>
@@ -265,6 +290,8 @@ function SubmittedRequestCard(props) {
             </Button>
             </DialogActions>
         </Dialog>
+        </div>
+        : null }
     </div>
   );
 }
