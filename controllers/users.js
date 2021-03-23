@@ -101,9 +101,11 @@ let UserController = {
     try {
       request = await Request.findOne({_id: requestID}).populate("author");
       let active = true;
-
       // run loop until due time passes or request is accepted by someone
       while (!isPastDue(req.query.dueDateTime)) {
+        if (!(await Request.findOne({_id: requestID}))){
+          break;
+        }
         let request_ = await Request.findOne({_id: requestID});
         active = request_.isActive;
         
@@ -150,6 +152,9 @@ let UserController = {
 
         while (pointerToNotNotified < potentialTranslators.length) {
           //before notifying make sure request is still active and date is not past due
+          if (!(await Request.findOne({_id: requestID}))){
+            break;
+          }
           let request_ = await Request.findOne({_id: requestID})
           active = request_.isActive;
           if (!active || isPastDue(req.query.dueDateTime)) {
@@ -166,6 +171,9 @@ let UserController = {
               if (!potentialTranslators[k].translator.translationActivity.declined.includes(requestID) && !potentialTranslators[k].translator.matchedRequests.includes(requestID)){
                 console.log('.....Notifying the following translator: ', potentialTranslators[k].translator._id);
                 // update matchedRequests for every matchedTranslators found.
+                if (!(await Request.findOne({_id: requestID}))){
+                  break;
+                }
                 potentialTranslators[k].translator.matchedRequests.push(request);
                 await potentialTranslators[k].translator.save();
                 // update matchedTranslators for the new matchedRequest found.
@@ -199,6 +207,9 @@ let UserController = {
         }
 
         //before waiting for the next cycle starts check again if request is active
+        if (!(await Request.findOne({_id: requestID}))){
+          break;
+        }
         request_ = await Request.findOne({_id: requestID})
         active = request_.isActive;
         if (!active || isPastDue(req.query.dueDateTime)) {
@@ -210,8 +221,9 @@ let UserController = {
         console.log('Waiting 10sec before starting a new cycle.');
         await new Promise(resolve => setTimeout(resolve, 10000));
       } 
-      
-      if (!active) { 
+      if (!(await Request.findOne({_id: requestID}))){
+        console.log('User Deleted This Request!');
+      } else if (!active) { 
         console.log('Yay, someone accepted this request!');
         //let translatorWhoAcceptedRequest = await Request.findOne({_id: requestID}).populate("acceptedTranslator");
       } else {
@@ -241,7 +253,7 @@ let UserController = {
           return res.status(400).json({ error: err.message });
         }
       } 
-      return res.status(201).json({ message: "Done running matching algorithm! Request was accepted/resubmitted/terminated " });
+      return res.status(201).json({ message: "Done running matching algorithm! Request was accepted/resubmitted/terminated/deleted " });
       //   console.log("The matchedTranslators for particular request: ", matchedTranslators);
       //   console.log("The matchedRequest for all matchedTranslators: ", request);
     } catch (error) {
