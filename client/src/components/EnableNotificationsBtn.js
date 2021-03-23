@@ -89,6 +89,7 @@ const EnableNotificationsBtn = (props) => {
             // subscribe to push-notifications
             configurePushSub();  
         }
+        window.location.href="/home"; //refresh page so button disappears on click
         });
     }
     
