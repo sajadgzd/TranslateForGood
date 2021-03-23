@@ -112,26 +112,22 @@ const EditProfileCard = (props) => {
     const [languagesSelected, setlanguegesSelected] = React.useState([]);
     const [languagesSelectedTo, setlanguegesSelectedTo] = React.useState([]);
     const [languagesSelectedFrom, setlanguegesSelectedFrom] = React.useState([]);
-    const [selectedImage, setImage] = useState(null);
     const [selectedImagePreview, setImagePrev] = useState(user.image);
 
     const imageSelectedHandler = (event) => {
         const file = event.target.files[0];
         console.log(file);
         if (event.target.files.length == 0) {
-          setImage(null);
           setImagePrev(null);
         } else {
             const fileType = file['type'];
             const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
             if (!validImageTypes.includes(fileType)) {
-              setImage(null);
               setImagePrev(null);
               window.alert("This is not an Image file");
             } else {
-                //setImage('images/' + file.name);
                 setImagePrev(URL.createObjectURL(file));
-                setData({ ...data, image: 'images/' + file.name});
+                setData({ ...data, image: URL.createObjectURL(file)});
             }
         }
       }
@@ -302,8 +298,8 @@ const EditProfileCard = (props) => {
                             <div>
                                 <form className={classes.formControl}>
                                     <div>
-                                    <div className="col-3">
-                                        <h5>Change User Profile Image</h5>
+                                    <div className="col-4" style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                        <h5>Change Your Image</h5>
                                             <div className="">
                                             <img src={selectedImagePreview} className="img-fluid z-depth-1 rounded-circle" alt="avatar" />
 

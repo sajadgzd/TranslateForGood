@@ -101,18 +101,6 @@ const ProfileCard = (props) => {
                             component="img"
                             image={user && user.image}
                         />
-                        <Input 
-                            type="file" 
-                            id="imageInput"
-                            placeholder="Upload a picture" 
-                            onChange={handleImageChange} 
-                            hidden="hidden">
-                        </Input>
-                        <Tooltip title="Edit profile picture" placement="top">
-                            <IconButton onClick={handleEditPicture}>
-                                <EditIcon color="primary"/>
-                            </IconButton>
-                        </Tooltip>
                         </Box>
                     <CardContent>
                         <List>
