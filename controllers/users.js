@@ -100,6 +100,7 @@ let UserController = {
 
     try {
       request = await Request.findOne({_id: requestID}).populate("author");
+      let authorID = request.author._id;
       let active = true;
       // run loop until due time passes or request is accepted by someone
       while (!isPastDue(req.query.dueDateTime)) {
@@ -147,8 +148,8 @@ let UserController = {
         // notify batches of translators 
         //figure out if request is urgent - currently less than 5 hours
         let isUrgentRequest = req.query.isUrgent;
-        let urgentConsoleLog = isUrgentRequest ? "Urgent" : "Not urgent";
-        console.log(urgentConsoleLog, "was requested.");
+        let urgentConsoleLog = isUrgentRequest === "true" ? "Urgent" : "Not urgent";
+        console.log(urgentConsoleLog, "request was submitted.");
         let N = isUrgentRequest === 'true' ? nUrgent : nNotUrgent;
 
         while (pointerToNotNotified < potentialTranslators.length) {
@@ -233,6 +234,20 @@ let UserController = {
         try {
           //time out - handle expired request
           console.log("REQUEST TO DEACTIVATE:", requestID);
+
+          // send push notification to request's author about their request's expiration
+          let subscription = await Subscription.findOne({user: authorID});
+          if (subscription) {
+
+              webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'Your request has expired. Please click this notification to check it out.'}))
+            .then(function() {
+              console.log('Push Application Server - Notification about expiration was sent to user', authorID);
+            }).catch(function() {
+              console.log('ERROR in sending Notification about expiration to user', authorID);
+            }); 
+          }
+
+
           await Request.updateOne( {_id: requestID}, {$set: {"isActive": false}});
           //console.log("TOTAL TRANSLATORS: ", allPotentialTranslators.length);
             for (let i = 0; i < allPotentialTranslators.length; i++) {
@@ -247,8 +262,9 @@ let UserController = {
               //add new acceptanceRate to translationActivity
               await User.findOneAndUpdate( {_id: translator_id}, {$set: {"translationActivity.acceptanceRate": acceptanceRate}});
               await User.updateOne( {_id: translator_id}, {$pull: {"matchedRequests": requestID}});
-              console.log("DEACTIVATION OF REQUEST COMPLETE!")
+              
             }
+            console.log("DEACTIVATION OF REQUEST COMPLETE!");
           return res.status(201).json({ message: "Request deactivated succesfully!" });
         } catch (error) {
           return res.status(400).json({ error: err.message });
@@ -269,7 +285,7 @@ let UserController = {
   // to get requests just do .request on the result of this query
   getUserRequests: async (req, res) => {
     try {
-      console.log("------- UserID: ", req.query.userID);
+      //console.log("------- UserID: ", req.query.userID);
       let requests = await User.findOne({_id: req.query.userID}).populate("requests");
       //console.log("Submitted Requests", requests.requests);
       for (let i = 0; i < requests.requests.length; i++) {
@@ -282,7 +298,7 @@ let UserController = {
       }
       res.json(requests.requests);
     } catch (error) {
-      console.log("Error getting the submitted requests");
+      console.log("");
       // return res.status(400).json({ error: err.message });
     }
   },
