@@ -27,7 +27,7 @@ app.use(express.json());
 const UserControls = require("./controllers/users");
 const RequestControls = require("./controllers/requests");
 const AuthControls = require("./controllers/auth");
-
+const ChatroomControls = require("./controllers/chatrooms");
 
 // Order matters here (https://stackoverflow.com/questions/51806260/express-router-order-of-request-executions-state-params-vs-state-absolute)
 app.post("/api/auth/register", AuthControls.register);
@@ -52,8 +52,8 @@ app.get("/api/users/matchedTranslators", UserControls.getMatchedTranslators);
 app.get("/api/users/translatorsMatchedRequests", UserControls.getTranslatorsMatchedRequests)
 app.get("/api/users/all", UserControls.getAll);
 
-
-
+app.post("/api/chatrooms/new", ChatroomControls.createChatroom);
+app.get("/api/chatrooms/all", ChatroomControls.getAllChatrooms);
 
 // Serve static assets (build folder) if in production
 if (process.env.NODE_ENV === 'production') {
@@ -65,7 +65,28 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-// prod false bcz  it will not run build script if its in prod, once its done it will be in prod
+const server = app.listen(5000, () => {
+  console.log("Server listening on port 5000");
+});
+
+const io = require('socket.io')(server);
+const jwt = require("jsonwebtoken");
+
+io.use(async (socket, next) => {
+  try {
+  const token = socket.handshake.query.token;
+  const payload = await jwt.verify(token, process.env.JWT_SECRET);
+  socket.userId = payload._id;
+  next();
+  } catch (err) {} 
+});
+
+io.on("connection", (socket) => {
+  console.log("Connected: " + socket.userId);
+
+  socket.on("disconect", () => {
+    console.log("Disconnected: " + socket.userId);
+  })
+});
 
 // login heroku , create new app

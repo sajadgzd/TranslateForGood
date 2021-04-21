@@ -15,7 +15,8 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import TranslateIcon from '@material-ui/icons/Translate';
 
 import moment from 'moment';
-import Chat from './Chat';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -86,12 +87,30 @@ function UserAcceptedRequestCard(props) {
 
   const dueDateTime = moment(props.due).format('LLL');
 
-  const [open, setOpen] = React.useState(false);
+  const [chatrooms, setChatrooms] = React.useState([]);
 
+  const getChatrooms = () => {
+    axios
+      .get("http://localhost:5000/chatroom", {
+        headers : {
+          Authorization: "Bearer" + localStorage.getItem("CC_Token"),
+        },
+      })
+      .then((response) => {
+        setChatrooms(response.data);
+      })
+      .catch(err=> {
+        setTimeout(getChatrooms, 3000);
+      });
+  }
+
+  React.useEffect(() => {
+    getChatrooms();
+  }, []);
 
   const handleClick = () => {
-      console.log("Button Clicked");
-  };
+    console.log("Button Clicked");
+};
 
   return (  
     <div>
@@ -154,6 +173,16 @@ function UserAcceptedRequestCard(props) {
         />
       </ListItem>
       <Divider/>
+      {/* <div>
+        TEST
+        {chatrooms.map((chatroom) => (
+          <div key = {chatroom._id} className = "chatroom">
+            <Link to={"chatroom/chatroom/" + chatroom._id}>
+              <div>Join</div>
+            </Link>
+            </div>
+        ))}
+      </div> */}
     </div>
   );
 }

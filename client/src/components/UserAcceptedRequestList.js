@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import UserAcceptedRequestCard from "./UserAcceptedRequestCard";
 
 import List from '@material-ui/core/List';
-import Chat from "./Chat";
 
 function UserAcceptedRequestList(props) {
 

@@ -11,7 +11,6 @@ import { useTheme } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views'
 
 import TranslatorAcceptedRequestList from "./TranslatorAcceptedRequestList";
-import ProfileCard from "./ProfileCard";
 import UserAcceptedRequestList from "./UserAcceptedRequestList";
  
 function TabPanel(props) {

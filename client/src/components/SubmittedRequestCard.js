@@ -111,6 +111,31 @@ function SubmittedRequestCard(props) {
   const handleClose = () => {
     setOpen(false);
   };
+  
+  const [data, setData] = useState({
+    name: "",
+  });
+
+
+//   const handleClickOpenChat = () => {
+//     console.log("HERE IS THE DATA POSTED for CHATROOM:\t",data);
+//         e.preventDefault();
+//         try {
+//             setData({ ...data });
+//             await axios.put(
+//                 "/api/chatrooms/new",
+//                 { name},
+//                 {
+//                     headers: {
+//                         "Content-Type": "application/json",
+//                 },
+//                 }
+//             );
+//         } catch (err) {
+//             setData({ ...data});
+//         }
+//   }
+
   const handleRemoveRequest = async (e) => {
     setShowCard(false);
     console.log(props.requestID);
@@ -249,7 +274,7 @@ function SubmittedRequestCard(props) {
                             { props.acceptedTranslator ? 
                                 <div> 
                                     <Tooltip title="Open chat to talk to your translator">
-                                        <Button variant="outlined" size="small" /*onClick={handleClickCloseRequest}*/ className={classes.outlinedGreen, classes.textGreen} > Open Chat </Button> 
+                                        <Button variant="outlined" size="small" /*onClick={handleClickOpenChat}*/ className={classes.outlinedGreen, classes.textGreen} > Open Chat </Button> 
                                     </Tooltip>
                                 </div>
                                 :
