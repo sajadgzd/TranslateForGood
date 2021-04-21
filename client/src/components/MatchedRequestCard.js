@@ -72,6 +72,18 @@ function MatchedRequestCard(props) {
     ).then(function(response){
         console.log("RESPONSE FROM Accept:\t", response.data)
     });
+
+    await axios.post(
+      "/api/chat/new",
+      {  requestID },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then(function(response){
+      console.log("RESPONSE FROM newChatRoom:\t", response.data) 
+  })
   };
 
   const handleDeclineMatchedTranslationRequest = (requestID, declinedUserID) => async (e) => {

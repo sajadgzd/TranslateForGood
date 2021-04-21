@@ -27,6 +27,7 @@ app.use(express.json());
 const UserControls = require("./controllers/users");
 const RequestControls = require("./controllers/requests");
 const AuthControls = require("./controllers/auth");
+const ChatControls = require("./controllers/chat");
 
 
 // Order matters here (https://stackoverflow.com/questions/51806260/express-router-order-of-request-executions-state-params-vs-state-absolute)
@@ -51,6 +52,10 @@ app.get("/api/users/user_accepted_requests", UserControls.getUserAcceptedRequest
 app.get("/api/users/matchedTranslators", UserControls.getMatchedTranslators);
 app.get("/api/users/translatorsMatchedRequests", UserControls.getTranslatorsMatchedRequests)
 app.get("/api/users/all", UserControls.getAll);
+
+app.post("/api/chat/new", ChatControls.create);
+app.post("/api/chat/deleteExpired", ChatControls.deleteExpired);
+
 
 
 

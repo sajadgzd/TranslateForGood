@@ -132,9 +132,9 @@ let RequestController = {
 
           webPush.sendNotification(subscription.subscription, JSON.stringify({title: 'TranslateForGood', body: 'Your request was accepted! Please click this notification to check it out.'}))
         .then(function() {
-          console.log('Push Application Server - Notification sent to user', userID);
+          console.log('Push Application Server - Notification sent to user', authorID);
         }).catch(function() {
-          console.log('ERROR in sending Notification to user', userID);
+          console.log('ERROR in sending Notification to user', authorID);
         }); 
       }
 
