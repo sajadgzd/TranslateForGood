@@ -8,6 +8,7 @@ import Home from "./components/pages/Home";
 import About from "./components/pages/About";
 import Profile from "./components/pages/Profile";
 import Navbar from './components/Navbar';
+import Chat from './components/pages/Chat';
 
 function App() {
   // register serviceWorker
@@ -29,6 +30,7 @@ function App() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/" component={About} />
           <Route exact path='/profile' component={Profile} />
+          <Route exact path='/chat' component={Chat} />
         </Switch>
       </BrowserRouter>
     );

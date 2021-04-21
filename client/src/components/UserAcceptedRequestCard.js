@@ -15,7 +15,6 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import TranslateIcon from '@material-ui/icons/Translate';
 
 import moment from 'moment';
-import Chat from './Chat';
 
 const useStyles = makeStyles((theme) => ({
     root: {
