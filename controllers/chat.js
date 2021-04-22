@@ -30,6 +30,19 @@ let ChatroomController = {
     }
   },
 
+  filterByRequest: async(req,res) => {
+    
+    try{
+      let list = req.query.requestsList;
+      let chatrooms = await Chatroom.find({request: { $in: list}});
+      // console.log("Accepted Requests", accepted.translationActivity.accepted);
+      res.json(chatrooms);
+      // return res.status(201).json({ message: "Filtered chatrooms by requests id sucsessfully!"});
+    } catch (err){
+      return res.status(400).json({error: err.message});
+    }
+  },
+
   deleteExpired: async(req, res) => {
     const { chatroomID } = req.body;
     try {
