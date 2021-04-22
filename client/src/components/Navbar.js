@@ -83,7 +83,7 @@ function Navbar(props) {
               </li>: <li></li>}
             {localStorage.getItem("token") ? 
             <li className='nav-item'>
-              <Link to='/chat' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/chatroom' className='nav-links' onClick={closeMobileMenu}>
                 Chat
               </Link>
             </li>: <li></li>}
