@@ -59,7 +59,7 @@ function MatchedRequestCard(props) {
   const handleAcceptMatchedTranslationRequest = (requestID, acceptedUserID) => async (e) => {
     e.preventDefault();
     setDialogAccept(false);
-    window.location.reload(false);
+    // window.location.reload(false);
     
     await axios.post(
     "/api/requests/onAccepted",
