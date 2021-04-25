@@ -1,10 +1,34 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {Link} from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+        overflow: 'hidden',
+        padding: theme.spacing(0, 3),
+        paddingTop: theme.spacing(10)
+      },
+    paper: {
+        elevation: 3,
+        width: 400,
+        margin: `${theme.spacing(1)}px auto`,
+        padding: theme.spacing(2),
+      },
+      button: {
+        margin: theme.spacing(1),
+      },
+  }));
+
 
 const Chatroom = () => {
 
-    // const [chatrooms, setChatroomsList] = useState([]);
     const [chatroomsTranslator, setChatroomsTranslator] = useState([]);
     const [chatroomsRequester, setChatroomsRequester] = useState([]);
 
@@ -56,36 +80,54 @@ const Chatroom = () => {
         getChatroomsRequester();
     }, []);
 
+    const classes = useStyles();
 
     return (
-        <div>
-            <div>
-                <div>Translate:</div>
-                <div className="chatrooms">
-                    {chatroomsTranslator.map((chatroom) => (
-                        <div key={chatroom._id} className="chat">
-                            <div>{chatroom.name}</div>
-                            <Link to={"/chat/" + chatroom._id}>
-                                <div>Join</div>
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div>
-                <div>Get Translation:</div>
-                <div className="chatrooms">
-                    {chatroomsRequester.map((chatroom) => (
-                        <div key={chatroom._id} className="chat">
-                            <div>{chatroom.name}</div>
-                            <Link to={"/chat/" + chatroom._id}>
-                                <div>Join</div>
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
+        <Grid container className={classes.root} spacing={2}>
+            <Grid item xs={6}>
+            <Typography variant="h5"  align="center">
+                Translate:
+            </Typography>
+                <Grid container justify="flex-start" >
+                {chatroomsTranslator.map((chatroom) => (
+                    <Paper key={chatroom._id} className={classes.paper} >
+                        <Grid item>
+                            <Grid item>
+                            {chatroom.name}
+                            </Grid>
+                            <Grid container justify="center">
+                                <Button href={"/chat/" + chatroom._id} className={classes.button} variant="contained" color="primary">
+                                    Join
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                ))}
+                </Grid>
+            </Grid>
+            <Grid item xs={6}>
+                <Typography variant="h5" align="center">
+                    Get Translation:
+                </Typography>
+                <Grid container justify="flex-start" >
+                {chatroomsRequester.map((chatroom) => (
+                    <Paper key={chatroom._id} className={classes.paper}>
+                        <Grid item>
+                            <Grid item>
+                            {chatroom.name}
+                            </Grid>
+                            <Grid container justify="center">
+                                <Button href={"/chat/" + chatroom._id} className={classes.button} variant="contained" color="primary">
+                                    Join
+                                </Button>
+                            </Grid>
+
+                        </Grid>
+                    </Paper>
+                ))}
+                </Grid>
+            </Grid>     
+        </Grid>
         
     )
 };
