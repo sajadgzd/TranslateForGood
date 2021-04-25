@@ -59,6 +59,7 @@ app.get("/api/chat/filter", ChatControls.filterByRequest);
 
 
 
+app.get("/api/chat/getChats", ChatControls.getAllChatrooms);
 
 
 // Serve static assets (build folder) if in production
@@ -71,7 +72,34 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+    methods: ["GET", "POST"]
+  }
+});
+
+const jwt = require("jsonwebtoken");
+
+io.use((socket, next) => {
+  try {
+      const token = socket.handshake.query.token;
+      const payload = jwt.verify(token, process.env.JWT_SECRET);
+      socket.userId = payload._id;
+      next();
+  } catch (err) {}
+})
+
+io.on("connection", (socket) => {
+  console.log("Connected: " + socket.userId);
+
+  socket.on("disconnect", () => {
+    console.log("Disconnected: " + socket.userId);
+  })
+});
+
 // prod false bcz  it will not run build script if its in prod, once its done it will be in prod
 
 // login heroku , create new app

@@ -26,6 +26,7 @@ import Select from '@material-ui/core/Select';
 
 
 
+import io from "socket.io-client"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,7 +63,16 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const Chat = () => {
+const Chat = (props) => {
+
+    const chatroomId = props.id;
+    const socket = io("http://localhost:5000", {
+        query: {
+            token: localStorage.getItem("token"),
+        },
+        transport : ['websocket']
+    });
+
     const classes = useStyles();
     const messages = [
         {

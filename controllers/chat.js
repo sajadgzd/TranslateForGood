@@ -5,6 +5,7 @@ const Chatroom = require("../models/chatroom");
 let ChatroomController = {
  
   create: async(req, res) => {
+    console.log("In CREATE");
     const { requestID } = req.body;
     let request = await Request.findOne({_id: requestID}).populate("author");
     let requester = request.author.name;
@@ -51,7 +52,13 @@ let ChatroomController = {
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }
-  }
+  },
+
+  getAllChatrooms: async(req, res) => {
+    const chatrooms = await Chatroom.find({});
+
+    res.json(chatrooms);
+  } 
 
 }
 

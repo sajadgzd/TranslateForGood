@@ -114,6 +114,8 @@ function MatchedRequestCard(props) {
 
   const[openDialogAccept, setDialogAccept] = useState(false);
   const handleCloseDialogAccept = () => {
+    console.log("CLOSING DIALOG")
+
     setDialogAccept(false);
   };
 
