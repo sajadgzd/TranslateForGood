@@ -57,8 +57,6 @@ app.post("/api/chat/new", ChatControls.create);
 app.post("/api/chat/deleteExpired", ChatControls.deleteExpired);
 app.get("/api/chat/filter", ChatControls.filterByRequest);
 
-
-
 app.get("/api/chat/getChats", ChatControls.getAllChatrooms);
 
 

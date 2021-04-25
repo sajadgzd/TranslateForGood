@@ -18,13 +18,6 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import SendIcon from '@material-ui/icons/Send';
 import ChatRoom from '../ChatRoom';
 import { IconButton } from '@material-ui/core';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-
-
 
 import io from "socket.io-client"
 
@@ -108,68 +101,8 @@ const Chat = (props) => {
     ]
 
 
-    const [selectedChatroom, setChatroom] = React.useState('');
-    const [chatrooms_list, setChatroomsList] = React.useState([]);
-
-      useEffect(() => {
-        getChatroomsList();
-      }, []);
-
-
-    const handleChange = (event) => {
-        setChatroom(event.target.value); 
-    }; 
-
-
-    // retrieve all chatrooms available to current user
-    // 1. user.requests (list of ids) 
-    // 2. user.translationActivity.accepted (list of ids)
-    // 3. make a set of request ids
-    // 4. filter chatrooms by request ids 
-    // let chatroomsList;
-    const getChatroomsList = async () => {
-
-        const res = await axios.get("/api/auth", {
-            headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, 
-            },
-        });
-        let user = res.data;
-        // console.log(user);
-        let requestTransl = user.translationActivity.accepted;
-        let requestUser = user.requests;
-        let requestsSet = new Set(requestTransl.concat(requestUser));
-        let requestsList = [...requestsSet];
-        const chatrooms = await axios.get("/api/chat/filter", { 
-            params: {
-                requestsList  
-            }
-          });
-
-        setChatroomsList(chatrooms.data);
-        
-    };
-    getChatroomsList();
-    // console.log(chatrooms_list);
-
   return (
     <div >
-        {/* Select chat from the list */}
-        <FormControl component="legend" >
-            <InputLabel>Select chatroom</InputLabel>
-            <Select
-                value={selectedChatroom}
-                onChange={e => { handleChange(e);}}
-            >
-                {chatrooms_list.map((chat) => (
-                    <MenuItem key={chat._id} value={chat.name}>
-                        {chat.name}
-                    </MenuItem> 
-                ))}
-
-
-            </Select>
-        </FormControl>
 
         {/*  Chat name: 
             UserName - TranslatorName (languageFrom - languageTo);
@@ -178,7 +111,7 @@ const Chat = (props) => {
         <AppBar position="static">
             <Toolbar>
                 <Typography variant="h6" >
-                    {selectedChatroom}
+                    "Chat name here"
                 </Typography>               
             </Toolbar>
         </AppBar> 
