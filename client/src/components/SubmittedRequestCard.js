@@ -133,6 +133,15 @@ function SubmittedRequestCard(props) {
     }
   };
 
+  const handleOpenChat = async (e) => {
+    const chatroom = await axios.get("/api/chat/filter", { 
+        params: {
+            requestsList :  props.requestID
+        }
+      });
+    window.location.href="/chat/" + chatroom.data._id;
+  };
+
   return (  
       <div>
     {showCard ? 
@@ -249,7 +258,7 @@ function SubmittedRequestCard(props) {
                             { props.acceptedTranslator ? 
                                 <div> 
                                     <Tooltip title="Open chat to talk to your translator">
-                                        <Button variant="outlined" size="small" /*onClick={handleClickCloseRequest}*/ className={classes.outlinedGreen, classes.textGreen} > Open Chat </Button> 
+                                        <Button variant="outlined" size="small" onClick={handleOpenChat} className={classes.outlinedGreen, classes.textGreen} > Open Chat </Button> 
                                     </Tooltip>
                                 </div>
                                 :
