@@ -58,7 +58,16 @@ let ChatroomController = {
     const chatrooms = await Chatroom.find({});
 
     res.json(chatrooms);
-  } 
+  },
+
+  getById: async(req, res) => {
+    try{
+      const chatroom = await Chatroom.findOne({_id: req.query.chatroomId});
+      res.json(chatroom);
+    } catch(err){
+      return res.status(400).json({error: err.message});
+    }
+  }
 
 }
 

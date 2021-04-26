@@ -58,6 +58,7 @@ app.post("/api/chat/deleteExpired", ChatControls.deleteExpired);
 app.get("/api/chat/filter", ChatControls.filterByRequest);
 
 app.get("/api/chat/getChats", ChatControls.getAllChatrooms);
+app.get("/api/chat/getById", ChatControls.getById);
 
 
 // Serve static assets (build folder) if in production

@@ -18,7 +18,6 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MicIcon from '@material-ui/icons/Mic';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import SendIcon from '@material-ui/icons/Send';
-import ChatRoom from '../ChatRoom';
 import { IconButton } from '@material-ui/core';
 import { withRouter } from 'react-router';
 
@@ -58,8 +57,29 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 const Chat = ({match, socket}) => {
-    const chatroomId = match.params.id;
     const classes = useStyles();
+    const chatroomId = match.params.id;
+    const [chatName, setChatName] = useState('');
+
+    const getChat = async () => {
+
+        const chatroom = await axios.get("/api/chat/getById", { 
+            params: {
+                chatroomId  
+            }
+        });
+        let response = chatroom.data;
+        setChatName(response.name);
+        
+        
+    };
+    useEffect(() => {
+        console.log("chatname: ", chatName);
+        getChat();
+    }, []);
+
+
+
     const messages = [
         {
             id: 1,
@@ -109,7 +129,7 @@ const Chat = ({match, socket}) => {
         <AppBar position="static">
             <Toolbar>
                 <Typography variant="h6" >
-                    "Chat name here"
+                    {chatName}
                 </Typography>               
             </Toolbar>
         </AppBar> 
@@ -158,9 +178,6 @@ const Chat = ({match, socket}) => {
         </div> 
         
 
-        
-
-      <ChatRoom />
       <Footer />
     </div>
   );
