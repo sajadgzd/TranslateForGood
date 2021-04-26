@@ -70,6 +70,11 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// Bring in the models
+require('./models/user');
+require('./models/chatroom');
+require('./models/message');
+
 const server = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
 const io = require('socket.io')(server, {
@@ -80,6 +85,7 @@ const io = require('socket.io')(server, {
 });
 
 const jwt = require("jsonwebtoken");
+const chatroom = require("./models/chatroom");
 
 io.use((socket, next) => {
   try {
@@ -95,7 +101,18 @@ io.on("connect", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("Disconnected: " + socket.userId);
-  })
+  });
+
+  socket.on("joinRoom", ({chatroomId}) => {
+    socket.join(chatroomId);
+    console.log("A user joined chatroom: " + chatroomId);
+  });
+
+  socket.on("leaveRoom", ({chatroomId}) => {
+    socket.leave(chatroomId);
+    console.log("A user left chatroom: " + chatroomId);
+  });
+
 });
 
 // prod false bcz  it will not run build script if its in prod, once its done it will be in prod

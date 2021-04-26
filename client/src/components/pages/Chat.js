@@ -18,6 +18,7 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import SendIcon from '@material-ui/icons/Send';
 import ChatRoom from '../ChatRoom';
 import { IconButton } from '@material-ui/core';
+import { withRouter } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,8 +55,8 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const Chat = (props) => {
-
+const Chat = ({match, socket}) => {
+    const chatroomId = match.params.id;
     const classes = useStyles();
     const messages = [
         {
@@ -90,6 +91,11 @@ const Chat = (props) => {
         },
     ]
 
+    // this useEffect() is just to test if id and socket are passed correctly. can be deleted
+    useEffect(() => {
+        console.log("Checking chatroomId in Chat.js: ", chatroomId);
+        console.log("Checking socket in Chat.js: ", socket);
+    });
 
   return (
     <div >
@@ -158,4 +164,4 @@ const Chat = (props) => {
   );
 }
 
-export default Chat
+export default withRouter(Chat);

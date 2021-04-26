@@ -60,11 +60,19 @@ function App() {
           <Route exact path='/home' component={Home} />
           <Route exact path='/about' component={About} />
           <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
+          <Route path="/login" 
+                 render={() => <Login setupSocket={setupSocket}/>} 
+                 exact
+          />
           <Route exact path="/" component={About} />
           <Route exact path='/profile' component={Profile} />
-          <Route exact path='/chatroom' component={Chatroom} />
-          <Route exact path='/chat/:id' component={Chat} />
+          <Route exact path='/chatroom' 
+                 render={() => <Chatroom socket={socket} />}
+          />
+          <Route exact path='/chat/:id' 
+                 render={() => 
+                  <Chat socket={socket}/>}
+          />
         </Switch>
       </BrowserRouter>
     );

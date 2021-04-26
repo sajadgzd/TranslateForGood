@@ -5,8 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
-
+import { Link, withRouter } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,8 +26,9 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const Chatroom = () => {
+const Chatroom = (props) => {
     const[showTransl, setShowTransl] = useState(false);
+    const socket = props.socket;
 
     const [chatroomsTranslator, setChatroomsTranslator] = useState([]);
     const [chatroomsRequester, setChatroomsRequester] = useState([]);
@@ -56,6 +56,7 @@ const Chatroom = () => {
         
     };
     useEffect(() => {
+        console.log("Socket: ", socket);
         getChatroomsTranslator();
     }, []);
 
@@ -81,6 +82,7 @@ const Chatroom = () => {
         }    
     };
     useEffect(() => {
+        console.log("Socket: ", socket);
         getChatroomsRequester();
     }, []);
 
@@ -88,7 +90,6 @@ const Chatroom = () => {
 
     return (
         <Grid container className={classes.root} spacing={2}>
-            
             
             <Grid item xs={6}>
                 <Typography variant="h5" align="center">
@@ -102,7 +103,7 @@ const Chatroom = () => {
                             {chatroom.name}
                             </Grid>
                             <Grid container justify="center">
-                                <Button href={"/chat/" + chatroom._id} className={classes.button} variant="contained" color="primary">
+                                <Button href={"/chat/" + String(chatroom._id)} className={classes.button} variant="contained" color="primary">
                                     Join
                                 </Button>
                             </Grid>
@@ -124,9 +125,12 @@ const Chatroom = () => {
                             {chatroom.name}
                             </Grid>
                             <Grid container justify="center">
-                                <Button href={"/chat/" + chatroom._id} className={classes.button} variant="contained" color="primary">
+                                {/* <Button href={"/chat/" + String(chatroom._id)} className={classes.button} variant="contained" color="primary">
                                     Join
-                                </Button>
+                                </Button> */}
+                                <Link to={'/chat/' + chatroom._id}>
+                                    <div>Join</div>
+                                </Link>
                             </Grid>
                         </Grid>
                     </Paper>
