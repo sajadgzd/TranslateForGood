@@ -28,10 +28,10 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Chatroom = () => {
+    const[showTransl, setShowTransl] = useState(false);
 
     const [chatroomsTranslator, setChatroomsTranslator] = useState([]);
     const [chatroomsRequester, setChatroomsRequester] = useState([]);
-
 
     // chatrooms where user is a translator
     const getChatroomsTranslator = async () => {
@@ -42,14 +42,17 @@ const Chatroom = () => {
             },
         });
         let user = res.data;
+        setShowTransl(user.languageFrom != "");
+        console.log(user);
         let requestsList = user.translationActivity.accepted;
         const chatroomsTranslator = await axios.get("/api/chat/filter", { 
             params: {
                 requestsList  
             }
-          });
+        });
 
-          setChatroomsTranslator(chatroomsTranslator.data);
+        setChatroomsTranslator( chatroomsTranslator.data);
+        
         
     };
     useEffect(() => {
@@ -65,16 +68,17 @@ const Chatroom = () => {
             },
         });
         let user = res.data;
-        // console.log(user);
-        let requestsList = user.requests;
-        const chatroomsRequester = await axios.get("/api/chat/filter", { 
-            params: {
-                requestsList  
-            }
-          });
+        setShowTransl(user.languageFrom != "");
+        if (user){
+            let requestsList = user.requests;
+            const chatroomsRequester = await axios.get("/api/chat/filter", { 
+                params: {
+                    requestsList  
+                }
+            });
 
-          setChatroomsRequester(chatroomsRequester.data);
-        
+            setChatroomsRequester(chatroomsRequester.data);
+        }    
     };
     useEffect(() => {
         getChatroomsRequester();
@@ -84,27 +88,8 @@ const Chatroom = () => {
 
     return (
         <Grid container className={classes.root} spacing={2}>
-            <Grid item xs={6}>
-            <Typography variant="h5"  align="center">
-                Translate:
-            </Typography>
-                <Grid container justify="flex-start" >
-                {chatroomsTranslator.map((chatroom) => (
-                    <Paper key={chatroom._id} className={classes.paper} >
-                        <Grid item>
-                            <Grid item>
-                            {chatroom.name}
-                            </Grid>
-                            <Grid container justify="center">
-                                <Button href={"/chat/" + chatroom._id} className={classes.button} variant="contained" color="primary">
-                                    Join
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-                ))}
-                </Grid>
-            </Grid>
+            
+            
             <Grid item xs={6}>
                 <Typography variant="h5" align="center">
                     Get Translation:
@@ -126,8 +111,29 @@ const Chatroom = () => {
                     </Paper>
                 ))}
                 </Grid>
-            </Grid>     
-        </Grid>
+            </Grid>    
+            <Grid item xs={6}>
+            <Typography variant="h5"  align="center"> 
+                {showTransl ? <div>Translate</div> : null}
+            </Typography>
+                <Grid container justify="flex-start" >
+                {chatroomsTranslator.map((chatroom) => (
+                    <Paper key={chatroom._id} className={classes.paper} >
+                        <Grid item>
+                            <Grid item>
+                            {chatroom.name}
+                            </Grid>
+                            <Grid container justify="center">
+                                <Button href={"/chat/" + chatroom._id} className={classes.button} variant="contained" color="primary">
+                                    Join
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                ))}
+                </Grid>
+            </Grid> 
+        </Grid> 
         
     )
 };

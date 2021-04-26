@@ -111,7 +111,7 @@ function SubmittedRequestCard(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleRemoveRequest = async (e) => {
+  const handleRemoveRequest = async (e) => { 
     setShowCard(false);
     console.log(props.requestID);
      try{
