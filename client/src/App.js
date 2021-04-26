@@ -19,7 +19,7 @@ function App() {
 
   const setupSocket = () => {
     const token = localStorage.getItem("token");
-    if(token != null && !socket) {
+    if(token && !socket) {
       const newSocket = io("http://localhost:5000", {
           query: {
               token: localStorage.getItem("token"),
@@ -70,8 +70,7 @@ function App() {
                  render={() => <Chatroom socket={socket} />}
           />
           <Route exact path='/chat/:id' 
-                 render={() => 
-                  <Chat socket={socket}/>}
+                 render={() => <Chat socket={socket}/>}
           />
         </Switch>
       </BrowserRouter>
