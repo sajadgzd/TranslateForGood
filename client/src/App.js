@@ -11,7 +11,39 @@ import Navbar from './components/Navbar';
 import Chat from './components/pages/Chat';
 import Chatroom from './components/pages/Chatroom';
 
+import io from "socket.io-client"
+
 function App() {
+
+  const [socket, setSocket] = useState(null);
+
+  const setupSocket = () => {
+    const token = localStorage.getItem("token");
+    if(token != null && !socket) {
+      const newSocket = io("http://localhost:5000", {
+          query: {
+              token: localStorage.getItem("token"),
+          },
+          transport : ['websocket']
+      });
+
+      newSocket.on("disconnect", () => {
+        setSocket(null);
+        setTimeout(setupSocket, 3000);
+      });
+
+      newSocket.on("connect", () => {
+      });
+
+      setSocket(newSocket);
+    }
+  }
+
+  // set the socket whenever the App component loads
+  useEffect(() => {
+    setupSocket();
+  }, []);
+
   // register serviceWorker
   if('serviceWorker' in navigator){
     navigator.serviceWorker

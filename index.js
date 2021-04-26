@@ -90,7 +90,7 @@ io.use((socket, next) => {
   } catch (err) {}
 })
 
-io.on("connection", (socket) => {
+io.on("connect", (socket) => {
   console.log("Connected: " + socket.userId);
 
   socket.on("disconnect", () => {
