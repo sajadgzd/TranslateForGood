@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+
 import axios from "axios";
 import { fade, makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
@@ -57,8 +59,9 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 const Chat = (props) => {
-
-    const chatroomId = props.id;
+    const location = useLocation().pathname;
+    const chatroomId = location.split("/")[2];
+    console.log(chatroomId);
     const socket = io("http://localhost:5000", {
         query: {
             token: localStorage.getItem("token"),

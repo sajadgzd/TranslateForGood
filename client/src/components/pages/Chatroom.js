@@ -102,7 +102,7 @@ const Chatroom = () => {
                             {chatroom.name}
                             </Grid>
                             <Grid container justify="center">
-                                <Button href={"/chat/" + chatroom._id} className={classes.button} variant="contained" color="primary">
+                                <Button href={"/chat/" + String(chatroom._id)} className={classes.button} variant="contained" color="primary">
                                     Join
                                 </Button>
                             </Grid>
@@ -114,7 +114,7 @@ const Chatroom = () => {
             </Grid>    
             <Grid item xs={6}>
             <Typography variant="h5"  align="center"> 
-                {showTransl ? <div>Translate</div> : null}
+                {showTransl ? <div>Translate:</div> : null}
             </Typography>
                 <Grid container justify="flex-start" >
                 {chatroomsTranslator.map((chatroom) => (

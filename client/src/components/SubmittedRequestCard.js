@@ -134,12 +134,19 @@ function SubmittedRequestCard(props) {
   };
 
   const handleOpenChat = async (e) => {
-    const chatroom = await axios.get("/api/chat/filter", { 
-        params: {
-            requestsList :  props.requestID
-        }
-      });
-    window.location.href="/chat/" + chatroom.data._id;
+    try{
+        await axios.get("/api/chat/filter", { 
+            params: {
+                requestsList :  props.requestID
+            }
+        }).then(function(response){
+            // console.log(response.data[0]._id);
+            window.location.href="/chat/" + String(response.data[0]._id);
+        });
+    } catch (e) {
+            console.log(e);
+    }
+    
   };
 
   return (  
