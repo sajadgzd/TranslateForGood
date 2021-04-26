@@ -20,8 +20,7 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import SendIcon from '@material-ui/icons/Send';
 import ChatRoom from '../ChatRoom';
 import { IconButton } from '@material-ui/core';
-
-import io from "socket.io-client"
+import { withRouter } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,17 +57,8 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const Chat = (props) => {
-    const location = useLocation().pathname;
-    const chatroomId = location.split("/")[2];
-    console.log(chatroomId);
-    const socket = io("http://localhost:5000", {
-        query: {
-            token: localStorage.getItem("token"),
-        },
-        transport : ['websocket']
-    });
-
+const Chat = ({match, socket}) => {
+    const chatroomId = match.params.id;
     const classes = useStyles();
     const messages = [
         {
@@ -103,6 +93,11 @@ const Chat = (props) => {
         },
     ]
 
+    // this useEffect() is just to test if id and socket are passed correctly. can be deleted
+    useEffect(() => {
+        console.log("Checking chatroomId in Chat.js: ", chatroomId);
+        console.log("Checking socket in Chat.js: ", socket);
+    });
 
   return (
     <div >
@@ -171,4 +166,4 @@ const Chat = (props) => {
   );
 }
 
-export default Chat
+export default withRouter(Chat);
