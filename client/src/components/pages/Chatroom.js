@@ -103,9 +103,9 @@ const Chatroom = (props) => {
                             {chatroom.name}
                             </Grid>
                             <Grid container justify="center">
-                                <Button href={"/chat/" + String(chatroom._id)} className={classes.button} variant="contained" color="primary">
-                                    Join
-                                </Button>
+                                <Link to={'/chat/' + chatroom._id}>
+                                    <div>Join</div>
+                                </Link>
                             </Grid>
 
                         </Grid>
