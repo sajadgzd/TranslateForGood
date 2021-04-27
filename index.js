@@ -109,9 +109,25 @@ io.on("connect", (socket) => {
     console.log("Disconnected: " + socket.userId);
   });
 
-  socket.on("joinRoom", ({chatroomId}) => {
+  socket.on("joinRoom", async ({chatroomId}) => {
     socket.join(chatroomId);
     console.log("A user joined chatroom: " + chatroomId);
+
+    let mostRecentMessages = await Message
+            .find({user: socket.user, chatroom: chatroomId})
+            .sort({_id:-1})
+            .limit(20);
+
+    let message = JSON.stringify(mostRecentMessages)
+
+    const user = await User.findOne({_id : socket.userId});
+
+    io.to(chatroomId).emit("historyMessages", {
+      message,
+      name: user.name,
+      userId : socket.userId,
+    });
+
   });
 
   socket.on("leaveRoom", ({chatroomId}) => {

@@ -126,6 +126,10 @@ const Chat = ({match, socket}) => {
                 chatroomId,
             });
 
+            socket.on("historyMessages", (message) => {
+                setMessages([...messages, message]);
+            });
+
             socket.on("newMessage", (message) => {
                 setMessages([...messages, message]);
             });
