@@ -59,7 +59,7 @@ function MatchedRequestCard(props) {
   const handleAcceptMatchedTranslationRequest = (requestID, acceptedUserID) => async (e) => {
     e.preventDefault();
     setDialogAccept(false);
-    window.location.reload(false);
+    // window.location.reload(false);
     
     await axios.post(
     "/api/requests/onAccepted",
@@ -72,6 +72,18 @@ function MatchedRequestCard(props) {
     ).then(function(response){
         console.log("RESPONSE FROM Accept:\t", response.data)
     });
+
+    await axios.post(
+      "/api/chat/new",
+      {  requestID },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then(function(response){
+      console.log("RESPONSE FROM newChatRoom:\t", response.data) 
+  })
   };
 
   const handleDeclineMatchedTranslationRequest = (requestID, declinedUserID) => async (e) => {
@@ -102,6 +114,8 @@ function MatchedRequestCard(props) {
 
   const[openDialogAccept, setDialogAccept] = useState(false);
   const handleCloseDialogAccept = () => {
+    console.log("CLOSING DIALOG")
+
     setDialogAccept(false);
   };
 
