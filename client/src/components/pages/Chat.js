@@ -127,6 +127,7 @@ const Chat = ({match, socket}) => {
             });
 
             socket.on("historyMessages", (message) => {
+                console.log("\nFRONTEND RECEIVED HISTORYMESSAGES:\n", message, "\n");
                 setMessages([...messages, message]);
             });
 

@@ -114,13 +114,17 @@ io.on("connect", (socket) => {
     console.log("A user joined chatroom: " + chatroomId);
 
     let mostRecentMessages = await Message
-            .find({user: socket.user, chatroom: chatroomId})
+            .find({user: socket.userId, chatroom: chatroomId})
             .sort({_id:-1})
             .limit(20);
+
+    console.log("\n BACKEND mostRecentMessages:\n", mostRecentMessages,  "\n");
 
     let message = JSON.stringify(mostRecentMessages)
 
     const user = await User.findOne({_id : socket.userId});
+
+    console.log("\n BACKEND SENT message:\n", message, user, "\n");
 
     io.to(chatroomId).emit("historyMessages", {
       message,
