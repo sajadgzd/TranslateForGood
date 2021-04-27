@@ -59,6 +59,20 @@ const Chat = ({match, socket}) => {
     const classes = useStyles();
     const chatroomId = match.params.id;
     const [chatName, setChatName] = useState('');
+    const [userName, setUserName] = useState('');
+    
+    const getUser = async () => {
+        const res = await axios.get("/api/auth", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setUserName(res.data.name);
+      };
+    
+      useEffect(() => {
+        getUser();
+      }, []);
 
     const getChat = async () => {
 
@@ -144,10 +158,12 @@ const Chat = ({match, socket}) => {
             <Paper style={{height: 500, overflow: 'auto'}}>
                 <List>
                     {messages.map((message, i) => (
-                        <ListItem key= {i}>
+                        <ListItem key= {i} alignItems="center">
                             <List>
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                                <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message}/>
+                                {userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
+                                                          : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
+                                
                                 <Box textAlign="right"  fontSize={12} m={1}>{"timeHere"}</Box>
                             </List>   
                         </ListItem>
