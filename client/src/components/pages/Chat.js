@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
         
     }
   }));
-const moment = require('moment-timezone');
+
 
 const Chat = ({match, socket}) => {
     const classes = useStyles();
@@ -105,6 +105,7 @@ const Chat = ({match, socket}) => {
             });
             messageRef.current.value = "";
         }
+        console.log(messages);
     };
 
     useEffect(() => {   
@@ -152,10 +153,7 @@ const Chat = ({match, socket}) => {
     return (
         <div >
     
-            {/*  Chat name: 
-                UserName - TranslatorName (languageFrom - languageTo);
-                Fixed */}
-    
+            {/*  Chat name: */}   
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h6" >
@@ -164,10 +162,7 @@ const Chat = ({match, socket}) => {
                 </Toolbar>
             </AppBar> 
     
-            {/*  Messages window. 
-                From logged in user: on right, from other user: on left in diff. color;
-                Scrollable  */}
-    
+            {/*  Messages window. */}   
             <Paper style={{height: 500, overflow: 'auto'}}>
                 <List>
                     {messages.map((message, i) => (
@@ -177,7 +172,7 @@ const Chat = ({match, socket}) => {
                                 {userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                                           : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
                                 
-                                <Box textAlign="right"  fontSize={12} m={1}>{moment().format('LT')}</Box>
+                                <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
                             </List>   
                         </ListItem>
                     ))}
@@ -185,8 +180,7 @@ const Chat = ({match, socket}) => {
                 </List>
             </Paper>  
     
-            {/* Input field.
-                Attach icon, input field, voice message */}
+            {/* Input field. Attach icon, input field, voice message */}
             <div className={classes.root}>
                 <AppBar position="relative" className={classes.footer}>
                     <Toolbar>
