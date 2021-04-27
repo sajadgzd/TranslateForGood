@@ -120,16 +120,14 @@ io.on("connect", (socket) => {
 
     console.log("\n BACKEND mostRecentMessages:\n", mostRecentMessages,  "\n");
 
-    let messageString = JSON.stringify(mostRecentMessages)
-
-    const user = await User.findOne({_id : socket.userId});
-
     let formattedMessageArray = []
 
-    for (let i = 0; i<mostRecentMessages.length; i++){
+    for (let i = 0; i < mostRecentMessages.length; i++){
+
+      const user = await User.findOne({_id : mostRecentMessages[i].user});
       let message = mostRecentMessages[i].message;
-      let formattedName = mostRecentMessages[i].user;
-      let formattedTime = mostRecentMessages[i].createdAt;
+      let formattedName = user.name;
+      let formattedTime = moment(mostRecentMessages[i].createdAt).format('LLL');
 
       formattedMessageArray.push({message, name: formattedName, time: formattedTime})
 
