@@ -118,16 +118,17 @@ io.on("connect", (socket) => {
             .sort({_id:-1})
             .limit(3);
 
-    console.log("\n BACKEND mostRecentMessages:\n", mostRecentMessages,  "\n");
+    let mostRecentMessagesReversed = mostRecentMessages.reverse();
+    console.log("\n BACKEND mostRecentMessages:\n", mostRecentMessagesReversed,  "\n");
 
     let formattedMessageArray = []
 
-    for (let i = 0; i < mostRecentMessages.length; i++){
+    for (let i = 0; i < mostRecentMessagesReversed.length; i++){
 
-      const user = await User.findOne({_id : mostRecentMessages[i].user});
-      let message = mostRecentMessages[i].message;
+      const user = await User.findOne({_id : mostRecentMessagesReversed[i].user});
+      let message = mostRecentMessagesReversed[i].message;
       let formattedName = user.name;
-      let formattedTime = moment(mostRecentMessages[i].createdAt).format('LLL');
+      let formattedTime = moment(mostRecentMessagesReversed[i].createdAt).format('LLL');
 
       formattedMessageArray.push({message, name: formattedName, time: formattedTime})
 
