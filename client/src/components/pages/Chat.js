@@ -126,9 +126,16 @@ const Chat = ({match, socket}) => {
                 chatroomId,
             });
 
-            socket.on("historyMessages", (message) => {
-                console.log("\nFRONTEND RECEIVED HISTORYMESSAGES:\n", message, "\n");
-                setMessages([...messages, message]);
+            socket.on("historyMessages", (formattedMessageArray) => {
+                console.log("\nFRONTEND RECEIVED HISTORYMESSAGES:\n", formattedMessageArray, "\n");
+
+                for (let i = 0; i<formattedMessageArray.length; i++){
+
+                    const newMessages = [...messages, formattedMessageArray[i]];
+                    setMessages(newMessages);
+              
+                  }
+                // setMessages([...messages, message]);
             });
 
             socket.on("newMessage", (message) => {
