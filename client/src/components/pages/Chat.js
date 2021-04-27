@@ -127,12 +127,14 @@ const Chat = ({match, socket}) => {
             });
 
             socket.on("historyMessages", (formattedMessageArray) => {
+                console.log("\nFRONTEND RECEIVED Typeof HISTORYMESSAGES:\n", typeof JSON.parse(formattedMessageArray), "\n");
                 console.log("\nFRONTEND RECEIVED HISTORYMESSAGES:\n", formattedMessageArray, "\n");
 
                 for (let i = 0; i<formattedMessageArray.length; i++){
+                    console.log("\nFRONTEND formattedMessageArray[i]:\n", formattedMessageArray[i], "\n");
 
-                    const newMessages = [...messages, formattedMessageArray[i]];
-                    setMessages(newMessages);
+                    // const newMessages = [...messages, formattedMessageArray[i].message];
+                    setMessages([...messages, formattedMessageArray[i]]);
               
                   }
                 // setMessages([...messages, message]);
