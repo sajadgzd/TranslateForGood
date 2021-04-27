@@ -72,9 +72,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Bring in the models
+require('./models/message');
 require('./models/user');
 require('./models/chatroom');
-require('./models/message');
 
 const server = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
@@ -87,6 +87,10 @@ const io = require('socket.io')(server, {
 
 const jwt = require("jsonwebtoken");
 const chatroom = require("./models/chatroom");
+const { useRadioGroup } = require("@material-ui/core");
+
+const Message = mongoose.model("Message");
+const User = mongoose.model("User");
 
 io.use((socket, next) => {
   try {
@@ -95,7 +99,7 @@ io.use((socket, next) => {
       socket.userId = payload._id;
       next();
   } catch (err) {}
-})
+});
 
 io.on("connect", (socket) => {
   console.log("Connected: " + socket.userId);
@@ -112,6 +116,27 @@ io.on("connect", (socket) => {
   socket.on("leaveRoom", ({chatroomId}) => {
     socket.leave(chatroomId);
     console.log("A user left chatroom: " + chatroomId);
+  });
+
+  socket.on("chatroomMessage", async ({ chatroomId, message}) => {
+    if(message.trim().length > 0) {
+
+      const user = await User.findOne({_id : socket.userId});
+      const newMessage = new Message({
+        chatroom : chatroomId, 
+        user: socket.userId, 
+        message
+      });
+
+      io.to(chatroomId).emit("newMessage", {
+        message,
+        name: user.name,
+        userId : socket.userId,
+      });
+
+      await newMessage.save();
+    }
+    
   });
 
 });

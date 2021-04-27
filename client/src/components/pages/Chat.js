@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useEffect, useState, useRef  } from 'react'
 
 import axios from "axios";
 import { fade, makeStyles } from '@material-ui/core/styles';
@@ -79,108 +78,113 @@ const Chat = ({match, socket}) => {
     }, []);
 
 
+    const [messages, setMessages] = useState([]); 
+    const messageRef = useRef();
 
-    const messages = [
-        {
-            id: 1,
-            user: 'Tom',
-            message: "Message message message message",
-            timestamp: "6:45pm"
-        },
-        {
-            id: 2,
-            user: 'Paul',
-            message: "Message message message message",
-            timestamp: "6:45pm"
-        },
-        {
-            id: 3,
-            user: 'Paul',
-            message: "Message message message message",
-            timestamp: "6:45pm"
-        },
-        {
-            id: 4,
-            user: 'Tom',
-            message: "Message message message message",
-            timestamp: "6:45pm"
-        },
-        {
-            id: 5,
-            user: 'Paul',
-            message: "Message message message message",
-            timestamp: "6:45pm"
-        },
-    ]
+    const sendMessage = () => {
+        if(socket) {
+            socket.emit("chatroomMessage", {
+                chatroomId, 
+                message : messageRef.current.value,
+            });
+            messageRef.current.value = "";
+        }
+    };
 
-    // this useEffect() is just to test if id and socket are passed correctly. can be deleted
-    useEffect(() => {
-        console.log("Checking chatroomId in Chat.js: ", chatroomId);
-        console.log("Checking socket in Chat.js: ", socket);
-    });
+    useEffect(() => {   
+        if(socket) {
+            socket.on("newMessage", (message) => {
+                const newMessages = [...messages, message];
+                setMessages(newMessages);
+            });
+        }
+    }, [messages]);
 
-  return (
-    <div >
+    useEffect(() => {   
+        console.log("Chat ID: ", chatroomId);
+        console.log("Socket: ", socket);
+       
+        if(socket) {
+            socket.emit("joinRoom", {
+                chatroomId,
+            });
 
-        {/*  Chat name: 
-            UserName - TranslatorName (languageFrom - languageTo);
-            Fixed */}
+            socket.on("newMessage", (message) => {
+                setMessages([...messages, message]);
+            });
+        }
 
-        <AppBar position="static">
-            <Toolbar>
-                <Typography variant="h6" >
-                    {chatName}
-                </Typography>               
-            </Toolbar>
-        </AppBar> 
-
-        {/*  Messages window. 
-            From logged in user: on right, from other user: on left in diff. color;
-            Scrollable  */}
-
-        <Paper style={{height: 500, overflow: 'auto'}}>
-            <List>
-                {messages.map(({ id, user, message, timestamp }) => (
-                    <ListItem key= {id}>
-                        <List>
-                            <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{user}</Box>
-                            <Chip avatar={<Avatar>{user.charAt(0)}</Avatar>} label={message}/>
-                            <Box textAlign="right"  fontSize={12} m={1}>{timestamp}</Box>
-                        </List>   
-                    </ListItem>
-                ))}
-            </List>
-        </Paper>  
-
-        {/* Input field.
-            Attach icon, input field, voice message */}
-        <div className={classes.root}>
-            <AppBar position="relative" className={classes.footer}>
+        return () => {
+            if(socket) {
+                socket.emit("leaveRoom", {
+                    chatroomId,
+                });
+            }
+        };
+    }, []);
+    return (
+        <div >
+    
+            {/*  Chat name: 
+                UserName - TranslatorName (languageFrom - languageTo);
+                Fixed */}
+    
+            <AppBar position="static">
                 <Toolbar>
-                    <IconButton> <AttachFileIcon/> </IconButton>
-
-                    <div className={classes.input}>
-                        <InputBase
-                            placeholder="Type your message"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'input' }}
-                        />
-                    </div>
-
-                    <IconButton><SendIcon/></IconButton>
-                    <IconButton><MicIcon/></IconButton>
-
+                    <Typography variant="h6" >
+                        {chatName}
+                    </Typography>               
                 </Toolbar>
-            </AppBar>
-        </div> 
-        
-
-      <Footer />
-    </div>
-  );
-}
-
-export default withRouter(Chat);
+            </AppBar> 
+    
+            {/*  Messages window. 
+                From logged in user: on right, from other user: on left in diff. color;
+                Scrollable  */}
+    
+            <Paper style={{height: 500, overflow: 'auto'}}>
+                <List>
+                    {messages.map((message, i) => (
+                        <ListItem key= {i}>
+                            <List>
+                                <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
+                                <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message}/>
+                                <Box textAlign="right"  fontSize={12} m={1}>{"timeHere"}</Box>
+                            </List>   
+                        </ListItem>
+                    ))}
+                </List>
+            </Paper>  
+    
+            {/* Input field.
+                Attach icon, input field, voice message */}
+            <div className={classes.root}>
+                <AppBar position="relative" className={classes.footer}>
+                    <Toolbar>
+                        <IconButton> <AttachFileIcon/> </IconButton>
+    
+                        <div className={classes.input}>
+                            <InputBase
+                                placeholder="Type your message"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'input' }}
+                                inputRef={messageRef}
+                            />
+                        </div>
+    
+                        <IconButton onClick={sendMessage}><SendIcon /></IconButton>
+                        <IconButton><MicIcon/></IconButton>
+    
+                    </Toolbar>
+                </AppBar>
+            </div> 
+            
+    
+          <Footer />
+        </div>
+      );
+    }
+    
+    export default withRouter(Chat);
