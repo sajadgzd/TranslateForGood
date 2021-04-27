@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const Chat = ({match, socket}) => {
     const classes = useStyles();
     const chatroomId = match.params.id;
+    const messagesEndRef = useRef(null);
     const [chatName, setChatName] = useState('');
     const [userName, setUserName] = useState('');
     
@@ -136,6 +137,17 @@ const Chat = ({match, socket}) => {
             }
         };
     }, []);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth",
+                                                block: 'end',
+                                                inline: 'nearest' })
+    }
+
+    useEffect(() => {
+        scrollToBottom()
+      }, [messages]);
+
     return (
         <div >
     
@@ -158,7 +170,7 @@ const Chat = ({match, socket}) => {
             <Paper style={{height: 500, overflow: 'auto'}}>
                 <List>
                     {messages.map((message, i) => (
-                        <ListItem key= {i} >
+                        <ListItem key= {i} style={{margin: 0, padding: 0}} >
                             <List>
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
                                 {userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
@@ -168,6 +180,7 @@ const Chat = ({match, socket}) => {
                             </List>   
                         </ListItem>
                     ))}
+                    <div ref={messagesEndRef} />
                 </List>
             </Paper>  
     
