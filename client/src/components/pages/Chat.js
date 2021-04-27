@@ -170,7 +170,7 @@ const Chat = ({match, socket}) => {
             <Paper style={{height: 500, overflow: 'auto'}}>
                 <List>
                     {messages.map((message, i) => (
-                        <ListItem key= {i} >
+                        <ListItem key= {i} style={{margin: 0, padding: 0}} >
                             <List>
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
                                 {userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
