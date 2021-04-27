@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const Chat = ({match, socket}) => {
     const classes = useStyles();
     const chatroomId = match.params.id;
+    const messagesEndRef = useRef(null);
     const [chatName, setChatName] = useState('');
     const [userName, setUserName] = useState('');
     
@@ -136,6 +137,17 @@ const Chat = ({match, socket}) => {
             }
         };
     }, []);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth",
+                                                block: 'end',
+                                                inline: 'nearest' })
+    }
+
+    useEffect(() => {
+        scrollToBottom()
+      }, [messages]);
+
     return (
         <div >
     
@@ -168,6 +180,7 @@ const Chat = ({match, socket}) => {
                             </List>   
                         </ListItem>
                     ))}
+                    <div ref={messagesEndRef} />
                 </List>
             </Paper>  
     
