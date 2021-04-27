@@ -5,6 +5,7 @@ require("dotenv").config();
 const cors = require("cors");
 const path = require('path')
 const { requireLogin } = require("./middleware/auth");
+const moment = require('moment-timezone');
 
 
 const PORT = process.env.PORT || 5000;
@@ -132,6 +133,7 @@ io.on("connect", (socket) => {
         message,
         name: user.name,
         userId : socket.userId,
+        time: moment().format('LT')
       });
 
       await newMessage.save();
