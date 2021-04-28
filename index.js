@@ -114,7 +114,9 @@ io.on("connect", (socket) => {
     console.log("A user joined chatroom: " + chatroomId);
 
     let mostRecentMessages = await Message
-            .find({user: socket.userId, chatroom: chatroomId})
+            .find({
+               chatroom: chatroomId
+            })
             .sort({_id:-1})
             .limit(3);
 
@@ -125,7 +127,7 @@ io.on("connect", (socket) => {
 
     for (let i = 0; i < mostRecentMessagesReversed.length; i++){
 
-      const user = await User.findOne({_id : mostRecentMessagesReversed[i].user});
+      let user = await User.findOne({_id : mostRecentMessagesReversed[i].user});
       let message = mostRecentMessagesReversed[i].message;
       let formattedName = user.name;
       let formattedTime = moment(mostRecentMessagesReversed[i].createdAt).format('LLL');

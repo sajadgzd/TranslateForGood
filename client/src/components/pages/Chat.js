@@ -62,6 +62,7 @@ const Chat = ({match, socket}) => {
     const messagesEndRef = useRef(null);
     const [chatName, setChatName] = useState('');
     const [userName, setUserName] = useState('');
+    const [userId, setUserId] = useState('');
     
     const getUser = async () => {
         const res = await axios.get("/api/auth", {
@@ -70,6 +71,7 @@ const Chat = ({match, socket}) => {
           },
         });
         setUserName(res.data.name);
+        setUserId(res.data._id);
       };
     
       useEffect(() => {
