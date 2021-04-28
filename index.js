@@ -121,7 +121,6 @@ io.on("connect", (socket) => {
             .limit(10);
 
     let mostRecentMessagesReversed = mostRecentMessages.reverse();
-    console.log("\n BACKEND mostRecentMessages:\n", mostRecentMessagesReversed,  "\n");
 
     let formattedMessageArray = []
 
@@ -135,10 +134,7 @@ io.on("connect", (socket) => {
       formattedMessageArray.push({message, name: formattedName, time: formattedTime})
 
     }
-
-    console.log("\n BACKEND formattedMessageArray :\n", formattedMessageArray, "\n");
-
-
+    // console.log("\n BACKEND formattedMessageArray :\n", formattedMessageArray, "\n");
     io.to(chatroomId).emit("historyMessages", {
       formattedMessageArray
     });
