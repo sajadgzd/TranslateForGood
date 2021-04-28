@@ -62,6 +62,7 @@ const Chat = ({match, socket}) => {
     const messagesEndRef = useRef(null);
     const [chatName, setChatName] = useState('');
     const [userName, setUserName] = useState('');
+    const [userId, setUserId] = useState('');
     
     const getUser = async () => {
         const res = await axios.get("/api/auth", {
@@ -70,6 +71,7 @@ const Chat = ({match, socket}) => {
           },
         });
         setUserName(res.data.name);
+        setUserId(res.data._id);
       };
     
       useEffect(() => {
@@ -124,6 +126,15 @@ const Chat = ({match, socket}) => {
         if(socket) {
             socket.emit("joinRoom", {
                 chatroomId,
+            });
+
+            socket.on("historyMessages", (formattedMessageArray) => {
+                let jsonArray = JSON.parse(JSON.stringify(formattedMessageArray)).formattedMessageArray;
+                // console.log("\nFRONTEND RECEIVED HISTORYMESSAGES:\n", jsonArray, "\n");
+                // console.log("\nFRONTEND RECEIVED typeof jsonArray:\n", typeof jsonArray, "\n");
+                // console.log("\nFRONTEND RECEIVED jsonArray.formattedMessageArray.length:\n", jsonArray.length, "\n");
+
+                setMessages([...messages, ...jsonArray]);
             });
 
             socket.on("newMessage", (message) => {

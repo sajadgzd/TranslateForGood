@@ -109,9 +109,36 @@ io.on("connect", (socket) => {
     console.log("Disconnected: " + socket.userId);
   });
 
-  socket.on("joinRoom", ({chatroomId}) => {
+  socket.on("joinRoom", async ({chatroomId}) => {
     socket.join(chatroomId);
     console.log("A user joined chatroom: " + chatroomId);
+
+    let mostRecentMessages = await Message
+            .find({
+               chatroom: chatroomId
+            })
+            .sort({_id:-1})
+            .limit(10);
+
+    let mostRecentMessagesReversed = mostRecentMessages.reverse();
+
+    let formattedMessageArray = []
+
+    for (let i = 0; i < mostRecentMessagesReversed.length; i++){
+
+      let user = await User.findOne({_id : mostRecentMessagesReversed[i].user});
+      let message = mostRecentMessagesReversed[i].message;
+      let formattedName = user.name;
+      let formattedTime = moment(mostRecentMessagesReversed[i].createdAt).format('LLL');
+
+      formattedMessageArray.push({message, name: formattedName, time: formattedTime})
+
+    }
+    // console.log("\n BACKEND formattedMessageArray :\n", formattedMessageArray, "\n");
+    io.to(chatroomId).emit("historyMessages", {
+      formattedMessageArray
+    });
+
   });
 
   socket.on("leaveRoom", ({chatroomId}) => {
