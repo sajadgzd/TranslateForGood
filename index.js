@@ -118,7 +118,7 @@ io.on("connect", (socket) => {
                chatroom: chatroomId
             })
             .sort({_id:-1})
-            .limit(3);
+            .limit(10);
 
     let mostRecentMessagesReversed = mostRecentMessages.reverse();
     console.log("\n BACKEND mostRecentMessages:\n", mostRecentMessagesReversed,  "\n");
