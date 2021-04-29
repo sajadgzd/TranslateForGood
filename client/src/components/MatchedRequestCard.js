@@ -82,7 +82,9 @@ function MatchedRequestCard(props) {
         },
       }
     ).then(function(response){
-      console.log("RESPONSE FROM newChatRoom:\t", response.data) 
+      console.log("RESPONSE FROM newChatRoom:\t", response.data)
+      // take the tranlslator to Chat page now:
+      window.location.href= "/chatList";
   })
   };
 
