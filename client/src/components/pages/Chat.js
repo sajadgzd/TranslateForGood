@@ -188,13 +188,9 @@ const Chat = ({match, socket}) => {
             console.log(e);
         }
 
-        if(socket) {
-                socket.emit("chatroomMessage", {
-                    chatroomId, 
-                    message : messageRef.current.value,
-                });
-                messageRef.current.value = "";
-        }
+        // setChatStatus(false);
+        sendMessage();
+
 
         window.location.href="/chatList";
     }
