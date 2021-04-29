@@ -107,14 +107,12 @@ const Chat = ({match, socket}) => {
         getChat();
         
         if(socket) {
-            if (isChatActive){
-                socket.emit("chatroomMessage", {
-                    chatroomId, 
-                    message : messageRef.current.value,
-                });
-                messageRef.current.value = "";
-            } else {
-            }
+            socket.emit("chatroomMessage", {
+                chatroomId, 
+                message : messageRef.current.value,
+            });
+            messageRef.current.value = "";
+
         }
         console.log(messages);
     };
@@ -148,6 +146,7 @@ const Chat = ({match, socket}) => {
 
             socket.on("newMessage", (message) => {
                 setMessages([...messages, message]);
+                getChat();
             });
         }
 
@@ -188,10 +187,7 @@ const Chat = ({match, socket}) => {
             console.log(e);
         }
 
-        // setChatStatus(false);
         sendMessage();
-
-
         window.location.href="/chatList";
     }
 
