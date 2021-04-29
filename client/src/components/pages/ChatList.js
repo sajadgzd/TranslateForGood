@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const Chatroom = (props) => {
+const ChatList = (props) => {
     const[showTransl, setShowTransl] = useState(false);
     const socket = props.socket;
 
@@ -142,4 +142,4 @@ const Chatroom = (props) => {
     )
 };
 
-export default Chatroom;
+export default ChatList;
