@@ -221,8 +221,8 @@ const Chat = ({match, socket}) => {
             <Paper style={{height: 500, overflow: 'auto'}}>
             {messages.map((message, i) => (
               userName == message.name ? 
-              <List style={{ right: 0}}> 
-                    <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
+              <List> 
+                    <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0, display: "flex", flexDirection: "row-reverse"}} >
                             <List style={{paddingTop: 0, paddingBottom: 0}} >
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
                                 {userName == message.name ?
