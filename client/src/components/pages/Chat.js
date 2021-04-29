@@ -107,14 +107,12 @@ const Chat = ({match, socket}) => {
         getChat();
         
         if(socket) {
-            if (isChatActive){
-                socket.emit("chatroomMessage", {
-                    chatroomId, 
-                    message : messageRef.current.value,
-                });
-                messageRef.current.value = "";
-            } else {
-            }
+            socket.emit("chatroomMessage", {
+                chatroomId, 
+                message : messageRef.current.value,
+            });
+            messageRef.current.value = "";
+
         }
         console.log(messages);
     };
@@ -148,6 +146,7 @@ const Chat = ({match, socket}) => {
 
             socket.on("newMessage", (message) => {
                 setMessages([...messages, message]);
+                getChat();
             });
         }
 
@@ -187,8 +186,14 @@ const Chat = ({match, socket}) => {
         } catch (e) {
             console.log(e);
         }
+
+        sendMessage();
         window.location.href="/chatList";
-    }
+    };
+
+    const handleLeaveChat = () =>{
+        window.location.href="/chatList";
+    };
 
     return (
         <div >
@@ -204,7 +209,7 @@ const Chat = ({match, socket}) => {
                         </Grid>
                         <Grid item xs={1}>
                             {isChatActive ? <Button variant="contained" color="secondary" onClick={handleCompleteChat}>Finish translation</Button> :
-                                            <Button variant="contained" color="secondary" onClick={handleCompleteChat}>Leave Room</Button>}
+                                            <Button variant="contained" color="secondary" onClick={handleLeaveChat}>Leave Room</Button>}
                             
                         </Grid>                    
                     </Grid>
