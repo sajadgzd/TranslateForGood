@@ -253,7 +253,6 @@ const Chat = ({match, socket}) => {
                             <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
                         </List>   
                     </ListItem>
-
                         <div ref={messagesEndRef} />
                 </List>
 
