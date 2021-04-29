@@ -58,8 +58,10 @@ app.post("/api/chat/new", ChatControls.create);
 app.post("/api/chat/deleteExpired", ChatControls.deleteExpired);
 app.get("/api/chat/filter", ChatControls.filterByRequest);
 
+app.post("/api/chat/complete", ChatControls.markComplete);
 app.get("/api/chat/getChats", ChatControls.getAllChatrooms);
 app.get("/api/chat/getById", ChatControls.getById);
+
 
 
 // Serve static assets (build folder) if in production
@@ -147,25 +149,35 @@ io.on("connect", (socket) => {
   });
 
   socket.on("chatroomMessage", async ({ chatroomId, message}) => {
-    if(message.trim().length > 0) {
-
-      const user = await User.findOne({_id : socket.userId});
-      const newMessage = new Message({
-        chatroom : chatroomId, 
-        user: socket.userId, 
-        message
-      });
-
+    const chat = await chatroom.findOne({_id: chatroomId});
+    const chatStatus = chat.complete;
+    if (chatStatus) {
       io.to(chatroomId).emit("newMessage", {
-        message,
-        name: user.name,
+        message: "Translation session was ended. You can leave the room. Thank you.",
+        name: '',
         userId : socket.userId,
-        time: moment().format('LT')
+        time: ''
       });
+    } else {
+      if(message.trim().length > 0) {
 
-      await newMessage.save();
+        const user = await User.findOne({_id : socket.userId});
+        const newMessage = new Message({
+          chatroom : chatroomId, 
+          user: socket.userId, 
+          message
+        });
+  
+        io.to(chatroomId).emit("newMessage", {
+          message,
+          name: user.name,
+          userId : socket.userId,
+          time: moment().format('LT')
+        });
+  
+        await newMessage.save();
+      }
     }
-    
   });
 
 });

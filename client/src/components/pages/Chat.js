@@ -5,6 +5,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import Footer from '../Footer';
 import AppBar from '@material-ui/core/AppBar';
+import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -17,6 +18,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MicIcon from '@material-ui/icons/Mic';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import SendIcon from '@material-ui/icons/Send';
+import Button from '@material-ui/core/Button';
 import { IconButton } from '@material-ui/core';
 import { withRouter } from 'react-router';
 
@@ -63,6 +65,9 @@ const Chat = ({match, socket}) => {
     const [chatName, setChatName] = useState('');
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
+    const [isChatActive, setChatStatus] = useState(true);
+
+
     
     const getUser = async () => {
         const res = await axios.get("/api/auth", {
@@ -87,8 +92,7 @@ const Chat = ({match, socket}) => {
         });
         let response = chatroom.data;
         setChatName(response.name);
-        
-        
+        setChatStatus(!response.complete);       
     };
     useEffect(() => {
         console.log("chatname: ", chatName);
@@ -100,12 +104,17 @@ const Chat = ({match, socket}) => {
     const messageRef = useRef();
 
     const sendMessage = () => {
+        getChat();
+        
         if(socket) {
-            socket.emit("chatroomMessage", {
-                chatroomId, 
-                message : messageRef.current.value,
-            });
-            messageRef.current.value = "";
+            if (isChatActive){
+                socket.emit("chatroomMessage", {
+                    chatroomId, 
+                    message : messageRef.current.value,
+                });
+                messageRef.current.value = "";
+            } else {
+            }
         }
         console.log(messages);
     };
@@ -161,15 +170,44 @@ const Chat = ({match, socket}) => {
         scrollToBottom()
       }, [messages]);
 
+    const handleCompleteChat = async (e)=>{
+        console.log("sending id:", chatroomId);
+        try{
+            await axios.post(
+                "/api/chat/complete",
+                {  chatroomId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+            ).then(function(response){
+                console.log("RESPONSE FROM MARKING CHATROOM AS COMPLETE:\t", response.data.message);
+              })
+        } catch (e) {
+            console.log(e);
+        }
+        window.location.href="/chatList";
+    }
+
     return (
         <div >
     
             {/*  Chat name: */}   
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="h6" >
-                        {chatName}
-                    </Typography>               
+                    <Grid container alignItems="center">
+                        <Grid item xs={11}>
+                            <Typography variant="h6" >
+                                {chatName}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                            {isChatActive ? <Button variant="contained" color="secondary" onClick={handleCompleteChat}>Finish translation</Button> :
+                                            <Button variant="contained" color="secondary" onClick={handleCompleteChat}>Leave Room</Button>}
+                            
+                        </Grid>                    
+                    </Grid>
                 </Toolbar>
             </AppBar> 
     
@@ -181,7 +219,8 @@ const Chat = ({match, socket}) => {
                             <List>
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
                                 {userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
-                                                          : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
+                                : message.name=='' ? <Typography>{message.message}</Typography>
+                                : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
                                 
                                 <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
                             </List>   
@@ -192,6 +231,7 @@ const Chat = ({match, socket}) => {
             </Paper>  
     
             {/* Input field. Attach icon, input field, voice message */}
+            {isChatActive ? 
             <div className={classes.root}>
                 <AppBar position="relative" className={classes.footer}>
                     <Toolbar>
@@ -214,7 +254,7 @@ const Chat = ({match, socket}) => {
     
                     </Toolbar>
                 </AppBar>
-            </div> 
+            </div> : <div></div>}
             
     
           <Footer />

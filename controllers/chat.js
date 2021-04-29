@@ -35,7 +35,7 @@ let ChatroomController = {
     
     try{
       let list = req.query.requestsList;
-      let chatrooms = await Chatroom.find({request: { $in: list}});
+      let chatrooms = await Chatroom.find({request: { $in: list}, complete: {$eq: false}});
       // console.log("Accepted Requests", accepted.translationActivity.accepted);
       res.json(chatrooms);
       // return res.status(201).json({ message: "Filtered chatrooms by requests id sucsessfully!"});
@@ -66,6 +66,18 @@ let ChatroomController = {
       res.json(chatroom);
     } catch(err){
       return res.status(400).json({error: err.message});
+    }
+  },
+
+  markComplete: async(req, res) => {
+    const { chatroomId} = req.body;
+    try {
+      let chatroom = await Chatroom.findOne({_id: chatroomId});
+      chatroom.complete = true;
+      await chatroom.save();
+      return res.status(201).json({ message: "Chatroom marked as complete sucsessfully!"});
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
     }
   }
 

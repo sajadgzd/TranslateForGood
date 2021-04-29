@@ -12,6 +12,11 @@ const ChatroomSchema = new mongoose.Schema(
         type: Schema.Types.ObjectId, 
         ref: 'Request'
     },
+
+    complete: {
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );
