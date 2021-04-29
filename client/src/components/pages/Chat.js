@@ -187,6 +187,15 @@ const Chat = ({match, socket}) => {
         } catch (e) {
             console.log(e);
         }
+
+        if(socket) {
+                socket.emit("chatroomMessage", {
+                    chatroomId, 
+                    message : messageRef.current.value,
+                });
+                messageRef.current.value = "";
+        }
+
         window.location.href="/chatList";
     }
 
