@@ -5,6 +5,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import Footer from '../Footer';
 import AppBar from '@material-ui/core/AppBar';
+import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -17,6 +18,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MicIcon from '@material-ui/icons/Mic';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import SendIcon from '@material-ui/icons/Send';
+import Button from '@material-ui/core/Button';
 import { IconButton } from '@material-ui/core';
 import { withRouter } from 'react-router';
 
@@ -161,15 +163,40 @@ const Chat = ({match, socket}) => {
         scrollToBottom()
       }, [messages]);
 
+    const handleCompleteChat = async (e)=>{
+        console.log("sending id:", chatroomId);
+        try{
+            await axios.post(
+                "/api/chat/complete",
+                {  chatroomId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+            ).then(function(response){
+                console.log("RESPONSE FROM MARKING CHATROOM AS COMPLETE:\t", response.data.message);
+              })
+        } catch (e) {
+            console.log(e);
+        }
+        window.location.href="/chatList";
+    }
+
     return (
         <div >
     
             {/*  Chat name: */}   
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="h6" >
-                        {chatName}
-                    </Typography>               
+                    <Grid container alignItems="center">
+                        <Grid item xs={11}>
+                            <Typography variant="h6" >
+                                {chatName}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={1}><Button variant="contained" color="secondary" onClick={handleCompleteChat}>Finish translation</Button></Grid>                    
+                    </Grid>
                 </Toolbar>
             </AppBar> 
     

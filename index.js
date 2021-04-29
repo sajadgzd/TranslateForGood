@@ -58,8 +58,10 @@ app.post("/api/chat/new", ChatControls.create);
 app.post("/api/chat/deleteExpired", ChatControls.deleteExpired);
 app.get("/api/chat/filter", ChatControls.filterByRequest);
 
+app.post("/api/chat/complete", ChatControls.markComplete);
 app.get("/api/chat/getChats", ChatControls.getAllChatrooms);
 app.get("/api/chat/getById", ChatControls.getById);
+
 
 
 // Serve static assets (build folder) if in production
