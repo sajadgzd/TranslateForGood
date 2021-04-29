@@ -189,7 +189,11 @@ const Chat = ({match, socket}) => {
 
         sendMessage();
         window.location.href="/chatList";
-    }
+    };
+
+    const handleLeaveChat = () =>{
+        window.location.href="/chatList";
+    };
 
     return (
         <div >
@@ -205,7 +209,7 @@ const Chat = ({match, socket}) => {
                         </Grid>
                         <Grid item xs={1}>
                             {isChatActive ? <Button variant="contained" color="secondary" onClick={handleCompleteChat}>Finish translation</Button> :
-                                            <Button variant="contained" color="secondary" onClick={handleCompleteChat}>Leave Room</Button>}
+                                            <Button variant="contained" color="secondary" onClick={handleLeaveChat}>Leave Room</Button>}
                             
                         </Grid>                    
                     </Grid>
