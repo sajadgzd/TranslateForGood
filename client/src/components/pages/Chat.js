@@ -17,6 +17,7 @@ import Box from '@material-ui/core/Box';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MicIcon from '@material-ui/icons/Mic';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
 import { IconButton } from '@material-ui/core';
@@ -195,6 +196,25 @@ const Chat = ({match, socket}) => {
         window.location.href="/chatList";
     };
 
+    //image, file, voice
+    const [data, setData] = useState({
+        attach_file: null,
+        attach_voice: null,
+    });
+    const [selectedFilePreview, setFilePrev] = useState();
+
+    const fileSelectedHandler = (event) => {
+        const file = event.target.files[0];
+        console.log(file);
+        if (event.target.files.length == 0) {
+          setFilePrev(null);
+        } else {
+            setFilePrev(URL.createObjectURL(file));
+            setData({ ...data, attach_file: URL.createObjectURL(file)});
+            
+        }
+      }
+
     return (
         <div >
     
@@ -240,8 +260,25 @@ const Chat = ({match, socket}) => {
             <div className={classes.root}>
                 <AppBar position="relative" className={classes.footer}>
                     <Toolbar>
-                        <IconButton> <AttachFileIcon/> </IconButton>
-    
+                        <div className={classes.input}>
+                            <input
+                                accept="image/*"
+                                id="icon-button-file"
+                                type="file"
+                            />
+                            <label htmlFor="icon-button-file">
+                            <IconButton
+                                color="primary"
+                                aria-label="upload picture"
+                                component="span"
+                            >
+                            <PhotoCamera/>
+                            </IconButton>
+                            </label>
+                            </div>
+
+                        <IconButton><AttachFileIcon/></IconButton>
+
                         <div className={classes.input}>
                             <InputBase
                                 placeholder="Type your message"
