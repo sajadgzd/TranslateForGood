@@ -104,16 +104,28 @@ const Chat = ({match, socket}) => {
     const [messages, setMessages] = useState([]); 
     const messageRef = useRef();
 
+    const [file, setFile] = useState();
+
     const sendMessage = () => {
         getChat();
-        
         if(socket) {
-            socket.emit("chatroomMessage", {
-                chatroomId, 
-                message : messageRef.current.value,
-            });
-            messageRef.current.value = "";
-
+            if(file){
+                const messageObject = {
+                    chatroomId, 
+                    message : messageRef.current.value,
+                    };
+                    setMessages("");
+                    setFile();
+                socket.emit("chatroomMessage", messageObject);
+                messageRef.current.value = "";
+            } else {
+                const messageObject = {
+                    chatroomId, 
+                    message : messageRef.current.value,
+                    };
+                socket.emit("chatroomMessage", messageObject);
+                messageRef.current.value = "";
+            }
         }
         console.log(messages);
     };
@@ -201,19 +213,11 @@ const Chat = ({match, socket}) => {
         attach_file: null,
         attach_voice: null,
     });
-    const [selectedFilePreview, setFilePrev] = useState();
 
-    const fileSelectedHandler = (event) => {
-        const file = event.target.files[0];
-        console.log(file);
-        if (event.target.files.length == 0) {
-          setFilePrev(null);
-        } else {
-            setFilePrev(URL.createObjectURL(file));
-            setData({ ...data, attach_file: URL.createObjectURL(file)});
-            
-        }
-      }
+    const selectFile = (e) =>{
+        setMessages(e.target.files[0].name);
+        setFile(e.target.files[0]);
+    };
 
     return (
         <div >
@@ -260,25 +264,22 @@ const Chat = ({match, socket}) => {
             <div className={classes.root}>
                 <AppBar position="relative" className={classes.footer}>
                     <Toolbar>
-                        <div className={classes.input}>
+                    <div className={classes.input}>
                             <input
                                 accept="image/*"
                                 id="icon-button-file"
                                 type="file"
                             />
                             <label htmlFor="icon-button-file">
-                            <IconButton
+                            <IconButton onChange={selectFile}
                                 color="primary"
                                 aria-label="upload picture"
                                 component="span"
                             >
-                            <PhotoCamera/>
                             </IconButton>
                             </label>
                             </div>
-
-                        <IconButton><AttachFileIcon/></IconButton>
-
+                        {/*<IconButton><AttachFileIcon/></IconButton> <input onChange={selectFile} type="file" />*/}
                         <div className={classes.input}>
                             <InputBase
                                 placeholder="Type your message"
@@ -290,7 +291,6 @@ const Chat = ({match, socket}) => {
                                 inputRef={messageRef}
                             />
                         </div>
-    
                         <IconButton onClick={sendMessage}><SendIcon /></IconButton>
                         <IconButton><MicIcon/></IconButton>
     
