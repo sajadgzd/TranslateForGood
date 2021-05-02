@@ -22,7 +22,6 @@ import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
 import { IconButton } from '@material-ui/core';
 import { withRouter } from 'react-router';
-import Image from "./Image";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -117,10 +116,9 @@ const Chat = ({match, socket}) => {
                     chatroomId, 
                     message : file,
                     };
-                    setMessages("");
                     setFile();
                 socket.emit("chatroomMessage", messageObject);
-                //messageRef.current.value = "";
+                messageRef.current.value = file;
             } else {
                 const messageObject = {
                     chatroomId, 
@@ -129,6 +127,7 @@ const Chat = ({match, socket}) => {
                 socket.emit("chatroomMessage", messageObject);
                 messageRef.current.value = "";
             }
+            messageRef.current.value = "";
         }
         console.log(messages);
     };
@@ -219,8 +218,6 @@ const Chat = ({match, socket}) => {
 
     const selectFile = (e) =>{
         console.log("Here !!!")
-        //setMessages(e.target.files[0].name);
-        //setFile(e.target.files[0]);
         var file = e.target.files[0];
         var reader = new FileReader();
         reader.onloadend = function() {
@@ -230,20 +227,14 @@ const Chat = ({match, socket}) => {
     reader.readAsDataURL(file);
     };
     const renderMessages = (message, i) =>{
-        if(message.type === "file"){
-            const blob = new Blob([message.message], {type:message.type});
-            return(
-                <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
-                    <Image fileName={message.fileName}  blob ={blob} />
-                </ListItem>
-                )
-        }
         return(
         <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
                             <List style={{paddingTop: 0, paddingBottom: 0}}>
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                                {userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
+                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                : userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                 : message.name=='' ? <Typography>{message.message}</Typography>
+                                : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
                                 : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
                                 
                                 <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
@@ -292,10 +283,8 @@ const Chat = ({match, socket}) => {
                                 type="file"
                                 onChange={selectFile} 
                                 type="file"
-                                inputRef={messageRef}
                             />
                             </div>
-                        {/*<IconButton><AttachFileIcon/></IconButton> <input onChange={selectFile} type="file" />*/}
                         <div className={classes.input}>
                             <InputBase
                                 placeholder="Type your message"
