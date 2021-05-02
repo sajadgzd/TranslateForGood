@@ -210,12 +210,6 @@ const Chat = ({match, socket}) => {
         window.location.href="/chatList";
     };
 
-    //image, file, voice
-    const [data, setData] = useState({
-        attach_file: null,
-        attach_voice: null,
-    });
-
     const selectFile = (e) =>{
         console.log("Here !!!")
         var file = e.target.files[0];
@@ -226,22 +220,7 @@ const Chat = ({match, socket}) => {
         }
     reader.readAsDataURL(file);
     };
-    const renderMessages = (message, i) =>{
-        return(
-        <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
-                            <List style={{paddingTop: 0, paddingBottom: 0}}>
-                                <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
-                                : userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
-                                : message.name=='' ? <Typography>{message.message}</Typography>
-                                : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
-                                : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
-                                
-                                <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
-                            </List>   
-        </ListItem>
-        )
-    };
+
     return (
         <div >
     
@@ -271,12 +250,12 @@ const Chat = ({match, socket}) => {
                     <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0, display: "flex", flexDirection: "row-reverse"}} >
                             <List style={{paddingTop: 0, paddingBottom: 0}} >
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
                                 :userName == message.name ?
                                     <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                     
                                             : message.name=='' ? <Typography>{message.message}</Typography>
-                                            : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                            : message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
                                     : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
                                     }
                                 
@@ -290,12 +269,12 @@ const Chat = ({match, socket}) => {
                     <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
                         <List style={{paddingTop: 0, paddingBottom: 0}} >
                             <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                            {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                            {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
                                 :userName == message.name ?
                                     <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                     
                                             : message.name=='' ? <Typography>{message.message}</Typography>
-                                            : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                            : message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
                                     : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
                                     }
                             
