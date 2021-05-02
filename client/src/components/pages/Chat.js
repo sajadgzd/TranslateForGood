@@ -17,6 +17,7 @@ import Box from '@material-ui/core/Box';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MicIcon from '@material-ui/icons/Mic';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
 import { IconButton } from '@material-ui/core';
@@ -103,16 +104,30 @@ const Chat = ({match, socket}) => {
     const [messages, setMessages] = useState([]); 
     const messageRef = useRef();
 
+    const [file, setFile] = useState();
+
     const sendMessage = () => {
         getChat();
-        
         if(socket) {
-            socket.emit("chatroomMessage", {
-                chatroomId, 
-                message : messageRef.current.value,
-            });
+            console.log("--------socket", file)
+            if(file){
+                console.log("File exist", typeof(file))
+                const messageObject = {
+                    chatroomId, 
+                    message : file,
+                    };
+                    setFile();
+                socket.emit("chatroomMessage", messageObject);
+                messageRef.current.value = file;
+            } else {
+                const messageObject = {
+                    chatroomId, 
+                    message : messageRef.current.value,
+                    };
+                socket.emit("chatroomMessage", messageObject);
+                messageRef.current.value = "";
+            }
             messageRef.current.value = "";
-
         }
         console.log(messages);
     };
@@ -195,7 +210,38 @@ const Chat = ({match, socket}) => {
         window.location.href="/chatList";
     };
 
+    //image, file, voice
+    const [data, setData] = useState({
+        attach_file: null,
+        attach_voice: null,
+    });
 
+    const selectFile = (e) =>{
+        console.log("Here !!!")
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            setFile(reader.result);
+        console.log('RESULT', reader.result);
+        }
+    reader.readAsDataURL(file);
+    };
+    const renderMessages = (message, i) =>{
+        return(
+        <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
+                            <List style={{paddingTop: 0, paddingBottom: 0}}>
+                                <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
+                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                : userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
+                                : message.name=='' ? <Typography>{message.message}</Typography>
+                                : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
+                                
+                                <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
+                            </List>   
+        </ListItem>
+        )
+    };
     return (
         <div >
     
@@ -225,11 +271,12 @@ const Chat = ({match, socket}) => {
                     <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0, display: "flex", flexDirection: "row-reverse"}} >
                             <List style={{paddingTop: 0, paddingBottom: 0}} >
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                                {userName == message.name ?
+                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                :userName == message.name ?
                                     <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                     
                                             : message.name=='' ? <Typography>{message.message}</Typography>
-                                    
+                                            : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
                                     : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
                                     }
                                 
@@ -243,12 +290,14 @@ const Chat = ({match, socket}) => {
                     <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
                         <List style={{paddingTop: 0, paddingBottom: 0}} >
                             <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                            {userName == message.name ?
-                                <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
-                                
-                                        : message.name=='' ? <Typography>{message.message}</Typography>
-                                
-                                : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
+                            {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                :userName == message.name ?
+                                    <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
+                                    
+                                            : message.name=='' ? <Typography>{message.message}</Typography>
+                                            : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                    : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
+                                    }
                             
                             <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
                         </List>   
@@ -264,8 +313,15 @@ const Chat = ({match, socket}) => {
             <div className={classes.root}>
                 <AppBar position="relative" className={classes.footer}>
                     <Toolbar>
-                        <IconButton> <AttachFileIcon/> </IconButton>
-    
+                    <div className={classes.input}>
+                            <InputBase
+                                accept="image/*"
+                                id="icon-button-file"
+                                type="file"
+                                onChange={selectFile} 
+                                type="file"
+                            />
+                            </div>
                         <div className={classes.input}>
                             <InputBase
                                 placeholder="Type your message"
@@ -277,7 +333,6 @@ const Chat = ({match, socket}) => {
                                 inputRef={messageRef}
                             />
                         </div>
-    
                         <IconButton onClick={sendMessage}><SendIcon /></IconButton>
                         <IconButton><MicIcon/></IconButton>
     
