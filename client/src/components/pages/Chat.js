@@ -265,10 +265,47 @@ const Chat = ({match, socket}) => {
     
             {/*  Messages window. */}   
             <Paper style={{height: 500, overflow: 'auto'}}>
-                <List>
-                    {messages.map(renderMessages)}
+            {messages.map((message, i) => (
+              userName == message.name ? 
+              <List> 
+                    <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0, display: "flex", flexDirection: "row-reverse"}} >
+                            <List style={{paddingTop: 0, paddingBottom: 0}} >
+                                <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
+                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                :userName == message.name ?
+                                    <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
+                                    
+                                            : message.name=='' ? <Typography>{message.message}</Typography>
+                                            : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                    : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
+                                    }
+                                
+                                <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
+                            </List>   
+                    </ListItem>
                     <div ref={messagesEndRef} />
                 </List>
+                :
+                <List> 
+                    <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
+                        <List style={{paddingTop: 0, paddingBottom: 0}} >
+                            <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
+                            {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                :userName == message.name ?
+                                    <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
+                                    
+                                            : message.name=='' ? <Typography>{message.message}</Typography>
+                                            : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                    : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
+                                    }
+                            
+                            <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
+                        </List>   
+                    </ListItem>
+                        <div ref={messagesEndRef} />
+                </List>
+
+            ))}
             </Paper>  
     
             {/* Input field. Attach icon, input field, voice message */}
