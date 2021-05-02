@@ -110,15 +110,17 @@ const Chat = ({match, socket}) => {
     const sendMessage = () => {
         getChat();
         if(socket) {
+            console.log("--------socket", file)
             if(file){
+                console.log("File exist", typeof(file))
                 const messageObject = {
                     chatroomId, 
-                    message : messageRef.current.value,
+                    message : file,
                     };
                     setMessages("");
                     setFile();
                 socket.emit("chatroomMessage", messageObject);
-                messageRef.current.value = "";
+                //messageRef.current.value = "";
             } else {
                 const messageObject = {
                     chatroomId, 
@@ -216,8 +218,16 @@ const Chat = ({match, socket}) => {
     });
 
     const selectFile = (e) =>{
-        setMessages(e.target.files[0].name);
-        setFile(e.target.files[0]);
+        console.log("Here !!!")
+        //setMessages(e.target.files[0].name);
+        //setFile(e.target.files[0]);
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            setFile(reader.result);
+        console.log('RESULT', reader.result);
+        }
+    reader.readAsDataURL(file);
     };
     const renderMessages = (message, i) =>{
         if(message.type === "file"){
@@ -277,24 +287,13 @@ const Chat = ({match, socket}) => {
                     <Toolbar>
                     <div className={classes.input}>
                             <InputBase
-                                 accept="image/*"
-                                 id="icon-button-file"
-                                 type="file"
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{ 'aria-label': 'input' }}
+                                accept="image/*"
+                                id="icon-button-file"
+                                type="file"
+                                onChange={selectFile} 
+                                type="file"
                                 inputRef={messageRef}
                             />
-                            <label htmlFor="icon-button-file">
-                            <IconButton onChange={selectFile}
-                                color="primary"
-                                aria-label="upload picture"
-                                component="span"
-                            >
-                            </IconButton>
-                            </label>
                             </div>
                         {/*<IconButton><AttachFileIcon/></IconButton> <input onChange={selectFile} type="file" />*/}
                         <div className={classes.input}>
