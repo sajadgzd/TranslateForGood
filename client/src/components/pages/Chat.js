@@ -22,6 +22,7 @@ import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
 import { IconButton } from '@material-ui/core';
 import { withRouter } from 'react-router';
+import Image from "./Image";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -218,7 +219,28 @@ const Chat = ({match, socket}) => {
         setMessages(e.target.files[0].name);
         setFile(e.target.files[0]);
     };
-
+    const renderMessages = (message, i) =>{
+        if(message.type === "file"){
+            const blob = new Blob([message.message], {type:message.type});
+            return(
+                <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
+                    <Image fileName={message.fileName}  blob ={blob} />
+                </ListItem>
+                )
+        }
+        return(
+        <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
+                            <List style={{paddingTop: 0, paddingBottom: 0}}>
+                                <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
+                                {userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
+                                : message.name=='' ? <Typography>{message.message}</Typography>
+                                : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
+                                
+                                <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
+                            </List>   
+        </ListItem>
+        )
+    };
     return (
         <div >
     
@@ -243,18 +265,7 @@ const Chat = ({match, socket}) => {
             {/*  Messages window. */}   
             <Paper style={{height: 500, overflow: 'auto'}}>
                 <List>
-                    {messages.map((message, i) => (
-                        <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
-                            <List style={{paddingTop: 0, paddingBottom: 0}}>
-                                <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                                {userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
-                                : message.name=='' ? <Typography>{message.message}</Typography>
-                                : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
-                                
-                                <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
-                            </List>   
-                        </ListItem>
-                    ))}
+                    {messages.map(renderMessages)}
                     <div ref={messagesEndRef} />
                 </List>
             </Paper>  
@@ -265,10 +276,16 @@ const Chat = ({match, socket}) => {
                 <AppBar position="relative" className={classes.footer}>
                     <Toolbar>
                     <div className={classes.input}>
-                            <input
-                                accept="image/*"
-                                id="icon-button-file"
-                                type="file"
+                            <InputBase
+                                 accept="image/*"
+                                 id="icon-button-file"
+                                 type="file"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'input' }}
+                                inputRef={messageRef}
                             />
                             <label htmlFor="icon-button-file">
                             <IconButton onChange={selectFile}
