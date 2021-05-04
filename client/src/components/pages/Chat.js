@@ -22,9 +22,11 @@ import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
 import { IconButton } from '@material-ui/core';
 import { withRouter } from 'react-router';
-
+import MicRecorder from 'mic-recorder-to-mp3';
 import {Recorder} from 'react-voice-recorder'
 import 'react-voice-recorder/dist/index.css'
+import Voice from "./Voice";
+import PopUp from "./PopUp"; 
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -107,11 +109,12 @@ const Chat = ({match, socket}) => {
     const messageRef = useRef();
 
     const [file, setFile] = useState();
-
+    const [mp3, setMP3] = useState();
     const sendMessage = () => {
         getChat();
         if(socket) {
             console.log("--------socket", file)
+            console.log("kkkkkkkkkkkkkkkkkkkkk", )
             if(file){
                 console.log("File exist", typeof(file))
                 const messageObject = {
@@ -222,33 +225,12 @@ const Chat = ({match, socket}) => {
         }
     reader.readAsDataURL(file);
     };
-
-    const [audioFile, setAudioFile] = useState();
-    const handleAudioStop = (data) => {
-        console.log(data)
-        setAudioFile(data);
-    }
-    const handleAudioUpload = (data) => {
-        console.log(data);
-    }
-    const handleReset = () => {
-        setAudioFile(null);
-      }
-    const recordAudio = (e) => {
-        return(
-            <Recorder
-            record={true}
-            title={"New recording"}
-            audioURL={setAudioFile(audioFile)}
-            showUIAudio
-            handleAudioStop={data => this.handleAudioStop(data)}
-            handleAudioUpload={data => this.handleAudioUpload(data)}
-            handleReset={() => this.handleReset()}
-            mimeTypeToUseWhenRecording={`audio/webm`} // For specific mimetype.
-        />
-        )
-    };
-
+    const [seen, setSeen] = useState();
+    const togglePop = () => {
+        setSeen(
+         !seen
+        );
+       };
     return (
         <div >
     
@@ -341,8 +323,13 @@ const Chat = ({match, socket}) => {
                             />
                         </div>
                         <IconButton onClick={sendMessage}><SendIcon /></IconButton>
-                        <div></div>
-                        <IconButton onClick={recordAudio}><MicIcon onClick={recordAudio}/></IconButton>
+                        <div>
+                            <div className="btn" onClick={togglePop}>
+                            <button>Record</button>
+                            </div>
+                            {seen ? <PopUp toggle={togglePop} /> : null}
+                            </div>
+                        <IconButton onClick={Voice}><MicIcon/></IconButton>
                                 
     
                     </Toolbar>
