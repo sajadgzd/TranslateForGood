@@ -23,6 +23,9 @@ import Button from '@material-ui/core/Button';
 import { IconButton } from '@material-ui/core';
 import { withRouter } from 'react-router';
 
+import {Recorder} from 'react-voice-recorder'
+import 'react-voice-recorder/dist/index.css'
+
 const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -57,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
         
     }
   }));
-
 
 const Chat = ({match, socket}) => {
     const classes = useStyles();
@@ -221,6 +223,32 @@ const Chat = ({match, socket}) => {
     reader.readAsDataURL(file);
     };
 
+    const [audioFile, setAudioFile] = useState();
+    const handleAudioStop = (data) => {
+        console.log(data)
+        setAudioFile(data);
+    }
+    const handleAudioUpload = (data) => {
+        console.log(data);
+    }
+    const handleReset = () => {
+        setAudioFile(null);
+      }
+    const recordAudio = (e) => {
+        return(
+            <Recorder
+            record={true}
+            title={"New recording"}
+            audioURL={setAudioFile(audioFile)}
+            showUIAudio
+            handleAudioStop={data => this.handleAudioStop(data)}
+            handleAudioUpload={data => this.handleAudioUpload(data)}
+            handleReset={() => this.handleReset()}
+            mimeTypeToUseWhenRecording={`audio/webm`} // For specific mimetype.
+        />
+        )
+    };
+
     return (
         <div >
     
@@ -313,7 +341,9 @@ const Chat = ({match, socket}) => {
                             />
                         </div>
                         <IconButton onClick={sendMessage}><SendIcon /></IconButton>
-                        <IconButton><MicIcon/></IconButton>
+                        <div></div>
+                        <IconButton onClick={recordAudio}><MicIcon onClick={recordAudio}/></IconButton>
+                                
     
                     </Toolbar>
                 </AppBar>
