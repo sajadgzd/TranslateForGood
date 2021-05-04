@@ -25,7 +25,6 @@ import { withRouter } from 'react-router';
 import MicRecorder from 'mic-recorder-to-mp3';
 import {Recorder} from 'react-voice-recorder'
 import 'react-voice-recorder/dist/index.css'
-import Voice from "./Voice";
 import PopUp from "./PopUp"; 
 
 const useStyles = makeStyles((theme) => ({
@@ -329,7 +328,7 @@ const Chat = ({match, socket}) => {
                             </div>
                             {seen ? <PopUp toggle={togglePop} /> : null}
                             </div>
-                        <IconButton onClick={Voice}><MicIcon/></IconButton>
+                        <IconButton><MicIcon/></IconButton>
                                 
     
                     </Toolbar>
