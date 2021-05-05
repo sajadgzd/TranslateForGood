@@ -71,7 +71,9 @@ const Chat = ({match, socket}) => {
     const [userId, setUserId] = useState('');
     const [isChatActive, setChatStatus] = useState(true);
 
-
+    const getData = (val) => {
+        console.log("blob is", val);
+    };
     
     const getUser = async () => {
         const res = await axios.get("/api/auth", {
@@ -326,7 +328,7 @@ const Chat = ({match, socket}) => {
                             <div className="btn" onClick={togglePop}>
                             <button>Record</button>
                             </div>
-                            {seen ? <PopUp toggle={togglePop} /> : null}
+                            {seen ? <PopUp toggle={togglePop} sendData={getData}/> : null}
                             </div>
                         <IconButton><MicIcon/></IconButton>
                                 

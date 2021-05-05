@@ -34,6 +34,7 @@ export default class PopUp extends React.Component {
         const blobURL = URL.createObjectURL(blob)
         this.setState({ blobURL, isRecording: false });
         console.log("Here is blobURL", blobURL);
+        this.props.sendData(blobURL);
       }).catch((e) => console.log(e));
   };
 
