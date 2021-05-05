@@ -22,6 +22,12 @@ import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
 import { IconButton } from '@material-ui/core';
 import { withRouter } from 'react-router';
+import MicRecorder from 'mic-recorder-to-mp3';
+import {Recorder} from 'react-voice-recorder'
+import 'react-voice-recorder/dist/index.css'
+import PopUp from "./PopUp"; 
+import './PopUp.css';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-
 const Chat = ({match, socket}) => {
     const classes = useStyles();
     const chatroomId = match.params.id;
@@ -68,7 +73,11 @@ const Chat = ({match, socket}) => {
     const [userId, setUserId] = useState('');
     const [isChatActive, setChatStatus] = useState(true);
 
-
+    const [mp3, setMP3] = useState();
+    const getData = (val) => {
+        console.log("blob is ", val);
+        setMP3(val);
+    };
     
     const getUser = async () => {
         const res = await axios.get("/api/auth", {
@@ -109,7 +118,8 @@ const Chat = ({match, socket}) => {
     const sendMessage = () => {
         getChat();
         if(socket) {
-            console.log("--------socket", file)
+            console.log("--------socket", file);
+            console.log("---------------blob audio ", mp3);
             if(file){
                 console.log("File exist", typeof(file))
                 const messageObject = {
@@ -119,6 +129,15 @@ const Chat = ({match, socket}) => {
                     setFile();
                 socket.emit("chatroomMessage", messageObject);
                 messageRef.current.value = file;
+            } else if(mp3){
+                console.log("Recorded message ", typeof(mp3))
+                const messageObject = {
+                    chatroomId, 
+                    message : mp3,
+                    };
+                    setMP3();
+                socket.emit("chatroomMessage", messageObject);
+                messageRef.current.value = mp3;
             } else {
                 const messageObject = {
                     chatroomId, 
@@ -210,12 +229,6 @@ const Chat = ({match, socket}) => {
         window.location.href="/chatList";
     };
 
-    //image, file, voice
-    const [data, setData] = useState({
-        attach_file: null,
-        attach_voice: null,
-    });
-
     const selectFile = (e) =>{
         console.log("Here !!!")
         var file = e.target.files[0];
@@ -226,22 +239,13 @@ const Chat = ({match, socket}) => {
         }
     reader.readAsDataURL(file);
     };
-    const renderMessages = (message, i) =>{
-        return(
-        <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
-                            <List style={{paddingTop: 0, paddingBottom: 0}}>
-                                <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
-                                : userName == message.name ? <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
-                                : message.name=='' ? <Typography>{message.message}</Typography>
-                                : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
-                                : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> }
-                                
-                                <Box textAlign="right"  fontSize={12} m={1}>{message.time}</Box>
-                            </List>   
-        </ListItem>
-        )
-    };
+    const [seen, setSeen] = useState();
+    const togglePop = () => {
+        setSeen(
+         !seen
+        );
+       };
+       
     return (
         <div >
     
@@ -271,12 +275,14 @@ const Chat = ({match, socket}) => {
                     <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0, display: "flex", flexDirection: "row-reverse"}} >
                             <List style={{paddingTop: 0, paddingBottom: 0}} >
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
+                                :userName == message.name && message.message.startsWith('blob') ? <audio src={message.message} controls="controls" />
                                 :userName == message.name ?
                                     <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                     
                                             : message.name=='' ? <Typography>{message.message}</Typography>
-                                            : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                            : message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
+                                            : message.message.startsWith('blob') ? <audio src={message.message} controls="controls" />
                                     : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
                                     }
                                 
@@ -290,12 +296,14 @@ const Chat = ({match, socket}) => {
                     <ListItem key= {i} style={{marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0}} >
                         <List style={{paddingTop: 0, paddingBottom: 0}} >
                             <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
-                            {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                            {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
+                            :userName == message.name && message.message.startsWith('blob') ? <audio src={message.message} controls="controls" />
                                 :userName == message.name ?
                                     <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                     
                                             : message.name=='' ? <Typography>{message.message}</Typography>
-                                            : message.message.startsWith('data:image') ? <img style={{width:150, height: "auto"}} src={message.message} alt="image"></img>
+                                            : message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
+                                            : message.message.startsWith('blob') ? <audio src={message.message} controls="controls" />
                                     : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
                                     }
                             
@@ -313,7 +321,7 @@ const Chat = ({match, socket}) => {
             <div className={classes.root}>
                 <AppBar position="relative" className={classes.footer}>
                     <Toolbar>
-                    <div className={classes.input}>
+                    <div className={classes.input} style={{width:300, height: "auto"}}>
                             <InputBase
                                 accept="image/*"
                                 id="icon-button-file"
@@ -334,7 +342,13 @@ const Chat = ({match, socket}) => {
                             />
                         </div>
                         <IconButton onClick={sendMessage}><SendIcon /></IconButton>
-                        <IconButton><MicIcon/></IconButton>
+                        <div>
+                            <div className="btn" onClick={togglePop} style={{width:270, height: "auto"}}>
+                            <button>Record Voice Message</button>
+                            </div>
+                            {seen ? <PopUp toggle={togglePop} sendData={getData}/> : null}
+                            </div>
+                                
     
                     </Toolbar>
                 </AppBar>
