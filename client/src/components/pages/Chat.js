@@ -26,7 +26,7 @@ import MicRecorder from 'mic-recorder-to-mp3';
 import {Recorder} from 'react-voice-recorder'
 import 'react-voice-recorder/dist/index.css'
 import PopUp from "./PopUp"; 
-import './App.css';
+import './PopUp.css';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -321,7 +321,7 @@ const Chat = ({match, socket}) => {
             <div className={classes.root}>
                 <AppBar position="relative" className={classes.footer}>
                     <Toolbar>
-                    <div className={classes.input}>
+                    <div className={classes.input} style={{width:300, height: "auto"}}>
                             <InputBase
                                 accept="image/*"
                                 id="icon-button-file"
@@ -343,12 +343,11 @@ const Chat = ({match, socket}) => {
                         </div>
                         <IconButton onClick={sendMessage}><SendIcon /></IconButton>
                         <div>
-                            <div className="btn" onClick={togglePop}>
-                            <button>Record</button>
+                            <div className="btn" onClick={togglePop} style={{width:270, height: "auto"}}>
+                            <button>Record Voice Message</button>
                             </div>
                             {seen ? <PopUp toggle={togglePop} sendData={getData}/> : null}
                             </div>
-                        <IconButton><MicIcon/></IconButton>
                                 
     
                     </Toolbar>

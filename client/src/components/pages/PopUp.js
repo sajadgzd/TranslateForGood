@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './PopUp.css';
 import MicRecorder from 'mic-recorder-to-mp3';
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
@@ -53,11 +53,11 @@ export default class PopUp extends React.Component {
 
   render(){
     return (
-      <div className="App">
-        <header className="App-header">
+      <div className="PopUp">
+        <header className="PopUp-header">
           <button onClick={this.start} disabled={this.state.isRecording}>Record</button>
           <button onClick={this.stop} disabled={!this.state.isRecording}>Stop</button>
-          <audio src={this.state.blobURL} controls="controls" />
+          
         </header>
       </div>
     );
