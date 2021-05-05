@@ -71,8 +71,10 @@ const Chat = ({match, socket}) => {
     const [userId, setUserId] = useState('');
     const [isChatActive, setChatStatus] = useState(true);
 
+    const [mp3, setMP3] = useState();
     const getData = (val) => {
-        console.log("blob is", val);
+        console.log("blob is ", val);
+        setMP3(val);
     };
     
     const getUser = async () => {
@@ -110,12 +112,12 @@ const Chat = ({match, socket}) => {
     const messageRef = useRef();
 
     const [file, setFile] = useState();
-    const [mp3, setMP3] = useState();
+
     const sendMessage = () => {
         getChat();
         if(socket) {
-            console.log("--------socket", file)
-            console.log("kkkkkkkkkkkkkkkkkkkkk", )
+            console.log("--------socket", file);
+            console.log("---------------blob audio ", mp3);
             if(file){
                 console.log("File exist", typeof(file))
                 const messageObject = {
@@ -125,6 +127,15 @@ const Chat = ({match, socket}) => {
                     setFile();
                 socket.emit("chatroomMessage", messageObject);
                 messageRef.current.value = file;
+            } else if(mp3){
+                console.log("Recorded message ", typeof(mp3))
+                const messageObject = {
+                    chatroomId, 
+                    message : mp3,
+                    };
+                    setMP3();
+                socket.emit("chatroomMessage", messageObject);
+                messageRef.current.value = mp3;
             } else {
                 const messageObject = {
                     chatroomId, 
