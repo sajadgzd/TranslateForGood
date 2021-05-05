@@ -26,6 +26,8 @@ import MicRecorder from 'mic-recorder-to-mp3';
 import {Recorder} from 'react-voice-recorder'
 import 'react-voice-recorder/dist/index.css'
 import PopUp from "./PopUp"; 
+import './App.css';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -243,6 +245,7 @@ const Chat = ({match, socket}) => {
          !seen
         );
        };
+       
     return (
         <div >
     
@@ -273,11 +276,13 @@ const Chat = ({match, socket}) => {
                             <List style={{paddingTop: 0, paddingBottom: 0}} >
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
                                 {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
+                                :userName == message.name && message.message.startsWith('blob') ? <audio src={message.message} controls="controls" />
                                 :userName == message.name ?
                                     <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                     
                                             : message.name=='' ? <Typography>{message.message}</Typography>
                                             : message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
+                                            : message.message.startsWith('blob') ? <audio src={message.message} controls="controls" />
                                     : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
                                     }
                                 
@@ -292,11 +297,13 @@ const Chat = ({match, socket}) => {
                         <List style={{paddingTop: 0, paddingBottom: 0}} >
                             <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
                             {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
+                            :userName == message.name && message.message.startsWith('blob') ? <audio src={message.message} controls="controls" />
                                 :userName == message.name ?
                                     <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                     
                                             : message.name=='' ? <Typography>{message.message}</Typography>
                                             : message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
+                                            : message.message.startsWith('blob') ? <audio src={message.message} controls="controls" />
                                     : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
                                     }
                             
