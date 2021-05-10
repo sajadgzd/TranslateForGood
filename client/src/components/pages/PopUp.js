@@ -1,6 +1,11 @@
 import React from 'react';
 import './PopUp.css';
 import MicRecorder from 'mic-recorder-to-mp3';
+import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
+import StopIcon from '@material-ui/icons/Stop';
+import Button from '@material-ui/core/Button';
+import { IconButton } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
@@ -55,8 +60,14 @@ export default class PopUp extends React.Component {
     return (
       <div className="PopUp">
         <header className="PopUp-header">
-          <button onClick={this.start} disabled={this.state.isRecording}>Record</button>
-          <button onClick={this.stop} disabled={!this.state.isRecording}>Stop</button>
+        <Tooltip title="Start recording">
+          <span><IconButton onClick={this.start} disabled={this.state.isRecording}><RecordVoiceOverIcon /></IconButton></span>
+        </Tooltip>
+        <Tooltip title="Stop recording">
+          {/* <button onClick={this.start} disabled={this.state.isRecording}>Record</button> */}
+          {/* <button onClick={this.stop} disabled={!this.state.isRecording}>Stop</button> */}
+          <span><IconButton onClick={this.stop} disabled={!this.state.isRecording}><StopIcon /></IconButton></span>
+        </Tooltip>
           
         </header>
       </div>
