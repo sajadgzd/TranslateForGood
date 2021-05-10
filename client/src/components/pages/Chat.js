@@ -114,6 +114,7 @@ const Chat = ({match, socket}) => {
     const messageRef = useRef();
 
     const [file, setFile] = useState();
+    const [fileName, setFileName] = useState("");
 
     const sendMessage = () => {
         getChat();
@@ -230,12 +231,13 @@ const Chat = ({match, socket}) => {
     };
 
     const selectFile = (e) =>{
-        console.log("Here !!!")
+        console.log("Attaching the file");
         var file = e.target.files[0];
+        setFileName(file.name);
         var reader = new FileReader();
         reader.onloadend = function() {
             setFile(reader.result);
-        console.log('RESULT', reader.result);
+        // console.log('RESULT', file.name, reader.result);
         }
     reader.readAsDataURL(file);
     };
@@ -321,16 +323,39 @@ const Chat = ({match, socket}) => {
             <div className={classes.root}>
                 <AppBar position="relative" className={classes.footer}>
                     <Toolbar>
-                    <div className={classes.input} style={{width:300, height: "auto"}}>
-                            <InputBase
-                                accept="image/*"
-                                id="icon-button-file"
+                    {/* <div className={classes.input} style={{width:300, height: "auto"}}> */}
+                        <IconButton
+                            variant="contained"
+                            component="label"
+                            >
+                            <AttachFileIcon />
+                            <input
                                 type="file"
-                                onChange={selectFile} 
-                                type="file"
+                                id="fileAttach"
+                                hidden
+                                onChange={selectFile}
                             />
-                            </div>
+                        </IconButton>
                         <div className={classes.input}>
+                            {file ? 
+                            <InputBase
+                                placeholder={fileName}
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'input' }}
+                                inputRef={messageRef}
+                            />: mp3 ?
+                            <InputBase
+                                placeholder="Audio is attached"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'input' }}
+                                inputRef={messageRef}
+                            /> :
                             <InputBase
                                 placeholder="Type your message"
                                 classes={{
@@ -339,15 +364,16 @@ const Chat = ({match, socket}) => {
                                 }}
                                 inputProps={{ 'aria-label': 'input' }}
                                 inputRef={messageRef}
-                            />
+                            />}
+                            
                         </div>
                         <IconButton onClick={sendMessage}><SendIcon /></IconButton>
                         <div>
-                            <div className="btn" onClick={togglePop} style={{width:270, height: "auto"}}>
-                            <button>Record Voice Message</button>
+                            <div className="btn" onClick={togglePop} style={{width:100, height: "auto"}}>
+                                <IconButton><MicIcon /></IconButton>
                             </div>
                             {seen ? <PopUp toggle={togglePop} sendData={getData}/> : null}
-                            </div>
+                        </div>
                                 
     
                     </Toolbar>

@@ -24,9 +24,9 @@ self.addEventListener('notificationclick', function(event) {
         return clientList[0].focus();
       }
       if (process.env.NODE_ENV === 'production') {
-        return self.clients.openWindow('https://translateforgood.herokuapp.com/home'); // change this for deployed version
+        return self.clients.openWindow('https://translateforgood.herokuapp.com/chatList'); // change this for deployed version
       } else {
-        return self.clients.openWindow('http://localhost:3000/home');
+        return self.clients.openWindow('http://localhost:3000/chatList');
       }
     })
   );
