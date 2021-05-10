@@ -36,10 +36,20 @@ export default class PopUp extends React.Component {
       .stop()
       .getMp3()
       .then(([buffer, blob]) => {
-        const blobURL = URL.createObjectURL(blob)
-        this.setState({ blobURL, isRecording: false });
-        console.log("Here is blobURL", blobURL);
-        this.props.sendData(blobURL);
+        let reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function(){
+          let base64data = reader.result;
+          this.setState({blobURL: base64data, isRecording: false});
+          // console.log('base64', this.state.blobURL);
+          // console.log('still recording', this.state.isRecording);
+          this.props.sendData(this.state.blobURL);
+        }.bind(this);
+        // reader.readAsDataURL(blob);
+        // const blobURL = URL.createObjectURL(blob)
+        // this.setState({ blobURL, isRecording: false });
+        // // console.log("Here is blobURL", blobURL);
+        this.props.sendData(blob);
       }).catch((e) => console.log(e));
   };
 
