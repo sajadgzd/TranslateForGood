@@ -279,12 +279,15 @@ const Chat = ({match, socket}) => {
                                 <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
                                 {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
                                 :userName == message.name && message.message.startsWith('data:audio/mp3') ? <audio src={message.message} controls="controls" />
+                                :userName == message.name && message.message.startsWith('data:application/pdf')?
+                                <a href={message.message} download>Download file</a>
                                 :userName == message.name ?
                                     <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                     
                                             : message.name=='' ? <Typography>{message.message}</Typography>
                                             : message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
                                             : message.message.startsWith('data:audio/mp3') ? <audio src={message.message} controls="controls" />
+                                            : message.message.startsWith('data:application/pdf')? <a href={message.message} download>Download file</a>
                                     : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
                                     }
                                 
@@ -300,12 +303,15 @@ const Chat = ({match, socket}) => {
                             <Box fontWeight="fontWeightBold" fontSize={12} m={1}>{message.name}</Box>
                             {userName == message.name && message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
                             :userName == message.name && message.message.startsWith('data:audio/mp3') ? <audio src={message.message} controls="controls" />
+                            :userName == message.name && message.message.startsWith('data:application/pdf')?
+                                <a href={message.message} download>Download file</a>
                                 :userName == message.name ?
                                     <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} color="primary"/> 
                                     
                                             : message.name=='' ? <Typography>{message.message}</Typography>
                                             : message.message.startsWith('data:image') ? <img style={{width:350, height: "auto"}} src={message.message} alt="image"></img>
                                             : message.message.startsWith('data:audio/mp3') ? <audio src={message.message} controls="controls" />
+                                            : message.message.startsWith('data:application/pdf')? <a href={message.message} download>Download file</a>
                                     : <Chip avatar={<Avatar>{message.name.charAt(0)}</Avatar>} label={message.message} /> 
                                     }
                             
