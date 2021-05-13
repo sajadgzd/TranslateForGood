@@ -28,6 +28,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import RequestsTabs from '../RequestsTabs';
 import EnableNotificationsBtn from '../EnableNotificationsBtn';
+import Footer from '../Footer';
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -360,6 +361,7 @@ const handleSubmitPreviousTranslator = async (e) => {
       </Grid>
     </Grid>
     <RequestsTabs user={user}/>
+    <Footer />
   </div>
 
   );
