@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Link, withRouter } from "react-router-dom";
+import Footer from '../Footer';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -89,6 +90,7 @@ const ChatList = (props) => {
     const classes = useStyles();
 
     return (
+        <div>
         <Grid container className={classes.root} spacing={2}>
             
             <Grid item xs={6}>
@@ -136,9 +138,11 @@ const ChatList = (props) => {
                     </Paper>
                 ))}
                 </Grid>
-            </Grid> 
+            </Grid>
+            
         </Grid> 
-        
+        <Footer /> 
+        </div>
     )
 };
 
