@@ -91,7 +91,7 @@ const ChatList = (props) => {
 
     return (
         <div>
-        <Grid container className={classes.root} spacing={2}>
+        <Grid container className={classes.root} spacing={2} style={{marginBottom: "1000px"}}>
             
             <Grid item xs={6}>
                 <Typography variant="h5" align="center">

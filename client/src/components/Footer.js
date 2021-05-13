@@ -5,7 +5,7 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 
 function Footer() {
   return (
-    <div className='footer-container' style={{marginTop: "100px"}}>
+    <div className='footer-container' style={{marginTop: "200px"}}>
         <div className='' style={{textAlign: "center", color: "white"}}>
         
           {/* <div className='footer-link-items'> */}
