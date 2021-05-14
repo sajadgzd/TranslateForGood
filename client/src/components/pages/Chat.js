@@ -27,6 +27,8 @@ import {Recorder} from 'react-voice-recorder'
 import 'react-voice-recorder/dist/index.css'
 import PopUp from "../PopUp"; 
 import '../PopUp.css';
+import '../Footer.css';
+import GitHubIcon from '@material-ui/icons/GitHub';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -385,6 +387,28 @@ const Chat = ({match, socket}) => {
                     </Toolbar>
                 </AppBar>
             </div> : <div></div>}
+            
+    
+          {/* <Footer style={{marginTop: "0px"}}/> */}
+
+            <div className='footer-container' style={{marginTop: "0"}}>
+                <div className='' style={{textAlign: "center", color: "white"}}>
+                
+                    <h5 style={{marginBottom: "20px", color: "white", textAlign: "center"}}>Developers <GitHubIcon></GitHubIcon></h5>
+                    <a href='https://github.com/EkaterinaArslanbaeva' style={{color: "white"}}>Ekaterina Arslanbaeva</a> <span> |  </span>
+                    <a href='https://github.com/sajadgzd' style={{color: "white"}}>Sajad Gholamzadehrizi</a> <span> |  </span>
+                    <a href='https://github.com/nataliaharrow' style={{color: "white"}}>Natalia Harrow</a> <span> |  </span>
+                    <a href='https://github.com/MarinaOrzechowski' style={{color: "white"}}>Marina Orzechowski</a>
+
+                <section className='' style={{marginTop: "20px", textAlign: "center"}}>
+                    <div className='' style={{textAlign: "center"}}>
+                    <small className='' style={{textAlign: "center"}}>TranslateForGood © 2021</small>
+                
+                    </div>
+                </section>
+                </div>
+
+            </div>
         </div>
       );
     }
