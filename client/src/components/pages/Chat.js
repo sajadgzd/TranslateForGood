@@ -385,9 +385,6 @@ const Chat = ({match, socket}) => {
                     </Toolbar>
                 </AppBar>
             </div> : <div></div>}
-            
-    
-          <Footer />
         </div>
       );
     }
