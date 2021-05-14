@@ -59,9 +59,6 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
         transition: theme.transitions.create('width'),
         width: '100%',
-        [theme.breakpoints.up('md')]: {
-          width: '20ch',
-        },
         
     }
   }));
@@ -354,6 +351,7 @@ const Chat = ({match, socket}) => {
                                 }}
                                 inputProps={{ 'aria-label': 'input' }}
                                 inputRef={messageRef}
+                                style={{width:"100%"}}
                             />: mp3 ?
                             <InputBase
                                 placeholder="Audio is attached"
@@ -363,6 +361,7 @@ const Chat = ({match, socket}) => {
                                 }}
                                 inputProps={{ 'aria-label': 'input' }}
                                 inputRef={messageRef}
+                                style={{width:"100%"}}
                             /> :
                             <InputBase
                                 placeholder="Type your message"
@@ -372,6 +371,7 @@ const Chat = ({match, socket}) => {
                                 }}
                                 inputProps={{ 'aria-label': 'input' }}
                                 inputRef={messageRef}
+                                style={{width:"100%"}}
                             />}
                             
                         </div>
