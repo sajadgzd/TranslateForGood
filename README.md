@@ -25,7 +25,7 @@ TranslateForGood hopes to provide the best experience to users in need of transl
  * Node.js
  * Socket.io
  * CSS
-    * Materiali UI
+    * Material UI
 
 <a name="display"></a>
 ## App Display
