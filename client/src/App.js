@@ -20,7 +20,7 @@ function App() {
   const setupSocket = () => {
     const token = localStorage.getItem("token");
     if(token && !socket) {
-      const newSocket = io("http://localhost:5000", {
+      const newSocket = io("/", {
           query: {
               token: localStorage.getItem("token"),
           },
