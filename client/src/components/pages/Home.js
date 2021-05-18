@@ -28,6 +28,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import RequestsTabs from '../RequestsTabs';
 import EnableNotificationsBtn from '../EnableNotificationsBtn';
+import Footer from '../Footer';
 
 // material-ui styles
 const theme = createMuiTheme();
@@ -254,7 +255,7 @@ const handleSubmitPreviousTranslator = async (e) => {
         <EnableNotificationsBtn user={user._id}/>
       </Grid>
 
-      <Grid item xs={12} sm={6} >
+      <Grid item xs={12} sm={10} style={{ marginLeft: 20}} >
         <Paper className={classes.paper}>
           <ThemeProvider theme={theme}>
             <Typography component={'span'} variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} >Request a Translator</Typography>
@@ -358,42 +359,9 @@ const handleSubmitPreviousTranslator = async (e) => {
 
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <Paper className={classes.paper}>
-          <ThemeProvider theme={theme}>
-              <Typography variant="h6" style={{ marginLeft: 10, marginBottom: 20 }} > Or Select a Previous Translator</Typography>
-          </ThemeProvider>
-          <FormControl component="fieldset" error={data.materialRadioInputError}>
-            <FormLabel component="legend">Select your translator</FormLabel>
-              <RadioGroup aria-label="previousTranslatorInfo" name="previousTranslatorInfo" value={previousTranslatorInfo} 
-                defaultValue="SajadGmail" onChange={handleChangeRadioButton}
-                >
-                <FormControlLabel value="SajadGmail" control={<Radio defaultValue/>} label="Sajad G. English to Farsi" />
-                <FormControlLabel value="EkaterinaGmail" control={<Radio />} label="Ekaterina A. English to Russian" />
-                <FormControlLabel value="NataliaGmail" control={<Radio />} label="Natalia H. English to Polish" />
-                {/* {Languages.map((option) => (
-                  <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
-                ))} */}
-                <FormHelperText>{"Please select an option"}</FormHelperText>
-              </RadioGroup>
-          </FormControl>
-          <div>
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              className={classes.button}
-              endIcon={<Icon>send</Icon>}
-              onClick={handleSubmitPreviousTranslator}
-              style={{marginTop: 15}}
-            >
-              Submit
-            </Button>
-          </div>
-        </Paper>
-      </Grid>
     </Grid>
     <RequestsTabs user={user}/>
+    <Footer />
   </div>
 
   );

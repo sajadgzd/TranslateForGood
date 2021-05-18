@@ -111,7 +111,7 @@ function SubmittedRequestCard(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleRemoveRequest = async (e) => {
+  const handleRemoveRequest = async (e) => { 
     setShowCard(false);
     console.log(props.requestID);
      try{
@@ -131,6 +131,22 @@ function SubmittedRequestCard(props) {
          catch (e) {
         console.log(e);
     }
+  };
+
+  const handleOpenChat = async (e) => {
+    try{
+        await axios.get("/api/chat/filter", { 
+            params: {
+                requestsList :  props.requestID
+            }
+        }).then(function(response){
+            // console.log(response.data[0]._id);
+            window.location.href="/chat/" + String(response.data[0]._id);
+        });
+    } catch (e) {
+            console.log(e);
+    }
+    
   };
 
   return (  
@@ -249,7 +265,7 @@ function SubmittedRequestCard(props) {
                             { props.acceptedTranslator ? 
                                 <div> 
                                     <Tooltip title="Open chat to talk to your translator">
-                                        <Button variant="outlined" size="small" /*onClick={handleClickCloseRequest}*/ className={classes.outlinedGreen, classes.textGreen} > Open Chat </Button> 
+                                        <Button variant="outlined" size="small" onClick={handleOpenChat} className={classes.outlinedGreen, classes.textGreen} > Open Chat </Button> 
                                     </Tooltip>
                                 </div>
                                 :

@@ -8,7 +8,8 @@ const weigths = {timezoneW: 0.7, activityW: 0.3};
 const nUrgent = 4;
 const nNotUrgent = 2;
 
-let allPotentialTranslators = [];
+
+let allPotentialTranslators = []; 
 
 // Secure push notifications
 const publicVapidKey = "BLeogzDBodY_tQFm-HGNxdttRxLIsW-NMLW6AUhFWpj7EYcGWodIQDjFwh4MIFkI3sPTafdgfflRV0DVZBjOb9E";
@@ -19,7 +20,7 @@ webPush.setVapidDetails(
   privateVapidKey 
 );
 
-const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => {
+const getUtilityFunctionScore = (activityScore, translatorTZ, requesterTZ) => { 
   try{
     let acceptanceScore = 1 - activityScore;
     let timeZoneDiff = (2600 - Math.abs(parseInt(moment().tz(requesterTZ).format('ZZ')) - parseInt(moment().tz(translatorTZ).format('ZZ'))))/2600;
@@ -227,6 +228,7 @@ let UserController = {
         console.log('User Deleted This Request!');
       } else if (!active) { 
         console.log('Yay, someone accepted this request!');
+
         //let translatorWhoAcceptedRequest = await Request.findOne({_id: requestID}).populate("acceptedTranslator");
       } else {
         console.log('We were not able to find a matching translator before request due date.');
@@ -274,7 +276,7 @@ let UserController = {
       //   console.log("The matchedTranslators for particular request: ", matchedTranslators);
       //   console.log("The matchedRequest for all matchedTranslators: ", request);
     } catch (error) {
-      console.log(err);
+      console.log(error);
       return res.status(400).json({ error: err.message });
     }
     

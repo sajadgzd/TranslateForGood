@@ -22,9 +22,10 @@
     color: #fff;
     justify-self: start;
     margin-left: 20px;
+    margin-bottom: 15px;
     cursor: pointer;
     text-decoration: none;
-    font-size: 2rem;
+    font-size: 1.7rem;
     display: flex;
     align-items: center;
   }
@@ -73,6 +74,10 @@
   
   .menu-icon {
     display: none;
+  }
+
+  a {
+    margin-bottom: 15px;
   }
   
   @media screen and (max-width: 960px) {
