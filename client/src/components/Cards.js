@@ -25,21 +25,25 @@ expensive, slow, and not available around the clock. TranslateForGood is free hu
         <div className='cards__wrapper'>
           <ul className='cards__items'>
             <CardItem
+            rel="noopener"
               src='images/ekaterina.jpg'
               text='Ekaterina Arslanbaeva'
               path='https://www.linkedin.com/in/ekaterina-arslanbaeva-022070160?lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_people%3BtPWTLeCdQjCBWK0zr%2FepZQ%3D%3D'
             />
             <CardItem
+            rel="noopener"
               src='images/sajad.png'
               text='Sajad Gholamzadehrizi'
               path='https://www.linkedin.com/in/sajadgzd?lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_people%3BFfTtSNleROiRpXkb5W%2Fl8Q%3D%3D'
             />
             <CardItem
+            rel="noopener"
               src='images/natalia.jpeg'
               text='Natalia Harrow'
               path='https://www.linkedin.com/in/nataliaharrow?lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_people%3BBFTLy2SlTT%2BX9sBvrP%2FOCg%3D%3D'
             />
             <CardItem
+            rel="noopener"
               src='images/marina.jfif'
               text='Marina Orzechowski'
               path='https://www.linkedin.com/in/marina-skachko-orzechowski/'
