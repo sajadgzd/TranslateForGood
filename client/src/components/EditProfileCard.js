@@ -126,8 +126,13 @@ const EditProfileCard = (props) => {
               setImagePrev(null);
               window.alert("This is not an Image file");
             } else {
-                setImagePrev(URL.createObjectURL(file));
-                setData({ ...data, image: URL.createObjectURL(file)});
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onloadend = function() {
+                        console.log('RESULT', file.name, reader.result);
+                        setImagePrev(URL.createObjectURL(file));
+                        setData({ ...data, image: reader.result});
+                    }
             }
         }
       }
