@@ -1,4 +1,5 @@
-//import { response } from "express";
+let CACHE_STATIC_NAME = 'static';
+let CACHE_DYNAMIC_NAME = 'dynamic';
 
 self.addEventListener('push', function(event) {
   event.waitUntil(
@@ -36,43 +37,55 @@ self.addEventListener('notificationclick', function(event) {
 self.addEventListener('install', function(event) {
   console.log("SW: Installing service worker...", event);
   event.waitUntil(
-    caches.open("static")
+    caches.open(CACHE_STATIC_NAME)
     .then(function(cache){
       console.log("SW: Precaching app shell");
       return cache.addAll(
         [
-          "offlineAbout.js"
+          "offlineAbout.html"
         ]
       );
     })
     )
 });
-
+self.addEventListener('activate', function(event) {
+  console.log('[Service Worker] Activating Service Worker ....', event);
+  event.waitUntil(
+    caches.keys()
+      .then(function(keyList) {
+        return Promise.all(keyList.map(function(key) {
+          if (key !== CACHE_STATIC_NAME && key !== CACHE_DYNAMIC_NAME) {
+            console.log('[Service Worker] Removing old cache.', key);
+            return caches.delete(key);
+          }
+        }));
+      })
+  );
+  return self.clients.claim();
+});
 
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    (async () => {
-      try {
-        // First, try to use the navigation preload response if it's supported.
-        const preloadResponse = await event.preloadResponse;
-        if (preloadResponse) {
-          return preloadResponse;
+    caches.match(event.request)
+      .then(function(response) {
+        if (response) {
+          return response;
+        } else {
+          return fetch(event.request)
+            .then(function(res) {
+              return caches.open(CACHE_DYNAMIC_NAME)
+                .then(function(cache) {
+                  cache.put(event.request.url, res.clone());
+                  return res;
+                })
+            })
+            .catch(function(err) {
+              return caches.open(CACHE_STATIC_NAME)
+                .then(function(cache) {
+                  return cache.match('/offlineAbout.html');
+                });
+            });
         }
-
-        // Always try the network first.
-        const networkResponse = await fetch(event.request);
-        return networkResponse;
-      } catch (error) {
-        // catch is only triggered if an exception is thrown, which is likely
-        // due to a network error.
-        // If fetch() returns a valid HTTP response with a response code in
-        // the 4xx or 5xx range, the catch() will NOT be called.
-        console.log("Fetch failed; returning offline page instead.", error);
-
-        const cache = await caches.open("static");
-        const cachedResponse = await cache.match("/offlineAbout.js"); 
-        return cachedResponse;
-      }
-    })()
+      })
   );
 });
