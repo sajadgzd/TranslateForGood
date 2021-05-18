@@ -92,6 +92,7 @@ const EditProfileCard = (props) => {
         languageTo: (user && user.languageTo),
         proofRead: [],
         femaleTranslator: (user && user.femaleTranslator),
+        image: (user && user.image),
         timezone: (user && user.timezone),
         error: null,
         country: "",
@@ -107,10 +108,34 @@ const EditProfileCard = (props) => {
         setData({ ...data, languageFrom: [], languageTo: [], proofRead: [], femaleTranslator:false});
     }
 
-    const { name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone, error, country, requiredPasswordError } = data;
+    const { name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, image, timezone, error, country, requiredPasswordError } = data;
     const [languagesSelected, setlanguegesSelected] = React.useState([]);
     const [languagesSelectedTo, setlanguegesSelectedTo] = React.useState([]);
     const [languagesSelectedFrom, setlanguegesSelectedFrom] = React.useState([]);
+    const [selectedImagePreview, setImagePrev] = useState(user.image);
+
+    const imageSelectedHandler = (event) => {
+        const file = event.target.files[0];
+        console.log(file);
+        if (event.target.files.length == 0) {
+          setImagePrev(null);
+        } else {
+            const fileType = file['type'];
+            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+            if (!validImageTypes.includes(fileType)) {
+              setImagePrev(null);
+              window.alert("This is not an Image file");
+            } else {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onloadend = function() {
+                        console.log('RESULT', file.name, reader.result);
+                        setImagePrev(URL.createObjectURL(file));
+                        setData({ ...data, image: reader.result});
+                    }
+            }
+        }
+      }
    
     const handleArray = (e) => {
         if(e.target.name == "languageFrom"){
@@ -164,7 +189,7 @@ const EditProfileCard = (props) => {
             }
             await axios.put(
                 "/api/users/edit",
-                { user, name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, timezone },
+                { user, name, email, password, languageFrom, languageTo, proofRead, femaleTranslator, image, timezone },
                 {
                 headers: {
                     "Content-Type": "application/json",
@@ -181,7 +206,7 @@ const EditProfileCard = (props) => {
     const classes = useStyles();
 
     const showLanguagesToAndFrom = <div>
-                                 <div id="translator">
+                                    <div id="translator">
                                     <div id="ArrayOne" style={{ marginTop: '1rem', marginLeft: '1rem'}}>
                                         <FormControl>
                                             <FormLabel component="legend">Languages you can translate from:</FormLabel>
@@ -278,6 +303,14 @@ const EditProfileCard = (props) => {
                             <div>
                                 <form className={classes.formControl}>
                                     <div>
+                                    <div className="col-4" style={{ marginTop: '1rem', marginLeft: '0.5rem', marginBottom:'0.5rem'}}>
+                                        <h5>Change Your Image</h5>
+                                            <div className="">
+                                            <img src={selectedImagePreview} className="img-fluid z-depth-1 rounded-circle" alt="avatar" />
+
+                                            <input type="file" onChange={imageSelectedHandler} required />
+                                        </div>
+                                    </div>
                                         <div>
                                             <TextField required={true}
                                                 id="name"

@@ -49,18 +49,6 @@ const ProfileCard = (props) => {
     getUser();
   }, []);
   
-  const handleImageChange = async (event) => {
-    //   const image = event.target.files[0];
-    //   setFileName(image);
-    //   const formData = new FormData();
-    //   formData.append("image", image, image.name);
-    //   console.log("clicked")
-  }
-
-  const handleEditPicture = () => {
-    //   const fileInput = document.getElementById("imageInput");
-    //   fileInput.click(); 
-  }
 
   const [editMode, setEditMode] = useState(false);
 
@@ -88,8 +76,9 @@ const ProfileCard = (props) => {
                     minWidth: 500,
                     minHeight: 550,
                     }}>
-                    <Box>
-                    <CardMedia
+                    <Grid container alignItems="center" justify="center">
+                        <Grid item>
+                        <CardMedia
                             style={{
                                 maxWidth: "250px",
                                 maxHeight: "250px",
@@ -101,19 +90,9 @@ const ProfileCard = (props) => {
                             component="img"
                             image={user && user.image}
                         />
-                        <Input 
-                            type="file" 
-                            id="imageInput"
-                            placeholder="Upload a picture" 
-                            onChange={handleImageChange} 
-                            hidden="hidden">
-                        </Input>
-                        <Tooltip title="Edit profile picture" placement="top">
-                            <IconButton onClick={handleEditPicture}>
-                                <EditIcon color="primary"/>
-                            </IconButton>
-                        </Tooltip>
-                        </Box>
+                        </Grid>
+                    </Grid>
+                    
                     <CardContent>
                         <List>
                         <ListItem>
