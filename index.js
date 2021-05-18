@@ -1,3 +1,4 @@
+const sslRedirect = require('heroku-ssl-redirect').default;
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -20,9 +21,15 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log("MongoDB is successfully connected"))
   .catch((err) => console.log("MongoDB Error:\t ",err));
 
-app.use(cors());
+app.use(cors()); 
 // Body parser
 app.use(express.json());
+// enable ssl redirect
+app.use(sslRedirect([
+  'other',
+  'development',
+  'production'
+  ]));
 
 // Routes
 const UserControls = require("./controllers/users");
