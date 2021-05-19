@@ -130,7 +130,7 @@ function MatchedRequestCard(props) {
     <div>
       <Card className={classes.root}>
           <CardContent >
-              <Grid container justify="center" alignItems="center"><Avatar alt="Profie Picture" className={classes.large}  src={defaultImage} /></Grid>
+              <Grid container justify="center" alignItems="center"></Grid>
               
               <Typography gutterBottom component={'span'}>
                   <Typography gutterBottom align='center' component={'span'} variant="h6" component="h1" style={{ fontWeight: 600 }}>

@@ -166,6 +166,8 @@ const Home = (props) => {
         return;
       }
       let newRequestID;
+      user.image = "";
+      console.log("User no image");
         await axios.post(
           "/api/requests/new",
           {  user, languageFrom, languageTo, dueDateTime, femaleTranslatorBool, documentProofReadingBool, previousTranslatorInfo, isActive },
