@@ -78,7 +78,6 @@ function TabPanel(props) {
                   aria-label="full width tabs example"
               >
                 <Tab label="Submitted Requests" {...a11yProps(0)} /> 
-                <Tab label="Requests In Progress" {...a11yProps(1)} />  
               </Tabs>
               :
               <Tabs
@@ -92,7 +91,6 @@ function TabPanel(props) {
                   >
                   <Tab label="Matched Requests" {...a11yProps(0)} />
                   <Tab label="Submitted Requests" {...a11yProps(1)} />                  
-                  <Tab label="Requests in Progress" {...a11yProps(2)} />  
               </Tabs>        
           }
         </AppBar>
