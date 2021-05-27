@@ -29,5 +29,8 @@ TranslateForGood hopes to provide the best experience to users in need of transl
 
 <a name="display"></a>
 ## App Display
+
+### Gif Demo
+![Demo](/gif/first.gif)
 ### Live Demo
 [Click Here](https://translateforgood.herokuapp.com/)
