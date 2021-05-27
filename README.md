@@ -28,6 +28,11 @@ TranslateForGood hopes to provide the best experience to users in need of transl
 <a name="display"></a>
 ## App Display
 
+### Live Demo
+
+#### To view a live demo of TranslateForGood, please click the link below.
+[Click Here](https://translateforgood.herokuapp.com/)
+
 ### Gif Demo 
 #### About Page, Registration, Login, Request, Notification, Text/Voice Chat
 ![Demo](/gif/first.gif)
@@ -37,7 +42,4 @@ TranslateForGood hopes to provide the best experience to users in need of transl
 
 #### Chat, Photo example
 ![Demo](/gif/third.gif)
-### Live Demo
 
-#### To view a live demo of TranslateForGood, please click the link below.
-[Click Here](https://translateforgood.herokuapp.com/)
